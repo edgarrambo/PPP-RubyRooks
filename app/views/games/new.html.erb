@@ -1,0 +1,7 @@
+<div class="col-10 offset-1">
+  <h1>Start a new game</h1>
+    <%= simple_form_for @game do |f| %>
+      <%= f.input :name %>
+      <%= f.submit 'Start', class: 'btn btn-primary' %>
+    <% end %>
+</div>
