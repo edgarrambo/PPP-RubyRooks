@@ -1,9 +1,5 @@
 require 'rails_helper'
 
 RSpec.describe Comment, type: :model do
-  describe "it should fail" do
-    it "should fail" do
-      puts "fail"
-    end
-  end
+  pending "add some examples to (or delete) #{__FILE__}"
 end
