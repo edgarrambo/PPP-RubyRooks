@@ -7,10 +7,10 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [:facebook]
 
-  has_many :created_games, :class_name 'Game', :foreign_key => 'creating_user_id'
-  has_many :invited_games, :class_name 'Game', :foreign_key => 'invited_user_id'
-  has_many :first_moves, :class_name 'Game', :foreign_key => 'first_move_id'
-  has_many :wins, :class_name 'Game', :foreign_key => 'winner_id'
+  has_many :created_games, :class_name => 'Game', :foreign_key => 'creating_user_id'
+  has_many :invited_games, :class_name => 'Game', :foreign_key => 'invited_user_id'
+  has_many :first_moves, :class_name => 'Game', :foreign_key => 'first_move_id'
+  has_many :wins, :class_name => 'Game', :foreign_key => 'winner_id'
   has_many :comments
   has_many :moves
 
