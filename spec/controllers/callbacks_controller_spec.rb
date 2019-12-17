@@ -11,7 +11,7 @@ RSpec.describe CallbacksController, type: :controller do
     OmniAuth.config.test_mode = false
   end
 
-  context 'omniauth-facebook' do
+  describe 'Omniauth' do
     before(:each) do
       OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new(
         provider: 'facebook',
@@ -24,7 +24,7 @@ RSpec.describe CallbacksController, type: :controller do
       sign_in @user
     end
 
-    it 'checks if Omniauth-facebook is setting an email' do
+    it 'checks if Omniauth hash is setting an email with devise' do
       expect(@user.email).to eq(User.last.email)
     end
   end
