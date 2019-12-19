@@ -10,26 +10,8 @@ FactoryBot.define do
     x_position { 0 }
     y_position { 0 }
     black { true }
-  end
 
-  factory :king do
-    
-  end
-
-  factory :queen do
-    
-  end
-
-  factory :knight do
-    
-  end
-
-  factory :rook do
-    
-  end
-
-  factory :pawn do
-    
+    association :game
   end
 
   factory :piece do
@@ -37,6 +19,8 @@ FactoryBot.define do
     y_position { 1 }
     game_id { 1 }
     black { false }
+
+    association :game
   end
 
   factory :move do
