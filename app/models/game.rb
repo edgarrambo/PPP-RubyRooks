@@ -8,5 +8,6 @@ class Game < ApplicationRecord
   has_many :positions
   has_many :moves
   has_many :comments
+  has_many :pieces
 
 end

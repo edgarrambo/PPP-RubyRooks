@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_16_183352) do
+ActiveRecord::Schema.define(version: 2019_12_19_012749) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,17 @@ ActiveRecord::Schema.define(version: 2019_12_16_183352) do
     t.index ["start_piece"], name: "index_moves_on_start_piece"
     t.index ["start_x", "start_y"], name: "index_moves_on_start_x_and_start_y"
     t.index ["user_id"], name: "index_moves_on_user_id"
+  end
+
+  create_table "pieces", force: :cascade do |t|
+    t.integer "x_position"
+    t.integer "y_position"
+    t.integer "game_id"
+    t.boolean "black"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "type"
+    t.index ["game_id"], name: "index_pieces_on_game_id"
   end
 
   create_table "positions", force: :cascade do |t|
