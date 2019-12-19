@@ -3,6 +3,13 @@
 FactoryBot.define do
   factory :game do
     name { 'game' }
+    game_id { 999 }
+  end
+
+  factory :bishop do
+    x_position { 0 }
+    y_position { 0 }
+    black { true }
   end
 
   factory :king do
@@ -46,5 +53,6 @@ FactoryBot.define do
 
   factory :user do
     email { 'john@smith.com' }
+    password { 'password' }
   end
 end

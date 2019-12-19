@@ -1,5 +1,5 @@
+# frozen_string_literal: true
+
 class Bishop < Piece
-  def new
-    byebug
-  end
+  def new; end
 end
