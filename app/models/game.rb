@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class Game < ApplicationRecord
-  has_one :creating_user, :class_name => 'User'
-  has_one :invited_user, :class_name => 'User'
+  belongs_to :creating_user, :class_name => 'User', :foreign_key => 'creating_user_id'
+  belongs_to :invited_user, :class_name => 'User', :foreign_key => 'invited_user_id'
   belongs_to :first_move, :class_name => 'User', :foreign_key => 'first_move_id'
-  has_one :winner, :class_name => 'User'
+  belongs_to :winner, :class_name => 'User', :foreign_key => 'winner_id'
   has_many :moves
   has_many :comments
   has_many :pieces

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_20_143322) do
+ActiveRecord::Schema.define(version: 2019_12_20_165049) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,10 +30,10 @@ ActiveRecord::Schema.define(version: 2019_12_20_143322) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description"
-    t.integer "creating_user_id"
-    t.integer "invited_user_id"
-    t.integer "first_move_id"
-    t.integer "winner_id"
+    t.bigint "first_move_id"
+    t.bigint "creating_user_id"
+    t.bigint "invited_user_id"
+    t.bigint "winner_id"
     t.index ["creating_user_id"], name: "index_games_on_creating_user_id"
     t.index ["first_move_id"], name: "index_games_on_first_move_id"
     t.index ["invited_user_id"], name: "index_games_on_invited_user_id"
@@ -82,4 +82,8 @@ ActiveRecord::Schema.define(version: 2019_12_20_143322) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "games", "users", column: "creating_user_id"
+  add_foreign_key "games", "users", column: "first_move_id"
+  add_foreign_key "games", "users", column: "invited_user_id"
+  add_foreign_key "games", "users", column: "winner_id"
 end
