@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_19_142956) do
+ActiveRecord::Schema.define(version: 2019_12_20_012257) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,10 +34,8 @@ ActiveRecord::Schema.define(version: 2019_12_19_142956) do
     t.integer "invited_user_id"
     t.integer "first_move_id"
     t.integer "winner_id"
-    t.integer "game_id", default: 0, null: false
     t.index ["creating_user_id"], name: "index_games_on_creating_user_id"
     t.index ["first_move_id"], name: "index_games_on_first_move_id"
-    t.index ["game_id"], name: "index_games_on_game_id"
     t.index ["invited_user_id"], name: "index_games_on_invited_user_id"
     t.index ["winner_id"], name: "index_games_on_winner_id"
   end
@@ -63,12 +61,10 @@ ActiveRecord::Schema.define(version: 2019_12_19_142956) do
   create_table "pieces", force: :cascade do |t|
     t.integer "x_position"
     t.integer "y_position"
-    t.integer "game_id"
     t.boolean "black"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type"
-    t.index ["game_id"], name: "index_pieces_on_game_id"
   end
 
   create_table "positions", force: :cascade do |t|

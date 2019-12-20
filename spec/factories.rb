@@ -6,14 +6,6 @@ FactoryBot.define do
     game_id { 999 }
   end
 
-  factory :bishop do
-    x_position { 0 }
-    y_position { 0 }
-    black { true }
-
-    association :game
-  end
-
   factory :piece do
     x_position { 1 }
     y_position { 1 }
@@ -21,18 +13,6 @@ FactoryBot.define do
     black { false }
 
     association :game
-  end
-
-  factory :move do
-    
-  end
-
-  factory :comment do
-    
-  end
-
-  factory :position do
-    
   end
 
   factory :user do
