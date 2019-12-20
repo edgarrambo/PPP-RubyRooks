@@ -14,7 +14,7 @@ FactoryBot.define do
   end
 
     factory :user do
-    sequence(:email, 1000, aliases: [:creating_user, :invited_user, :first_move, :winner]) { |n| "person#{n}@example.com" }
+    sequence(:email, 1000) { |n| "person#{n}@example.com" }
     password { 'password' }
   end
   
