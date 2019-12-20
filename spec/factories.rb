@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :game do
     name { 'A-Game' }
+
   end
 
   factory :piece do
@@ -12,8 +13,9 @@ FactoryBot.define do
     association :game
   end
 
-  factory :user do
-    email { 'john@smith.com' }
+    factory :user do
+    sequence(:email, 1000, aliases: [:creating_user, :invited_user, :first_move, :winner]) { |n| "person#{n}@example.com" }
     password { 'password' }
   end
+  
 end
