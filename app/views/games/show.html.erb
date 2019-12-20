@@ -4,18 +4,26 @@
 
 <br />
 
-<div class="col-8 offset-2">
-  <% 8.times do |x| %>
-    <div class="row justify-content-center">
-      <% 8.times do |y| %>
-        <% if x % 2 == 0 && y % 2 == 0 || x % 2 == 1 && y % 2 == 1 %>
-          <div id="<%= x %>,<%= y %>" class="black">
-          </div>
-        <% else %>
-          <div id="<%= x %>,<%= y %>" class="white">
-          </div>
+<div class="row">
+  <div class="col-2 text-center">
+    <h4><%= @game.first_move_id.email %></h4>
+  </div>
+  <div class="col-8">
+    <% 8.times do |x| %>
+      <div class="row justify-content-center">
+        <% 8.times do |y| %>
+          <% if x % 2 == 0 && y % 2 == 0 || x % 2 == 1 && y % 2 == 1 %>
+            <div id="<%= x %>,<%= y %>" class="black">
+            </div>
+          <% else %>
+            <div id="<%= x %>,<%= y %>" class="white">
+            </div>
+          <% end %>
         <% end %>
-      <% end %>
-    </div>
-  <% end %>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-2 text-center">
+    <h4>Player Two</h4>
+  </div>
 </div>
