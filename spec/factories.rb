@@ -14,7 +14,7 @@ FactoryBot.define do
     association :game
   end
 
-    factory :user do
+  factory :user do
     sequence(:email, 1000) { |n| "person#{n}@example.com" }
     password { 'password' }
   end
