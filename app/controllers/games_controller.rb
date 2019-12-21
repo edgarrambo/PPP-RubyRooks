@@ -8,8 +8,12 @@ class GamesController < ApplicationController
   end
 
   def create
-    @game = Game.create(game_params)
-    redirect_to game_path(@game)
+    @game = Game.create(game_params.merge(creating_user: current_user))
+    if @game.valid?
+      redirect_to game_path(@game)
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def show

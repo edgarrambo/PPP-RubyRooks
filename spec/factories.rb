@@ -4,6 +4,7 @@ FactoryBot.define do
   factory :game do
     name { 'A-Game' }
 
+    association :creating_user, factory: :user
   end
 
   factory :piece do
