@@ -1,1 +1,47 @@
-<%= @game.inspect %>
+<div class="col-8 offset-2 text-center">
+  <h2><%= @game.name %></h2>
+</div>
+
+<br />
+
+<div class="row">
+  <div class="col-lg-3 text-center">
+    <h4>
+      <% if @game.creating_user == @game.first_move %>
+        <%= @game.creating_user.email %>
+      <% elsif @game.invited_user.present? && @game.invited_user == @game.first_move %>
+        <%= @game.invited_user.email %>
+      <% else %>
+        No Second Player
+      <% end %>      
+    </h4>
+    <hr />
+  </div>
+  <div class="col-lg-6">
+    <% 8.times do |x| %>
+      <div class="row justify-content-center">
+        <% 8.times do |y| %>
+          <% if x % 2 == 0 && y % 2 == 0 || x % 2 == 1 && y % 2 == 1 %>
+            <div id="<%= x %>,<%= y %>" class="black">
+            </div>
+          <% else %>
+            <div id="<%= x %>,<%= y %>" class="white">
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-lg-3 text-center">
+    <h4>
+      <% if @game.creating_user != @game.first_move %>
+        <%= @game.creating_user.email %>
+      <% elsif @game.invited_user.present? && @game.invited_user != @game.first_move %>
+        <%= @game.invited_user.email %>
+      <% else %>
+        No Second Player
+      <% end %>      
+    </h4>
+    <hr />
+  </div>
+</div>
