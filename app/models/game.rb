@@ -9,4 +9,6 @@ class Game < ApplicationRecord
   has_many :comments
   has_many :pieces
 
+  scope :available, -> { where(invited_user_id: nil) }
+
 end
