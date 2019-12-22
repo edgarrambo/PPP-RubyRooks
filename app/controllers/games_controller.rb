@@ -25,8 +25,10 @@ class GamesController < ApplicationController
   end
 
   def update_invited_user
-    @game = Game.find(params[:id])
-    @game.update_attributes(invited_user_id: current_user)
+    @game = Game.find(params[:game_id])
+    @game.update(invited_user_id: current_user.id)
+
+    redirect_to game_path(@game)
   end
 
   private
