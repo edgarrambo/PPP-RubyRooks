@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GamesController < ApplicationController
-  before_action :authenticate_user!, only: %i[new create show update]
+  before_action :authenticate_user!, only: %i[new create show update_invited_user]
 
   def index
     @games = Game.all
