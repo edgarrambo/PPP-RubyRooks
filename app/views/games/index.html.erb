@@ -7,7 +7,7 @@
       <% @games.available.each do |game| %>
         <li class="list-group-item">
           <h2><%= game.name %></h2>
-          <%= link_to "Join", game_join_path(current_user), 
+          <%= link_to "Join", join_path(game), 
               method: :get, data: {confirm: 'Are you sure you want to join?'},
               class: 'btn btn-secondary' %>
         </li>

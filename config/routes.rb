@@ -2,6 +2,7 @@
 
 Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: 'callbacks' }
-  root 'static_pages#index'
-  resources :games, only: %i[new create show]
+  root 'games#index'
+  resources :games, only: %i[index new create show]
+  get "/games/:id", to: 'games#update_invited_user', as: :join
 end
