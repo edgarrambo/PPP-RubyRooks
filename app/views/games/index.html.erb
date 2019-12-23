@@ -3,17 +3,13 @@
 
 <% if current_user.present? %>
   <h2>Created Games</h2>
-  <% @games.each do |game| %>
-    <% if game.creating_user_id == current_user.id %>
-      <%= link_to game.name, game_path(game) %>
-    <% end%>
+  <% @created.each do |game| %>
+    <%= link_to game.name, game_path(game) %>
   <% end %>
 
   <h2>Joined Gamed</h2>
-  <% @games.each do |game| %>
-    <% if game.invited_user_id == current_user.id %>
-      <%= link_to game.name, game_path(game) %>      
-    <% end %>
+  <% @joined.each do |game| %>
+    <%= link_to game.name, game_path(game) %>     
   <% end %>
 <% end %>
 

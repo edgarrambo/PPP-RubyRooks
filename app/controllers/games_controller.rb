@@ -5,6 +5,8 @@ class GamesController < ApplicationController
 
   def index
     @games = Game.all
+    @created = Game.where(creating_user_id: current_user.id)
+    @joined = Game.where(invited_user_id: current_user.id)
   end
 
   def new
