@@ -12,7 +12,7 @@
   </ul>
 
   <ul class="list-group">
-    <h2>Joined Gamed</h2>
+    <h2>Joined Games</h2>
         <% @joined.each do |game| %>
           <li class="list-group-item">
             <h4><%= link_to game.name, game_path(game) %></h4>
