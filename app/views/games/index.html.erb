@@ -1,0 +1,42 @@
+<h1>Ahoy Mateys!!!</h1>
+<br />
+
+<% if current_user %>
+  <ul class="list-group">
+    <h2>Created Games</h2>
+        <% @created.each do |game| %>
+          <li class="list-group-item">
+            <h4><%= link_to game.name, game_path(game) %></h4>
+          </li>
+        <% end %>
+  </ul>
+
+  <ul class="list-group">
+    <h2>Joined Games</h2>
+        <% @joined.each do |game| %>
+          <li class="list-group-item">
+            <h4><%= link_to game.name, game_path(game) %></h4>
+          </li>    
+        <% end %>
+  </ul>
+<% end %>
+
+<br />
+
+<% if @games.present? %>
+  <% if @games.available.present? %>
+    <ul class="list-group">
+      <h2>Available Games</h2>
+      <% @games.available.each do |game| %>
+        <li class="list-group-item">
+          <h4><%= game.name %></h4> &nbsp &nbsp &nbsp 
+          <%= link_to "Join", game_update_invited_user_path(game), 
+              method: :get, data: {confirm: 'Are you sure you want to join?'},
+              class: 'btn btn-secondary' %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <h2>No games available to join. <%= link_to 'New Game', new_game_path, class: 'btn btn-primary'%></h2>
+  <% end %>
+<% end %>

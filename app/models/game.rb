@@ -10,5 +10,4 @@ class Game < ApplicationRecord
   has_many :pieces
 
   scope :available, -> { where(invited_user_id: nil) }
-
 end
