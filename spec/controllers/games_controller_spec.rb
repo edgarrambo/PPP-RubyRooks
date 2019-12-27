@@ -7,7 +7,7 @@ RSpec.describe GamesController, type: :controller do
       expect(response).to redirect_to new_user_session_path
     end
 
-    it 'should successfully create a new game' do
+    it 'should successfully create a new game with 32 pieces' do
       user = create(:user)
       sign_in user
 
@@ -24,6 +24,7 @@ RSpec.describe GamesController, type: :controller do
 
       expect(game.name).to eq('Test')
       expect(game.creating_user_id).to eq(user.id)
+      expect(game.pieces.count).to eq 32
     end
   end
 end
