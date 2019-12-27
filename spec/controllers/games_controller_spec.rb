@@ -8,7 +8,7 @@ RSpec.describe GamesController, type: :controller do
     end
 
     it 'should successfully create a new game with 32 pieces' do
-      user = FactoryBot.create(:user)
+      user = create(:user)
       sign_in user
 
       post :create, params: {
