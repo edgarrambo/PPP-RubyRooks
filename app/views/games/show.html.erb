@@ -18,9 +18,10 @@
     <hr />
   </div>
   <div class="col-lg-6">
-    <% 8.times do |x| %>
+    <%# I switched around the x and y variables to make it more logical %> 
+    <% 8.times do |y| %> 
       <div class="row justify-content-center">
-        <% 8.times do |y| %>
+        <% 8.times do |x| %>
           <% if x % 2 == 0 && y % 2 == 0 || x % 2 == 1 && y % 2 == 1 %>
             <div id="<%= x %>,<%= y %>" class="black">
             </div>
