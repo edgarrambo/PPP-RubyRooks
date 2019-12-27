@@ -39,7 +39,8 @@ end
 RSpec.configure do |config|
   # Includes Devise Helpers for testing
   config.include Devise::Test::ControllerHelpers, type: :controller
-  config.include Devise::Test::IntegrationHelpers
+  config.include Devise::Test::ControllerHelpers, type: :view
+  config.include Devise::Test::IntegrationHelpers, type: :model
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
