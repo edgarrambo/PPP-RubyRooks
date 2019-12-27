@@ -5,6 +5,7 @@ class Piece < ApplicationRecord
 
 
   def is_obstructed?(x, y)
+   
     x_sorted_array = [x, x_position].sort
     y_sorted_array = [y, y_position].sort
 
