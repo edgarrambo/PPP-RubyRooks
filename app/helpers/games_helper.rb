@@ -1,4 +1,14 @@
 # frozen_string_literal: true
 
 module GamesHelper
+  include ActionView::Helpers::TagHelper
+
+  def get_piece(x, y, game)
+    game.pieces.where(x_position: x, y_position: y).first
+  end
+
+  def render_piece(x, y, game, color)
+    piece = get_piece(x, y, game)
+    tag.h1 piece.piece.to_s, class: color
+  end
 end
