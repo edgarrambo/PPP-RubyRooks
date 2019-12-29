@@ -22,11 +22,20 @@
     <% 8.times do |y| %> 
       <div class="row justify-content-center">
         <% 8.times do |x| %>
+          <% piece = get_piece(x, y, @game) %>
           <% if x % 2 == 0 && y % 2 == 0 || x % 2 == 1 && y % 2 == 1 %>
             <div id="<%= x %>,<%= y %>" class="black">
+              <% if piece.present? %>
+                <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
+                <%= render_piece(x, y, @game, color) %>
+              <% end %>
             </div>
           <% else %>
             <div id="<%= x %>,<%= y %>" class="white">
+              <% if piece.present? %>
+                <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
+                <%= render_piece(x, y, @game, color) %>
+              <% end %>
             </div>
           <% end %>
         <% end %>
