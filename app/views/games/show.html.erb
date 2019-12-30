@@ -7,13 +7,7 @@
 <div class="row">
   <div class="col-lg-3 text-center">
     <h4>
-      <% if @game.creating_user == @game.first_move || @game.creating_user == @game.invited_user %>
-        <%= @game.creating_user.email %>
-      <% elsif @game.invited_user.present? && @game.invited_user == @game.first_move %>
-        <%= @game.invited_user.email %>
-      <% else %>
-        No Second Player
-      <% end %>      
+      <%= @game.get_player_one %>      
     </h4>
     <hr />
   </div>
@@ -23,7 +17,7 @@
       <div class="row justify-content-center">
         <% 8.times do |x| %>
           <% piece = get_piece(x, y, @game) %>
-          <% if x % 2 == 0 && y % 2 == 0 || x % 2 == 1 && y % 2 == 1 %>
+          <% if is_black?(x,y) %>
             <div id="<%= x %>,<%= y %>" class="black">
               <% if piece.present? %>
                 <%= link_to piece_path(piece.id) do %>
@@ -48,13 +42,7 @@
   </div>
   <div class="col-lg-3 text-center">
     <h4>
-      <% if @game.creating_user != @game.first_move || @game.creating_user == @game.invited_user %>
-        <%= @game.creating_user.email %>
-      <% elsif @game.invited_user.present? && @game.invited_user != @game.first_move %>
-        <%= @game.invited_user.email %>
-      <% else %>
-        No Second Player
-      <% end %>      
+      <%= @game.get_player_two %>    
     </h4>
     <hr />
   </div>

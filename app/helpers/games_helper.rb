@@ -11,4 +11,8 @@ module GamesHelper
     piece = get_piece(x, y, game)
     tag.h1 piece.piece.to_s, class: color
   end
+
+  def is_black?(x,y)
+    return (x % 2 == 0 && y % 2 == 0 || x % 2 == 1 && y % 2 == 1)
+  end
 end
