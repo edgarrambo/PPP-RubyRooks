@@ -27,7 +27,7 @@ class GamesController < ApplicationController
 
   def show
     @game = Game.find(params[:id])
-    @piece = Piece.all
+    @piece =Piece.all
   end
 
   def update_invited_user
