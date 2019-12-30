@@ -80,3 +80,4 @@ gem 'omniauth-google-oauth2'
 gem 'omniauth-twitter'
 gem 'rubocop', require: false
 gem 'simple_form'
+gem 'jquery-ui-rails'
