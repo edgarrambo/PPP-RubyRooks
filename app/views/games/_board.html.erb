@@ -1,0 +1,16 @@
+<% 8.times do |y| %> 
+  <div class="row justify-content-center">
+    <% 8.times do |x| %>
+      <% piece = get_piece(x, y, the_game) %>
+        <div id="<%= x %>,<%= y %>" class="<%= is_black?(x,y) ? "black" : "white" %>">
+          <% if piece.present? %>
+            <%= link_to piece_path(piece.id) do %>
+              <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
+              <%= render_piece(x, y, the_game, color) %>
+            <% end %>
+          <% end %>
+          <%= link_to '1', piece_update_position_path(the_piece,x_position: x, y_position: y) if the_piece %>
+        </div>
+    <% end %>
+  </div>
+<% end %>

@@ -7,59 +7,17 @@
 <div class="row">
   <div class="col-lg-3 text-center">
     <h4>
-      <% if @piece.game.creating_user == @piece.game.first_move || @piece.game.creating_user == @piece.game.invited_user %>
-        <%= @piece.game.creating_user.email %>
-      <% elsif @piece.game.invited_user.present? && @piece.game.invited_user == @piece.game.first_move %>
-        <%= @piece.game.invited_user.email %>
-      <% else %>
-        No Second Player
-      <% end %>      
+      <%= @piece.game.get_player_one %>      
     </h4>
     <hr />
   </div>
   <div class="col-lg-6">
     <%# I switched around the x and y variables to make it more logical %> 
-    <% 8.times do |y| %> 
-      <div class="row justify-content-center">
-        <% 8.times do |x| %>
-          <% piece = get_piece(x, y, @piece.game) %>
-          
-          <% if @piece == piece %>
-            <div id="<%= @piece.x_position%>,<%= @piece.y_position %>" class="purple">
-              <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
-                  <%= render_piece(x, y, @piece.game, color) %>
-            </div>
-          
-          <% elsif x % 2 == 0 && y % 2 == 0 || x % 2 == 1 && y % 2 == 1 %>
-            <div id="<%= x %>,<%= y %>" class="black">
-              <%= link_to '1', piece_update_position_path(@piece,x_position: x, y_position: y) %>
-              <% if piece.present? %>
-                  <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
-                  <%= render_piece(x, y, @piece.game, color) %>
-              <% end %>
-            </div>
-          <% else %>
-            <div id="<%= x %>,<%= y %>" class="white">
-              <%= link_to '1', piece_update_position_path(@piece,x_position: x, y_position: y) %>
-              <% if piece.present? %>
-                  <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
-                  <%= render_piece(x, y, @piece.game, color) %>
-              <% end %>
-            </div>
-          <% end %>
-        <% end %>
-      </div>
-    <% end %>
+    <%= render :partial => "games/board", :locals => { :the_piece => @piece, :the_game => @piece.game } %>
   </div>
   <div class="col-lg-3 text-center">
     <h4>
-      <% if @piece.game.creating_user != @piece.game.first_move || @piece.game.creating_user == @piece.game.invited_user %>
-        <%= @piece.game.creating_user.email %>
-      <% elsif @piece.game.invited_user.present? && @piece.game.invited_user != @piece.game.first_move %>
-        <%= @piece.game.invited_user.email %>
-      <% else %>
-        No Second Player
-      <% end %>      
+      <%= @piece.game.get_player_two %>    
     </h4>
     <hr />
   </div>

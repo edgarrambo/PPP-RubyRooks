@@ -13,32 +13,7 @@
   </div>
   <div class="col-lg-6">
     <%# I switched around the x and y variables to make it more logical %> 
-    <% 8.times do |y| %> 
-      <div class="row justify-content-center">
-        <% 8.times do |x| %>
-          <% piece = get_piece(x, y, @game) %>
-          <% if is_black?(x,y) %>
-            <div id="<%= x %>,<%= y %>" class="black">
-              <% if piece.present? %>
-                <%= link_to piece_path(piece.id) do %>
-                  <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
-                  <%= render_piece(x, y, @game, color) %>
-                <% end %>
-              <% end %>
-            </div>
-          <% else %>
-            <div id="<%= x %>,<%= y %>" class="white">
-              <% if piece.present? %>
-                <%= link_to piece_path(piece.id) do %>
-                  <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
-                  <%= render_piece(x, y, @game, color) %>
-                <% end %>
-              <% end %>
-            </div>
-          <% end %>
-        <% end %>
-      </div>
-    <% end %>
+    <%= render :partial => "board", :locals => { :the_piece => nil, :the_game => @game } %>
   </div>
   <div class="col-lg-3 text-center">
     <h4>

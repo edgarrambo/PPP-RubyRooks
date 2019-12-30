@@ -1,32 +1,35 @@
 # frozen_string_literal: true
-
 class Game < ApplicationRecord
   belongs_to :creating_user, :class_name => 'User', :foreign_key => 'creating_user_id'
   belongs_to :invited_user, :class_name => 'User', :foreign_key => 'invited_user_id', optional: true
-  belongs_to :first_move, :class_name => 'User', :foreign_key => 'first_move_id', optional: true
   belongs_to :winner, :class_name => 'User', :foreign_key => 'winner_id', optional: true
   has_many :moves, dependent: :destroy 
   has_many :comments, dependent: :destroy
   has_many :pieces, dependent: :destroy
-
+  before_create :assign_default_player
   scope :available, -> { where(invited_user_id: nil) }
+  def assign_default_player
+	write_attribute(:p1_id, creating_user.id)
+  end
+  def player_one
+    return nil if p1_id.nil?
+    return User.find(p1_id)
+  end
+  def player_two
+    return nil if p2_id.nil?
+    return User.find(p2_id)
+  end
+  def player_one=(u)
+    write_attribute(:p1_id,u.id)
+  end
+  def player_two=(u)
+    write_attribute(:p2_id,u.id)
+  end
   def get_player_one 
-    if creating_user == first_move || creating_user == invited_user 
-       creating_user.email
-    elsif invited_user.present? && invited_user == first_move
-       invited_user.email 
-    else 
-      return "No First Player"
-    end
+    return (not player_one.nil?) ? player_one.email : "No Player One"
   end
   def get_player_two
-    if creating_user != first_move || creating_user == invited_user 
-      creating_user.email 
-    elsif invited_user.present? && invited_user != first_move 
-      invited_user.email 
-    else 
-      return "No Second Player"
-    end   
+    return (not player_two.nil?) ? player_two.email : "No Player Two"
   end
   def populate_game
     # White Rooks
