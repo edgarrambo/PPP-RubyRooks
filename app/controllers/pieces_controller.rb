@@ -1,6 +1,5 @@
 class PiecesController < ApplicationController
   before_action :authenticate_user!
-  #before_action :require_authorized_to_move_piece
   
   def show
     @piece = Piece.find(params[:id])
@@ -19,10 +18,6 @@ class PiecesController < ApplicationController
     params.permit(:x_position, :y_position)
   end
 
-  #def require_authorized_to_move_piece
-    #if current_user != creating_user || current_user != invited_user
-        #render plain: 'Game in progress', status: :Unauthorized
-    #end
-  #end
+  
 
 end
