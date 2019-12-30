@@ -26,7 +26,7 @@
           <% if x % 2 == 0 && y % 2 == 0 || x % 2 == 1 && y % 2 == 1 %>
             <div id="<%= x %>,<%= y %>" class="black">
               <% if piece.present? %>
-                <%= link_to piece_path(@piece) do %>
+                <%= link_to piece_path(piece.id) do %>
                   <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
                   <%= render_piece(x, y, @game, color) %>
                 <% end %>
@@ -34,8 +34,8 @@
             </div>
           <% else %>
             <div id="<%= x %>,<%= y %>" class="white">
-              <%= link_to piece_path(@piece) do %>
-                <% if piece.present? %>
+              <% if piece.present? %>
+                <%= link_to piece_path(piece.id) do %>
                   <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
                   <%= render_piece(x, y, @game, color) %>
                 <% end %>

@@ -1,1 +1,67 @@
-<h1>Pieces</h1>
+<div class="col-8 offset-2 text-center">
+  <h2><%= @piece.game.name %></h2>
+</div>
+
+<br />
+
+<div class="row">
+  <div class="col-lg-3 text-center">
+    <h4>
+      <% if @piece.game.creating_user == @piece.game.first_move || @piece.game.creating_user == @piece.game.invited_user %>
+        <%= @piece.game.creating_user.email %>
+      <% elsif @piece.game.invited_user.present? && @piece.game.invited_user == @piece.game.first_move %>
+        <%= @piece.game.invited_user.email %>
+      <% else %>
+        No Second Player
+      <% end %>      
+    </h4>
+    <hr />
+  </div>
+  <div class="col-lg-6">
+    <%# I switched around the x and y variables to make it more logical %> 
+    <% 8.times do |y| %> 
+      <div class="row justify-content-center">
+        <% 8.times do |x| %>
+          <% piece = get_piece(x, y, @piece.game) %>
+          <% if @piece == piece %>
+            <div id="<%= @piece.x_position%>,<%= @piece.y_position %>" class="purple">
+              <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
+                  <%= render_piece(x, y, @piece.game, color) %>
+            </div>
+          
+          <% elsif x % 2 == 0 && y % 2 == 0 || x % 2 == 1 && y % 2 == 1 %>
+            <div id="<%= x %>,<%= y %>" class="black">
+              <% if piece.present? %>
+                <%= link_to piece_path(piece.id) do %>
+                  <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
+                  <%= render_piece(x, y, @piece.game, color) %>
+                <% end %>
+              <% end %>
+            </div>
+          <% else %>
+            <div id="<%= x %>,<%= y %>" class="white">
+              <% if piece.present? %>
+                <%= link_to piece_path(piece.id) do %>
+                  <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
+                  <%= render_piece(x, y, @piece.game, color) %>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-lg-3 text-center">
+    <h4>
+      <% if @piece.game.creating_user != @piece.game.first_move || @piece.game.creating_user == @piece.game.invited_user %>
+        <%= @piece.game.creating_user.email %>
+      <% elsif @piece.game.invited_user.present? && @piece.game.invited_user != @piece.game.first_move %>
+        <%= @piece.game.invited_user.email %>
+      <% else %>
+        No Second Player
+      <% end %>      
+    </h4>
+    <hr />
+  </div>
+</div>
