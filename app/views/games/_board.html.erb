@@ -4,8 +4,7 @@
       <% piece = get_piece(x, y, the_game) %>        
         <% if is_square_for_piece_to_be_moved?(the_piece, piece) %>
           <div id="<%= @piece.x_position%>,<%= @piece.y_position %>" class="purple">
-            <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
-            <%= render_piece(x, y, @piece.game, color) %>
+            <%= render_piece(x, y, @piece.game, 'green') %>
           </div>
         <% else %>
         <div id="<%= x %>,<%= y %>" class="<%= is_black?(x,y) ? "black" : "white" %>">

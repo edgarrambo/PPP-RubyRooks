@@ -2,8 +2,6 @@ class PiecesController < ApplicationController
 
   def show
     @piece = Piece.find(params[:id])
-
-
   end
 
 
@@ -11,7 +9,6 @@ class PiecesController < ApplicationController
     @piece = Piece.find(params[:piece_id])
     @piece.update_attributes(piece_params)
     redirect_to game_path(@piece.game)
-
   end
 
   private
