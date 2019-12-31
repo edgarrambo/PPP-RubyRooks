@@ -47,13 +47,13 @@ hr {
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0), black, rgba(0, 0, 0, 0));
 }
 
-.disappear {
+.transparent_box {
   opacity: 0;
   width: 5vw;
   height: 5vw;
 }
 
-.disappear:hover {
+.transparent_box:hover {
   opacity: 1;
   background-color: green;
 }
