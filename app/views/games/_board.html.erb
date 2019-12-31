@@ -4,7 +4,7 @@
       <% piece = get_piece(x, y, the_game) %>
         <div id="<%= x %>,<%= y %>" class="<%= is_black?(x,y) ? "black" : "white" %>">
           <% if piece.present? %>
-            <%= link_to piece_path(piece.id) do %>
+            <%= link_to piece_path(piece.id), data: {turbolinks: false} do %>
               <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
               <%= render_piece(x, y, the_game, color) %>
             <% end %>
