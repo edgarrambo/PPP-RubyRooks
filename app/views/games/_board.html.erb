@@ -9,7 +9,7 @@
       <% else %>
         <div id="<%= x %>,<%= y %>" class="<%= is_black?(x,y) ? "black" : "white" %>">
           <% if the_piece %>
-            <%= link_to piece_path(piece: the_piece, x_position: x, y_position: y), action: :update, method: :PUT do %>
+            <%= link_to piece_path(x_position: x, y_position: y), action: :update, method: :PUT do %>
               <div class="transparent_box"></div>
                 <% if piece.present? %>
                   <div class="move_on_top_of_transparent_box">

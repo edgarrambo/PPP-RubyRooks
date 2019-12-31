@@ -3,22 +3,28 @@ require 'rails_helper'
 RSpec.describe PiecesController, type: :controller do
   describe 'pieces#update action' do
     it 'updates a pieces location' do
-      user = create(:user)
-      sign_in user
-
       game = create(:game)
-      piece = game.pieces.last
+      sign_in game.player_one
 
+      piece = create(:piece, game_id: game.id, piece: 5, x_position: 1, y_position: 7)
+      # piece.update_attributes(x_position: 3, y_position: 7)
+      
       patch :update, params: {
         id: piece.id,
         piece: {
-          x_position: 4,
+          x_position: 3,
           y_position: 7
         }
       }
 
       expect(response).to redirect_to game_path(game.id)
-      expect(piece.x_position).to eq 4
+      expect(game.player_one).to eq piece.game.player_one
+      expect(piece.piece).to eq 5
+      expect(controller.current_user).to eq piece.game.player_one
+      
+      piece.reload
+      
+      expect(piece.x_position).to eq 3
       expect(piece.y_position).to eq 7
     end
   end
