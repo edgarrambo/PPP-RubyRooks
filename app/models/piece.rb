@@ -27,7 +27,8 @@ class Piece < ApplicationRecord
     #Horizontal
     elsif x == self.x_position 
       @pieces_in_the_way = []
-      self.game.pieces.each do |chess_piece|    if chess_piece != self
+      self.game.pieces.each do |chess_piece|    
+        if chess_piece != self
           if (chess_piece.x_position == x) && chess_piece.y_position.between?(y_sorted_array[0], y_sorted_array[1])
             @pieces_in_the_way << chess_piece
           end
@@ -48,4 +49,22 @@ class Piece < ApplicationRecord
     end
   end
 
+  def move_to!(new_x, new_y)
+    # is valid
+    # is obstructed
+    if self.game.pieces.where(x_position: new_x, y_position: new_y)
+      occupying_piece = self.game.pieces.where(x_position: new_x, y_position: new_y)[0]
+      if occupying_piece.piece > 5 && self.piece < 6  
+        occupying_piece.update(x_position: 8, y_position: 0) 
+        self.update(x_position: new_x, y_position: new_y)
+      elsif occupying_piece.piece < 6 && self.piece > 5 
+        occupying_piece.update(x_position: 9, y_position: 0)
+        self.update(x_position: new_x, y_position: new_y) 
+      else
+        # TODO: Popup alert for in valid move
+      end 
+    else 
+      self.update(x_position: new_x, y_position: new_y)
+    end
+  end
 end
