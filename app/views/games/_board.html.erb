@@ -8,8 +8,18 @@
           </div>
         <% else %>
         <div id="<%= x %>,<%= y %>" class="<%= is_black?(x,y) ? "black" : "white" %>">
-          <%= link_to '1', piece_path(piece: the_piece, x_position: x, y_position: y), action: :update, method: :PUT, class: 'disappear' if the_piece %>
-          <% if piece.present? %>
+          <% if the_piece %>
+            <%= link_to piece_path(piece: the_piece, x_position: x, y_position: y), action: :update, method: :PUT do %>
+              <div class="disappear"></div>
+              <% if piece.present? %>
+                  <div class="move_on_top_of_transparent_box">
+                    <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
+                    <%= render_piece(x, y, the_game, color) %>
+                  </div>
+                <% end %>
+            <% end %>
+          <% end %>
+          <% if piece.present? && !the_piece %>
             <%= link_to piece_path(piece.id), data: {turbolinks: false} do %>        
               <% piece.piece > 5 ? color = 'blue' : color = 'red' %>
               <%= render_piece(x, y, the_game, color) %>

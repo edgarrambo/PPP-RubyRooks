@@ -2,18 +2,20 @@
 
 .red {
   color: red;
+  font-size: 3vw;
 }
 
 .blue {
   color: blue;
+  font-size: 3vw;
 }
 
 .green {
   color: #34eb40;
+  font-size: 3vw;
 }
 
 .white {
-  border: 1px solid black;
   width: 5vw;
   height: 5vw;
 }
@@ -21,15 +23,14 @@
   text-decoration: none;
 }
 
-.black a:hover {
-  text-decoration: none;
-}
-
 .black {
   background-color: black;
-  border: 1px solid black;
   width: 5vw;
   height: 5vw;
+}
+
+.black a:hover {
+  text-decoration: none;
 }
 
 .purple {
@@ -44,4 +45,20 @@ hr {
   border: 0;
   height: 3px;
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0), black, rgba(0, 0, 0, 0));
+}
+
+.disappear {
+  opacity: 0;
+  width: 5vw;
+  height: 5vw;
+}
+
+.disappear:hover {
+  opacity: 1;
+  background-color: green;
+}
+
+.move_on_top_of_transparent_box {
+  position: relative;
+  margin-top: -5vw;
 }
