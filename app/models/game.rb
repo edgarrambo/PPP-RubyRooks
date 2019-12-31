@@ -41,38 +41,38 @@ class Game < ApplicationRecord
   
   def populate_game
     # White Rooks
-    pieces.create(x_position: 0, y_position: 0, piece: 0)
-    pieces.create(x_position: 0, y_position: 7, piece: 0)
+    pieces.create(x_position: 0, y_position: 0, piece_number: 0)
+    pieces.create(x_position: 0, y_position: 7, piece_number: 0)
     # White Knights
-    pieces.create(x_position: 0, y_position: 1, piece: 1)
-    pieces.create(x_position: 0, y_position: 6, piece: 1)
+    pieces.create(x_position: 0, y_position: 1, piece_number: 1)
+    pieces.create(x_position: 0, y_position: 6, piece_number: 1)
     # White Bishops
-    pieces.create(x_position: 0, y_position: 2, piece: 2)
-    pieces.create(x_position: 0, y_position: 5, piece: 2)
+    pieces.create(x_position: 0, y_position: 2, piece_number: 2)
+    pieces.create(x_position: 0, y_position: 5, piece_number: 2)
     # White Queen
-    pieces.create(x_position: 0, y_position: 3, piece: 3)
+    pieces.create(x_position: 0, y_position: 3, piece_number: 3)
     # White King
-    pieces.create(x_position: 0, y_position: 4, piece: 4)
+    pieces.create(x_position: 0, y_position: 4, piece_number: 4)
     # White Pawns
     8.times do |y|
-      pieces.create(x_position: 1, y_position: y, piece: 5)
+      pieces.create(x_position: 1, y_position: y, piece_number: 5)
     end
     # Black Rooks
-    pieces.create(x_position: 7, y_position: 0, piece: 6)
-    pieces.create(x_position: 7, y_position: 7, piece: 6)
+    pieces.create(x_position: 7, y_position: 0, piece_number: 6)
+    pieces.create(x_position: 7, y_position: 7, piece_number: 6)
     # Black Knights
-    pieces.create(x_position: 7, y_position: 1, piece: 7)
-    pieces.create(x_position: 7, y_position: 6, piece: 7)
+    pieces.create(x_position: 7, y_position: 1, piece_number: 7)
+    pieces.create(x_position: 7, y_position: 6, piece_number: 7)
     # Black Bishops
-    pieces.create(x_position: 7, y_position: 2, piece: 8)
-    pieces.create(x_position: 7, y_position: 5, piece: 8)
+    pieces.create(x_position: 7, y_position: 2, piece_number: 8)
+    pieces.create(x_position: 7, y_position: 5, piece_number: 8)
     # Black Queen
-    pieces.create(x_position: 7, y_position: 3, piece: 9)
+    pieces.create(x_position: 7, y_position: 3, piece_number: 9)
     # Black King
-    pieces.create(x_position: 7, y_position: 4, piece: 10)
+    pieces.create(x_position: 7, y_position: 4, piece_number: 10)
     # Black Pawns
     8.times do |y|
-      pieces.create(x_position: 6, y_position: y, piece: 11)
+      pieces.create(x_position: 6, y_position: y, piece_number: 11)
     end
   end
 end

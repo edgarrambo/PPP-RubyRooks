@@ -48,7 +48,7 @@ RSpec.describe GamesController, type: :controller do
         8.times do |y|
           8.times do |x|
             if get_piece(x, y, game).present?
-              expect(render_piece(x, y, game, 'blue')).to eq(tag.h1(get_piece(x, y, game).piece.to_s, class: 'blue'))
+              expect(render_piece(x, y, game, 'blue')).to eq(tag.h1(get_piece(x, y, game).piece_number.to_s, class: 'blue'))
             end
           end
         end

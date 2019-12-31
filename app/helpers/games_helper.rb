@@ -9,7 +9,7 @@ module GamesHelper
 
   def render_piece(x, y, game, color)
     piece = get_piece(x, y, game)
-    tag.h1 piece.piece.to_s, class: color
+    tag.h1 piece.piece_number.to_s, class: color
   end
 
   def is_black?(x,y)
