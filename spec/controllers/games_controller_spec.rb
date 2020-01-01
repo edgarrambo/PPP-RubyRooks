@@ -30,6 +30,28 @@ RSpec.describe GamesController, type: :controller do
     end
   end
 
+  describe 'games#update_invited_user action' do
+    it 'should require users to be loged in' do
+      game = create(:game)
+      
+      get :update_invited_user, params: {game_id: game.id}
+      expect(response).to redirect_to new_user_session_path
+    end
+
+    it 'should require users to be loged in' do
+      game = create(:game)
+      user = create(:user)
+      sign_in user
+      
+      get :update_invited_user, params: {game_id: game.id}
+      
+      expect(response).to redirect_to game_path(game.id)
+      game.reload
+      players = [game.creating_user, game.invited_user]
+      expect([game.player_one, game.player_two]).to match_array players
+    end
+  end
+
   describe 'games helper methods' do
     context 'rendering pieces' do
       it 'should render html' do
