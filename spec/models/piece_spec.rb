@@ -8,72 +8,124 @@ RSpec.describe Piece, type: :model do
       expect(create(:piece)).to be_valid
     end
   end
+
   describe 'piece is_obstructed? method' do
-    it 'returns true if obstructed vertically' do
+    before(:each) do
       user = create(:user)
       sign_in user
 
-      game = create(:game)
-      piece_one = create(:piece, x_position: 0, y_position: 4, game_id: game.id)
-      piece_two = create(:piece, x_position: 0, y_position: 5, game_id: game.id)
+      @game = create(:game)
+    end
+
+    it 'returns true if obstructed vertically' do
+      piece_one = create(:piece, x_position: 0, y_position: 4, game_id: @game.id)
+      piece_two = create(:piece, x_position: 0, y_position: 5, game_id: @game.id)
 
       expect(piece_one.is_obstructed?(0,6)).to eq true
     end
 
     it 'returns false if not obstructed vertically' do
-      user = create(:user)
-      sign_in user
-
-      game = create(:game)
-      piece_one = create(:piece, x_position: 0, y_position: 4, game_id: game.id)
-      piece_two = create(:piece, x_position: 0, y_position: 7, game_id: game.id)
+      piece_one = create(:piece, x_position: 0, y_position: 4, game_id: @game.id)
+      piece_two = create(:piece, x_position: 0, y_position: 7, game_id: @game.id)
 
       expect(piece_one.is_obstructed?(0,6)).to eq false
     end
 
     it 'returns true if obstructed horizontally' do
-      user = create(:user)
-      sign_in user
-
-      game = create(:game)
-      piece_one = create(:piece, x_position: 0, y_position: 4, game_id: game.id)
-      piece_two = create(:piece, x_position: 2, y_position: 4, game_id: game.id)
+      piece_one = create(:piece, x_position: 0, y_position: 4, game_id: @game.id)
+      piece_two = create(:piece, x_position: 2, y_position: 4, game_id: @game.id)
 
       expect(piece_one.is_obstructed?(4,4)).to eq true
     end
 
     it 'returns false if not obstructed horizontally' do
-      user = create(:user)
-      sign_in user
-
-      game = create(:game)
-      piece_one = create(:piece, x_position: 0, y_position: 4, game_id: game.id)
-      piece_two = create(:piece, x_position: 2, y_position: 4, game_id: game.id)
+      piece_one = create(:piece, x_position: 0, y_position: 4, game_id: @game.id)
+      piece_two = create(:piece, x_position: 2, y_position: 4, game_id: @game.id)
 
       expect(piece_one.is_obstructed?(1,4)).to eq false
     end
 
     it 'returns true if obstructed diagonally' do
-      user = create(:user)
-      sign_in user
-
-      game = create(:game)
-      piece_one = create(:piece, x_position: 1, y_position: 1, game_id: game.id)
-      piece_two = create(:piece, x_position: 2, y_position: 2, game_id: game.id)
+      piece_one = create(:piece, x_position: 1, y_position: 1, game_id: @game.id)
+      piece_two = create(:piece, x_position: 2, y_position: 2, game_id: @game.id)
 
       expect(piece_one.is_obstructed?(3,3)).to eq true
     end
 
     it 'returns false if not obstructed diagonally' do
-      user = create(:user)
-      sign_in user
+      piece_one = create(:piece, x_position: 1, y_position: 1, game_id: @game.id)
+      piece_two = create(:piece, x_position: 3, y_position: 3, game_id: @game.id)
 
-      game = create(:game)
-      piece_one = create(:piece, x_position: 1, y_position: 1, game_id: game.id)
-      piece_two = create(:piece, x_position: 3, y_position: 3, game_id: game.id)
-
-      expect(piece_one.is_obstructed?(2,2)).to eq false
+      expect(piece_one.is_obstructed?(2, 2)).to eq false
     end
   end
 
+  describe 'move_to!() method' do
+    before(:each) do
+      user = create(:user)
+      sign_in user
+
+      @game = create(:game)
+    end
+
+    it 'updates moving piece(white) position and occupying piece(black) position if they are different colors' do
+      piece_one = create(:piece, x_position: 1, y_position: 1, piece_number: 1, game_id: @game.id)
+      piece_two = create(:piece, x_position: 3, y_position: 3, piece_number: 7, game_id: @game.id)
+
+      piece_one.move_to!(3, 3)
+      piece_two = Piece.where(piece_number: 7, game_id: @game.id)[0]
+
+      expect(piece_one.x_position).to eq 3
+      expect(piece_one.y_position).to eq 3
+      expect(piece_two.x_position).to eq 8
+      expect(piece_two.y_position).to eq 0
+    end
+
+    it 'updates moving piece(black) position and occupying piece(white) position if they are different colors' do
+      piece_one = create(:piece, x_position: 1, y_position: 1, piece_number: 7, game_id: @game.id)
+      piece_two = create(:piece, x_position: 3, y_position: 3, piece_number: 1, game_id: @game.id)
+
+      piece_one.move_to!(3, 3)
+      piece_two = Piece.where(piece_number: 1, game_id: @game.id)[0]
+
+      expect(piece_one.x_position).to eq 3
+      expect(piece_one.y_position).to eq 3
+      expect(piece_two.x_position).to eq 9
+      expect(piece_two.y_position).to eq 0
+    end
+
+    it 'rejects a move if the pieces are both white' do
+      piece_one = create(:piece, x_position: 1, y_position: 1, piece_number: 4, game_id: @game.id)
+      piece_two = create(:piece, x_position: 3, y_position: 3, piece_number: 1, game_id: @game.id)
+
+      piece_one.move_to!(3, 3)
+      piece_two = Piece.where(piece_number: 1, game_id: @game.id)[0]
+
+      expect(piece_one.x_position).to eq 1
+      expect(piece_one.y_position).to eq 1
+      expect(piece_two.x_position).to eq 3
+      expect(piece_two.y_position).to eq 3
+    end
+
+    it 'rejects a move if the pieces are both black' do
+      piece_one = create(:piece, x_position: 1, y_position: 1, piece_number: 7, game_id: @game.id)
+      piece_two = create(:piece, x_position: 3, y_position: 3, piece_number: 9, game_id: @game.id)
+
+      piece_one.move_to!(3, 3)
+      piece_two = Piece.where(piece_number: 9, game_id: @game.id)[0]
+
+      expect(piece_one.x_position).to eq 1
+      expect(piece_one.y_position).to eq 1
+      expect(piece_two.x_position).to eq 3
+      expect(piece_two.y_position).to eq 3
+    end
+
+    it 'updates position if there is no occupying piece' do
+      piece_one = create(:piece, x_position: 1, y_position: 1, piece_number: 0, game_id: @game.id)
+      piece_one.move_to!(4, 4)
+
+      expect(piece_one.x_position).to eq 4
+      expect(piece_one.y_position).to eq 4
+    end
+  end
 end
