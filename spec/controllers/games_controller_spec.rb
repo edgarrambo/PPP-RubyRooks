@@ -31,14 +31,14 @@ RSpec.describe GamesController, type: :controller do
   end
 
   describe 'games#update_invited_user action' do
-    it 'should require users to be loged in' do
+    it 'should require users to be logged in' do
       game = create(:game)
       
       get :update_invited_user, params: {game_id: game.id}
       expect(response).to redirect_to new_user_session_path
     end
 
-    it 'should require users to be loged in' do
+    it 'should successfully update a game with two assigned players' do
       game = create(:game)
       user = create(:user)
       sign_in user

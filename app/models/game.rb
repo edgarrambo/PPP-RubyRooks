@@ -12,6 +12,15 @@ class Game < ApplicationRecord
   def assign_default_player
 	 write_attribute(:p1_id, creating_user.id)
   end
+
+  def randomly_assign_player_one_and_player_two(current_user)
+    other_player = creating_user
+    if rand(1..1000) <= 500
+      update(p1_id: other_player.id, p2_id: current_user.id)
+    else
+      update(p1_id: current_user.id, p2_id: other_player.id)
+    end
+  end
   
   def player_one
     return nil if p1_id.nil?

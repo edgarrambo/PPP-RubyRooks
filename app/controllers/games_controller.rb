@@ -32,15 +32,12 @@ class GamesController < ApplicationController
   def update_invited_user
     @game = Game.find(params[:game_id])
     @game.update(invited_user_id: current_user.id)
-    other_player = @game.creating_user
-    if rand(1..1000) <= 500
-      @game.update(p1_id: other_player.id, p2_id: current_user.id)
+    if @game.valid?
+      @game.randomly_assign_player_one_and_player_two(current_user)
+      redirect_to game_path(@game)
     else
-      @game.update(p1_id: current_user.id, p2_id: other_player.id)
-    end
-
-
-    redirect_to game_path(@game)
+      render :new, status: :unprocessable_entity
+    end    
   end
 
   private
