@@ -1,5 +1,5 @@
 <div class="col-8 offset-2 text-center">
-  <h2><%= @game.name %></h2>
+  <h2><%= @piece.game.name %></h2>
 </div>
 
 <br />
@@ -7,16 +7,16 @@
 <div class="row">
   <div class="col-lg-3 text-center">
     <h4>
-      <%= @game.get_player_one %>      
+      <%= @piece.game.get_player_one %>      
     </h4>
     <hr />
   </div>
   <div class="col-lg-6">
-    <%= render :partial => "board", :locals => { :the_piece => nil, :the_game => @game } %>
+    <%= render :partial => "games/board", :locals => { :the_piece => @piece, :the_game => @piece.game } %>
   </div>
   <div class="col-lg-3 text-center">
     <h4>
-      <%= @game.get_player_two %>    
+      <%= @piece.game.get_player_two %>    
     </h4>
     <hr />
   </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_21_191438) do
+ActiveRecord::Schema.define(version: 2019_12_31_214321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,12 +30,12 @@ ActiveRecord::Schema.define(version: 2019_12_21_191438) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description"
-    t.bigint "first_move_id"
     t.bigint "creating_user_id"
     t.bigint "invited_user_id"
     t.bigint "winner_id"
+    t.integer "p1_id"
+    t.integer "p2_id"
     t.index ["creating_user_id"], name: "index_games_on_creating_user_id"
-    t.index ["first_move_id"], name: "index_games_on_first_move_id"
     t.index ["invited_user_id"], name: "index_games_on_invited_user_id"
     t.index ["winner_id"], name: "index_games_on_winner_id"
   end
@@ -61,13 +61,12 @@ ActiveRecord::Schema.define(version: 2019_12_21_191438) do
   create_table "pieces", force: :cascade do |t|
     t.integer "x_position", limit: 2
     t.integer "y_position", limit: 2
-    t.integer "piece", limit: 2
+    t.integer "piece_number", limit: 2
     t.integer "game_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["game_id"], name: "index_pieces_on_game_id"
   end
-
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -88,7 +87,6 @@ ActiveRecord::Schema.define(version: 2019_12_21_191438) do
   end
 
   add_foreign_key "games", "users", column: "creating_user_id"
-  add_foreign_key "games", "users", column: "first_move_id"
   add_foreign_key "games", "users", column: "invited_user_id"
   add_foreign_key "games", "users", column: "winner_id"
 end
