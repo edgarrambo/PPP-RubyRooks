@@ -73,7 +73,7 @@ RSpec.describe Piece, type: :model do
       piece_two = create(:piece, x_position: 3, y_position: 3, piece_number: 7, game_id: @game.id)
 
       piece_one.move_to!(3, 3)
-      piece_two = Piece.where(piece_number: 7, game_id: @game.id)[0]
+      piece_two.reload
 
       expect(piece_one.x_position).to eq 3
       expect(piece_one.y_position).to eq 3
@@ -86,7 +86,7 @@ RSpec.describe Piece, type: :model do
       piece_two = create(:piece, x_position: 3, y_position: 3, piece_number: 1, game_id: @game.id)
 
       piece_one.move_to!(3, 3)
-      piece_two = Piece.where(piece_number: 1, game_id: @game.id)[0]
+      piece_two.reload
 
       expect(piece_one.x_position).to eq 3
       expect(piece_one.y_position).to eq 3
@@ -99,7 +99,7 @@ RSpec.describe Piece, type: :model do
       piece_two = create(:piece, x_position: 3, y_position: 3, piece_number: 1, game_id: @game.id)
 
       piece_one.move_to!(3, 3)
-      piece_two = Piece.where(piece_number: 1, game_id: @game.id)[0]
+      piece_two.reload
 
       expect(piece_one.x_position).to eq 1
       expect(piece_one.y_position).to eq 1
@@ -112,7 +112,7 @@ RSpec.describe Piece, type: :model do
       piece_two = create(:piece, x_position: 3, y_position: 3, piece_number: 9, game_id: @game.id)
 
       piece_one.move_to!(3, 3)
-      piece_two = Piece.where(piece_number: 9, game_id: @game.id)[0]
+      piece_two.reload
 
       expect(piece_one.x_position).to eq 1
       expect(piece_one.y_position).to eq 1
