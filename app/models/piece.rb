@@ -47,7 +47,6 @@ class Piece < ApplicationRecord
     end
   end
 
-<<<<<<< HEAD
   def move_to!(new_x, new_y)
     # is valid
     # is obstructed
@@ -74,24 +73,5 @@ class Piece < ApplicationRecord
       self.update(x_position: new_x, y_position: new_y)
     end
   end
-=======
-  def moving_on_board?(x, y)
-    x.between?(0, 7) && y.between?(0, 7)
-  end
-
-  def valid_move?
-    if !(self.moving_on_board?(x, y))
-      return false
-    elsif self.is_obstructed?(x, y) && @pieces_in_the_way.count > 1
-      return false
-    elsif self.is_obstructed?(x, y) && @pieces_in_the_way.first.color == self.color
-      return false
-    elsif self.is_obstructed?(x, y) && @pieces_in_the_way.first.x_position != x && @pieces_in_the_way.first.y_position != y
-      return false
-    else
-      true
-    end
-  end
-
->>>>>>> Added valid_move? for king and supporting methods
+  
 end
