@@ -8,8 +8,13 @@ class PiecesController < ApplicationController
 
 
   def update
-    Piece.find_by_id(params[:id]).update(piece_params)
-    redirect_to game_path(@piece.game)
+    @piece = Piece.find(params[:id])
+    if !@piece.is_obstructed?(piece_params[:x_position].to_i, piece_params[:y_position].to_i) 
+      @piece.move_to!(piece_params[:x_position].to_i, piece_params[:y_position].to_i)
+      redirect_to game_path(@piece.game)
+    else
+     redirect_to game_path(@piece.game), alert: 'There is a piece in the way!'
+    end
   end
 
   private
@@ -21,7 +26,7 @@ class PiecesController < ApplicationController
   def player_one_can_only_move_white_and_player_two_can_only_move_black
     @piece = Piece.find(params[:id])
     if @piece.piece_number < 6 && @piece.game.player_one != current_user || @piece.piece_number > 5 && @piece.game.player_two != current_user
-      redirect_to game_path(@piece.game), alert: "That is not your piece!"
+      redirect_to game_path(@piece.game), alert: 'That is not your piece!'
     end
   end
 end

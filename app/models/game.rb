@@ -47,6 +47,14 @@ class Game < ApplicationRecord
   def get_player_two
     return (not player_two.nil?) ? player_two.email : "No Player Two"
   end
+
+  def captured_black_pieces 
+    return pieces.where(x_position: 8)
+  end
+
+  def captured_white_pieces 
+    return pieces.where(x_position: 9)
+  end
   
   def populate_game
     # White Rooks

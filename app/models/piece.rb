@@ -13,24 +13,19 @@ class Piece < ApplicationRecord
 
     #Vertical
     elsif y == self.y_position 
-      @pieces_in_the_way = []
-      self.game.pieces.each do |chess_piece|
-        if chess_piece != self
-          if (chess_piece.y_position == y) && chess_piece.x_position.between?(x_sorted_array[0], x_sorted_array[1])
-            @pieces_in_the_way << chess_piece
-          end
-        end
+      @pieces_in_the_way = self.game.pieces.select do |chess_piece|
+        next false if chess_piece == self
+        next false if chess_piece.x_position == x && chess_piece.y_position == y # Pieces at destination do not count as obstruction
+        (chess_piece.y_position == y) && chess_piece.x_position.between?(x_sorted_array[0], x_sorted_array[1])
       end
       !@pieces_in_the_way.empty?
 
     #Horizontal
     elsif x == self.x_position 
-      @pieces_in_the_way = []
-      self.game.pieces.each do |chess_piece|    if chess_piece != self
-          if (chess_piece.x_position == x) && chess_piece.y_position.between?(y_sorted_array[0], y_sorted_array[1])
-            @pieces_in_the_way << chess_piece
-          end
-        end
+      @pieces_in_the_way = self.game.pieces.select do |chess_piece| 
+        next false if chess_piece == self
+        next false if chess_piece.x_position == x && chess_piece.y_position == y # Pieces at destination do not count as obstruction
+        (chess_piece.x_position == x) && chess_piece.y_position.between?(y_sorted_array[0], y_sorted_array[1])
       end
       !@pieces_in_the_way.empty?
 
@@ -38,6 +33,7 @@ class Piece < ApplicationRecord
     elsif (x - self.x_position).abs == (y-self.y_position).abs
       @pieces_in_the_way = self.game.pieces.select do |chess_piece|
         next false if chess_piece == self
+        next false if chess_piece.x_position == x && chess_piece.y_position == y # Pieces at destination do not count as obstruction
         ((x - chess_piece.x_position).abs == (y - chess_piece.y_position).abs) && chess_piece.x_position.between?(x_sorted_array[0], x_sorted_array[1]) && chess_piece.y_position.between?(y_sorted_array[0], y_sorted_array[1])
       end
       !@pieces_in_the_way.empty?
@@ -48,9 +44,6 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(new_x, new_y)
-    # is valid
-    # is obstructed
-
     # Check if a piece is at this position
     if Piece.where(x_position: new_x, y_position: new_y, game_id: self.game.id)[0]
       occupying_piece = Piece.where(x_position: new_x, y_position: new_y, game_id: self.game.id)[0]

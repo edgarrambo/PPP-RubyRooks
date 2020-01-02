@@ -10,6 +10,11 @@
       <%= @game.get_player_one %>      
     </h4>
     <hr />
+    <h3>Captured Pieces</h3>
+    <br />
+    <% @captured_black_pieces.each do |piece| %>
+      <div class="captured"><%= piece.piece_number %></div>
+    <% end %>
   </div>
   <div class="col-lg-6">
     <%= render :partial => "board", :locals => { :the_piece => nil, :the_game => @game } %>
@@ -19,5 +24,10 @@
       <%= @game.get_player_two %>    
     </h4>
     <hr />
+    <h3>Captured Pieces</h3>
+    <br />
+    <% @captured_white_pieces.each do |piece| %>
+      <div class="captured"><%= piece.piece_number %></div>
+    <% end %>
   </div>
 </div>
