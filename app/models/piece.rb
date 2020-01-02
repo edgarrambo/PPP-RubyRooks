@@ -73,5 +73,17 @@ class Piece < ApplicationRecord
       self.update(x_position: new_x, y_position: new_y)
     end
   end
+
   
+
+  def valid_move?
+    if self.is_obstructed?(x, y) && @pieces_in_the_way.count > 1
+      return false    
+    elsif self.is_obstructed?(x, y) && @pieces_in_the_way.first.x_position != x && @pieces_in_the_way.first.y_position != y
+      return false
+    else
+      true
+    end
+  end
+
 end
