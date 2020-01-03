@@ -53,7 +53,7 @@ class Piece < ApplicationRecord
     save
   end
 
-  def set_captured! # TODO: Eventually should add a column to table that states whether a piece is captured
+  def set_captured! # TODO: Maybe should add a column to table that states whether a piece is captured
     if is_white?
       assign_attributes(x_position: 9, y_position: 0)
     else
