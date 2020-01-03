@@ -120,12 +120,22 @@ RSpec.describe Piece, type: :model do
       expect(piece_two.y_position).to eq 3
     end
 
-    it 'updates position if there is no occupying piece' do
-      piece_one = create(:piece, x_position: 1, y_position: 1, piece_number: 0, game_id: @game.id)
-      piece_one.move_to!(4, 4)
+    it 'rejects a move if it is the original location' do
+      piece = create(:piece, x_position: 1, y_position: 1, game_id: @game.id, piece_number: 0)
+      
+      piece.move_to!(1, 1)
+      piece.reload
 
-      expect(piece_one.x_position).to eq 4
-      expect(piece_one.y_position).to eq 4
+      expect(piece.updated_at).to eq piece.created_at
+    end
+
+    it 'updates position if there is no occupying piece' do
+      piece = create(:piece, x_position: 1, y_position: 1, piece_number: 0, game_id: @game.id)
+      
+      piece.move_to!(4, 4)
+      
+      expect(piece.x_position).to eq 4
+      expect(piece.y_position).to eq 4
     end
   end
 end
