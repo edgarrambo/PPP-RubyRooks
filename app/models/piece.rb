@@ -23,7 +23,7 @@ class Piece < ApplicationRecord
 
     end
 
-    obstructions.present? || players_own_piece_is_there?(x, y) 
+    return obstructions.present? || players_own_piece_is_there?(x, y) 
     
   end
   
