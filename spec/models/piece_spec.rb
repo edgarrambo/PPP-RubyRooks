@@ -70,6 +70,13 @@ RSpec.describe Piece, type: :model do
       expect(piece_one.is_obstructed?(2, 2)).to eq true
     end
 
+    it 'returns false if destination contains piece of the opposite color' do
+      piece_one = create(:piece, x_position: 1, y_position: 1, piece_number: 5, game_id: @game.id)
+      piece_two = create(:piece, x_position: 2, y_position: 2, piece_number: 11, game_id: @game.id)
+
+      expect(piece_one.is_obstructed?(2, 2)).to eq false
+    end
+
     it 'returns true if destination is the original location' do
       piece_one = create(:piece, x_position: 1, y_position: 1, piece_number: 5, game_id: @game.id)
 
@@ -79,9 +86,6 @@ RSpec.describe Piece, type: :model do
 
   describe 'move_to!() method' do
     before(:each) do
-      user = create(:user)
-      sign_in user
-
       @game = create(:game)
     end
 
