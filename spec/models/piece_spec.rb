@@ -21,35 +21,35 @@ RSpec.describe Piece, type: :model do
       piece_one = create(:piece, x_position: 0, y_position: 4, game_id: @game.id)
       piece_two = create(:piece, x_position: 0, y_position: 5, game_id: @game.id)
 
-      expect(piece_one.is_obstructed?(0,6)).to eq true
+      expect(piece_one.is_obstructed?(0, 6)).to eq true
     end
 
     it 'returns false if not obstructed vertically' do
       piece_one = create(:piece, x_position: 0, y_position: 4, game_id: @game.id)
       piece_two = create(:piece, x_position: 0, y_position: 7, game_id: @game.id)
 
-      expect(piece_one.is_obstructed?(0,6)).to eq false
+      expect(piece_one.is_obstructed?(0, 6)).to eq false
     end
 
     it 'returns true if obstructed horizontally' do
       piece_one = create(:piece, x_position: 0, y_position: 4, game_id: @game.id)
       piece_two = create(:piece, x_position: 2, y_position: 4, game_id: @game.id)
 
-      expect(piece_one.is_obstructed?(4,4)).to eq true
+      expect(piece_one.is_obstructed?(4, 4)).to eq true
     end
 
     it 'returns false if not obstructed horizontally' do
       piece_one = create(:piece, x_position: 0, y_position: 4, game_id: @game.id)
       piece_two = create(:piece, x_position: 2, y_position: 4, game_id: @game.id)
 
-      expect(piece_one.is_obstructed?(1,4)).to eq false
+      expect(piece_one.is_obstructed?(1, 4)).to eq false
     end
 
     it 'returns true if obstructed diagonally' do
       piece_one = create(:piece, x_position: 1, y_position: 1, game_id: @game.id)
       piece_two = create(:piece, x_position: 2, y_position: 2, game_id: @game.id)
 
-      expect(piece_one.is_obstructed?(3,3)).to eq true
+      expect(piece_one.is_obstructed?(3, 3)).to eq true
     end
 
     it 'returns false if not obstructed diagonally' do
