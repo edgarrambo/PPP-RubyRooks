@@ -3,3 +3,4 @@ class AddTypeToPiece < ActiveRecord::Migration[5.2]
     add_column :pieces, :type, :string
   end
 end
+
