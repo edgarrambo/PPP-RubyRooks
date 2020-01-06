@@ -18,6 +18,13 @@ RSpec.describe Rook, type: :model do
     it 'should not allow the rook to move like an L' do
       expect(@rook.valid_move?(3,4)).to be false
     end
+    it 'checks for obstructions' do
+      game = create(:game)
+      rook = create(:rook, x_position: 2, y_position: 2, game_id: game.id)
+      piece = create(:piece, x_position: 2, y_position: 3, game_id: game.id)
+
+      expect(rook.valid_move?(2,6)).to be false
+    end
 
   end
 end
