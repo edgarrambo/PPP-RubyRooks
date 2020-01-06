@@ -26,4 +26,5 @@ RSpec.describe Bishop, type: :model do
       end      
     end 
   end
+
 end
