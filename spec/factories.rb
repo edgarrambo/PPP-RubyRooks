@@ -14,6 +14,15 @@ FactoryBot.define do
     association :game
   end
 
+  factory :queen, parent: :piece, class: 'Queen' do
+  end
+
+  factory :knight, parent: :piece, class: 'Knight' do
+  end
+
+  factory :pawn, parent: :piece, class: 'Pawn' do
+  end
+
   factory :user do
     sequence(:email, 1000) { |n| "person#{n}@example.com" }
     password { 'password' }
@@ -22,6 +31,9 @@ FactoryBot.define do
   
   factory :king, parent: :piece,
     class: 'King' do    
+  end
+
+  factory :bishop, parent: :piece, class: 'Bishop' do    
   end
 
 end
