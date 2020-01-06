@@ -12,8 +12,12 @@ RSpec.describe Rook, type: :model do
     it 'allows the rook to move multiple squares vertically' do
       expect(@rook.valid_move?(2,4)).to be true
     end
-    it 'should not allow the rook to move multiple squares diagonally' do
+    it 'should not allow the rook to move diagonally' do
       expect(@rook.valid_move?(1,1)).to be false
     end
+    it 'should not allow the rook to move like an L' do
+      expect(@rook.valid_move?(3,4)).to be false
+    end
+
   end
 end
