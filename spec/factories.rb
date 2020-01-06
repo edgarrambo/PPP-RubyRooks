@@ -23,7 +23,7 @@ FactoryBot.define do
   factory :pawn, parent: :piece, class: 'Pawn' do
   end
 
-  factory :pawn, parent: :piece, class: 'Bishop' do    
+  factory :bishop, parent: :piece, class: 'Bishop' do    
   end
 
   factory :user do
