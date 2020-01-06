@@ -42,6 +42,12 @@ RSpec.describe Pawn, type: :model do
       it 'does not allow white pawn to move diagonally if there is no piece to capture' do
         expect(@pawn.valid_move?(2,6)).to be false
       end
+
+      it 'checks for obstructions' do
+        piece = create(:piece, x_position: 2, y_position: 7, piece_number: 8, game_id: @game.id)
+
+        expect(@pawn.valid_move?(3,7)).to be false
+      end
     end
 
     context 'tests black pawns' do
@@ -80,6 +86,12 @@ RSpec.describe Pawn, type: :model do
 
       it 'does not allow black pawn to move diagonally if there is no piece to capture' do
         expect(@pawn.valid_move?(5,6)).to be false
+      end
+
+      it 'checks for obstructions' do
+        piece = create(:piece, x_position: 5, y_position: 7, piece_number: 8, game_id: @game.id)
+
+        expect(@pawn.valid_move?(4,7)).to be false
       end
     end
   end
