@@ -4,7 +4,7 @@
       <% piece = get_piece(x, y, the_game) %>        
       <% if is_square_for_piece_to_be_moved?(the_piece, piece) %>
         <div id="<%= @piece.x_position%>,<%= @piece.y_position %>" class="purple">
-          <%= render_piece(x, y, @piece.game, 'green') %>
+          <%= image_tag piece.piece_number.to_s + ".png", class: "piece" %>
         </div>
       <% else %>
         <div id="<%= x %>,<%= y %>" class="<%= is_black?(x,y) ? "black" : "white" %>">
@@ -13,16 +13,14 @@
               <div class="transparent_box"></div>
                 <% if piece.present? %>
                   <div class="move_on_top_of_transparent_box">
-                    <% piece.piece_number > 5 ? color = 'blue' : color = 'red' %>
-                    <%= render_piece(x, y, the_game, color) %>
+                    <%= image_tag piece.piece_number.to_s + ".png", class: "piece" %>
                   </div>
                 <% end %>
             <% end %>
           <% end %>
           <% if piece.present? && !the_piece %>
             <%= link_to piece_path(piece.id), data: {turbolinks: false} do %>        
-              <% piece.piece_number > 5 ? color = 'blue' : color = 'red' %>
-              <%= render_piece(x, y, the_game, color) %>
+              <%= image_tag piece.piece_number.to_s + ".png", class: "piece" %>
             <% end %>
           <% end %>
         </div>
