@@ -14,6 +14,9 @@ FactoryBot.define do
     association :game
   end
 
+  factory :queen, parent: :piece, class: 'Queen' do
+  end
+
   factory :knight, parent: :piece, class: 'Knight' do
   end
 
