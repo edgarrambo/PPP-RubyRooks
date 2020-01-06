@@ -23,6 +23,9 @@ FactoryBot.define do
   factory :pawn, parent: :piece, class: 'Pawn' do
   end
 
+  factory :pawn, parent: :piece, class: 'Bishop' do    
+  end
+
   factory :user do
     sequence(:email, 1000) { |n| "person#{n}@example.com" }
     password { 'password' }
