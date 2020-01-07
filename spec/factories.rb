@@ -36,4 +36,8 @@ FactoryBot.define do
     password_confirmation { 'password' }
   end
   
+  factory :king, parent: :piece,
+    class: 'King' do    
+  end
+
 end

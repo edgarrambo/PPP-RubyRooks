@@ -38,5 +38,6 @@ class Piece < ApplicationRecord
     else
       self.update(x_position: new_x, y_position: new_y)
     end
-  end
+  end 
+
 end
