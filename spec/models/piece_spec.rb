@@ -114,14 +114,25 @@ RSpec.describe Piece, type: :model do
       expect(piece_two.x_position).to eq 9
       expect(piece_two.y_position).to eq 0
     end
-    
+
     it 'updates position if there is no occupying piece' do
       piece = create(:piece, x_position: 1, y_position: 1, piece_number: 0, game_id: @game.id)
-      
+
       piece.move_to!(4, 4)
-      
+
       expect(piece.x_position).to eq 4
       expect(piece.y_position).to eq 4
+    end
+  end
+
+  describe 'can_take? method' do
+    before(:each) do
+      @game = create(:game)
+    end
+
+    it 'checks if a black queen can take a white knight' do
+      black_queen = create(:queen, x_position: 3, y_position: 3, piece_number: 10)
+      white_knight = create(:knight, x_position: 5, y_position: 5, piece_number: 1)
     end
   end
 end
