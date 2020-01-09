@@ -1,12 +1,16 @@
 class King < Piece
 
   def valid_move?(new_x, new_y)
-    
-    if (x_position - new_x).abs == 1 && (y_position - new_y).abs == 0
+    return false if players_own_piece_is_there?(new_x, new_y)
+
+    x_distance = (new_x - x_position).abs
+    y_distance = (new_y - y_position).abs
+
+    if x_distance == 1 && y_distance == 0
       return true
-    elsif (x_position - new_x).abs == 0 && (y_position - new_y).abs == 1
+    elsif x_distance == 0 && y_distance == 1
       return true
-    elsif (x_position - new_x).abs == 1 && (y_position - new_y).abs == 1
+    elsif x_distance == 1 && y_distance == 1
       return true
     else
       return false
