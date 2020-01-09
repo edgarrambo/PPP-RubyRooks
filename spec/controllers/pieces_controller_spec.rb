@@ -15,7 +15,7 @@ RSpec.describe PiecesController, type: :controller do
       game = create(:game)
       sign_in game.player_one
 
-      piece = create(:piece, game_id: game.id, piece_number: 11, x_position: 6, y_position: 7)
+      piece = create(:piece, game_id: game.id, piece_number: 11, x_position: 6, y_position: 7, type: 'Pawn')
 
       patch :update, params: { id: piece.id, x_position: 5, y_position: 7 }
 
@@ -44,13 +44,29 @@ RSpec.describe PiecesController, type: :controller do
       expect(piece.y_position).to eq 7
     end
 
+    it 'allows white players to move white bishops diagonally' do
+      game = create(:game)
+      sign_in game.player_one
+
+      piece = create(:piece, game_id: game.id, piece_number: 2, x_position: 1, y_position: 3, type: 'Bishop')
+      
+      patch :update, params: { id: piece.id, x_position: 5, y_position: 7 }
+
+      expect(response).to redirect_to game_path(game.id)
+
+      piece.reload
+
+      expect(piece.x_position).to eq 5
+      expect(piece.y_position).to eq 7
+    end
+
     it 'should not allow black players to move white pieces' do
       user = create(:user)      
       game = create(:game, player_two: user)
       
       sign_in user
 
-      piece = create(:piece, game_id: game.id, piece_number: 5, x_position: 1, y_position: 7)
+      piece = create(:piece, game_id: game.id, piece_number: 5, x_position: 1, y_position: 7, type: 'Pawn')
 
       patch :update, params: { id: piece.id, x_position: 3, y_position: 7 }
 

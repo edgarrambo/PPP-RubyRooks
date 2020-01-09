@@ -3,22 +3,16 @@
 class Pawn < Piece
 
   def valid_move?(new_x,new_y)
-    if is_obstructed?(new_x, new_y)
-      return false
-    end
-    
-    if diagonal_capture(new_x, new_y)
-      return true
-    end
-    
     x_distance = new_x - x_position
     y_distance = new_y - y_position
-
-    if y_distance != 0
+    
+    if is_obstructed?(new_x, new_y)
       return false
-    end
-
-    if is_white? and x_position == 1 # Allows two space move on first move of white pawn
+    elsif diagonal_capture(new_x, new_y)
+      return true
+    elsif y_distance != 0
+      return false
+    elsif is_white? and x_position == 1 # Allows two space move on first move of white pawn
       return x_distance == 2 || x_distance == 1 
     elsif !is_white? and x_position == 6 # Allows two space move on first move of black pawn
       return x_distance == -2 || x_distance == -1

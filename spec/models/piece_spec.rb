@@ -56,6 +56,13 @@ RSpec.describe Piece, type: :model do
       expect(piece_one.is_obstructed?(2, 2)).to eq false
     end
 
+    it 'returns false if not obstructed diagonally' do
+      piece_one = create(:piece, x_position: 1, y_position: 3, game_id: @game.id)
+      piece_two = create(:piece, x_position: 3, y_position: 3, game_id: @game.id)
+      
+      expect(piece_one.is_obstructed?(5, 7)).to eq false
+    end
+
     it 'returns true if destination contains piece of the same color(white)' do
       piece_one = create(:piece, x_position: 1, y_position: 1, piece_number: 5, game_id: @game.id)
       piece_two = create(:piece, x_position: 2, y_position: 2, piece_number: 5, game_id: @game.id)

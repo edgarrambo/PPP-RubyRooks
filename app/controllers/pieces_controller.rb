@@ -21,7 +21,7 @@ class PiecesController < ApplicationController
 
   def player_one_can_only_move_white_and_player_two_can_only_move_black
     @piece = Piece.find(params[:id])
-    if @piece.piece_number < 6 && @piece.game.player_one != current_user || @piece.piece_number > 5 && @piece.game.player_two != current_user
+    if @piece.is_white? && @piece.game.player_one != current_user || !@piece.is_white? && @piece.game.player_two != current_user
       redirect_to game_path(@piece.game), alert: "That is not your piece!"
     end
   end

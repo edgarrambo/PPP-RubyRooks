@@ -11,7 +11,13 @@ RSpec.describe Bishop, type: :model do
     end
 
     it 'should allow diagonal movements greater than 1' do
-      expect(@bishop.valid_move?(6,6)).to eq true
+      expect(@bishop.valid_move?(6, 6)).to eq true
+    end
+
+    it 'should allow diagonal movements greater than 1' do
+      bishop = create(:bishop, x_position: 1, y_position: 3)
+
+      expect(bishop.valid_move?(5, 7)).to eq true
     end
 
     it 'should not allow horizontal movements' do
@@ -23,7 +29,7 @@ RSpec.describe Bishop, type: :model do
     end
 
     it 'should not allow L shaped movements' do
-      expect(@bishop.valid_move?(6,7)).to eq false
+      expect(@bishop.valid_move?(6, 7)).to eq false
     end
 
     it 'should not allow moves to tiles occupied with players piece' do
@@ -31,21 +37,21 @@ RSpec.describe Bishop, type: :model do
       bishop = create(:bishop, x_position: 4, y_position: 4, piece_number: 2, game_id: game.id)
       piece = create(:piece, x_position: 6, y_position: 6, piece_number: 3, game_id: game.id)
 
-      expect(bishop.valid_move?(6,6)).to eq false
+      expect(bishop.valid_move?(6, 6)).to eq false
     end
 
     it 'should not allow moves to original tile' do
       bishop = create(:bishop, x_position: 4, y_position: 4, piece_number: 2)
 
-      expect(bishop.valid_move?(4,4)).to eq false
+      expect(bishop.valid_move?(4, 4)).to eq false
     end
 
     it 'checks for obstructions' do
       game = create(:game)
-      rook = create(:rook, x_position: 4, y_position: 4, game_id: game.id)
+      rook = create(:bishop, x_position: 4, y_position: 4, game_id: game.id)
       piece = create(:piece, x_position: 5, y_position: 5, game_id: game.id)
 
-      expect(rook.valid_move?(6,6)).to be false
+      expect(rook.valid_move?(6, 6)).to be false
     end      
   end
 end
