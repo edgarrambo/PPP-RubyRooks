@@ -131,8 +131,45 @@ RSpec.describe Piece, type: :model do
     end
 
     it 'checks if a black queen can take a white knight' do
-      black_queen = create(:queen, x_position: 3, y_position: 3, piece_number: 10)
-      white_knight = create(:knight, x_position: 5, y_position: 5, piece_number: 1)
+      black_queen = create(:queen, x_position: 3, y_position: 3, piece_number: 10, game_id: @game.id)
+      white_knight = create(:knight, x_position: 5, y_position: 5, piece_number: 1, game_id: @game.id)
+
+      expect(black_queen.can_take?(white_knight)).to eq true
+    end
+
+    it 'checks if a white knight can take a black queen' do
+      black_queen = create(:queen, x_position: 3, y_position: 3, piece_number: 10, game_id: @game.id)
+      white_knight = create(:knight, x_position: 4, y_position: 5, piece_number: 1, game_id: @game.id)
+
+      expect(white_knight.can_take?(black_queen)).to eq true
+    end
+
+    it 'verifies a white knight cannot take a black queen if invalid move' do
+      black_queen = create(:queen, x_position: 3, y_position: 3, piece_number: 10, game_id: @game.id)
+      white_knight = create(:knight, x_position: 4, y_position: 4, piece_number: 1, game_id: @game.id)
+
+      expect(white_knight.can_take?(black_queen)).to eq false
+    end
+
+    it 'verifies a black queen cannot take a white knight if invalid move' do
+      black_queen = create(:queen, x_position: 3, y_position: 3, piece_number: 10, game_id: @game.id)
+      white_knight = create(:knight, x_position: 4, y_position: 5, piece_number: 1, game_id: @game.id)
+
+      expect(black_queen.can_take?(white_knight)).to eq false
+    end
+
+    it 'verifies a black queen cannot take a black king' do
+      black_queen = create(:queen, x_position: 3, y_position: 3, piece_number: 10, game_id: @game.id)
+      black_king = create(:king, x_position: 4, y_position: 5, piece_number: 9, game_id: @game.id)
+
+      expect(black_queen.can_take?(black_king)).to eq false
+    end
+
+    it 'verifies a white knight cannot take a white bishop' do
+      white_bishop = create(:bishop, x_position: 3, y_position: 6, piece_number: 2, game_id: @game.id)
+      white_knight = create(:knight, x_position: 4, y_position: 4, piece_number: 1, game_id: @game.id)
+
+      expect(white_knight.can_take?(white_bishop)).to eq false
     end
   end
 end
