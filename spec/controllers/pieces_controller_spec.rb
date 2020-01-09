@@ -32,8 +32,8 @@ RSpec.describe PiecesController, type: :controller do
       game = create(:game)
       sign_in game.player_one
 
-      piece = create(:piece, game_id: game.id, piece_number: 5, x_position: 1, y_position: 7)
-
+      piece = create(:piece, game_id: game.id, piece_number: 5, x_position: 1, y_position: 7, type: 'Pawn')
+      
       patch :update, params: { id: piece.id, x_position: 3, y_position: 7 }
 
       expect(response).to redirect_to game_path(game.id)
@@ -69,7 +69,7 @@ RSpec.describe PiecesController, type: :controller do
       
       sign_in user
 
-      piece = create(:piece, game_id: game.id, piece_number: 11, x_position: 6, y_position: 7)
+      piece = create(:piece, game_id: game.id, piece_number: 11, x_position: 6, y_position: 7, type: 'Pawn')
 
       patch :update, params: { id: piece.id, x_position: 4, y_position: 7 }
 

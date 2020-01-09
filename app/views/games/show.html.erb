@@ -9,6 +9,11 @@
     <h4>
       <%= @game.get_player_one %>      
     </h4>
+    <h3>Captured Pieces</h3>
+    <br />
+    <% @game.pieces.where(:x_position => 8).each do |piece| %>
+      <div class="captured"><%= image_tag piece.piece_number.to_s + ".png", class: "piece" %></div>
+    <% end %>
     <hr />
   </div>
   <div class="col-lg-6">

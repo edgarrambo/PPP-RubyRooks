@@ -22,6 +22,10 @@ RSpec.describe Bishop, type: :model do
       expect(@bishop.valid_move?(4, 6)).to eq false
     end
 
+    it 'should not allow L shaped movements' do
+      expect(@bishop.valid_move?(6,7)).to eq false
+    end
+
     it 'should not allow moves to tiles occupied with players piece' do
       game = create(:game)
       bishop = create(:bishop, x_position: 4, y_position: 4, piece_number: 2, game_id: game.id)
