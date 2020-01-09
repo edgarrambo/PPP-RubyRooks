@@ -9,7 +9,9 @@ class PiecesController < ApplicationController
 
 
   def update
-    Piece.find_by_id(params[:id]).move_to!(piece_params[:x_position].to_i, piece_params[:y_position].to_i)
+    x = piece_params[:x_position].to_i
+    y = piece_params[:y_position].to_i
+    Piece.find_by_id(params[:id]).move_to!(x, y)
     redirect_to game_path(@piece.game)
   end
 
@@ -28,7 +30,9 @@ class PiecesController < ApplicationController
 
   def valid_move?
     @piece = Piece.find(params[:id])
-    if !@piece.valid_move?(piece_params[:x_position].to_i, piece_params[:y_position].to_i)
+    x = piece_params[:x_position].to_i
+    y = piece_params[:y_position].to_i
+    if !@piece.valid_move?(x, y)
       redirect_to game_path(@piece.game), alert: "This is not a valid move!"
     end
   end

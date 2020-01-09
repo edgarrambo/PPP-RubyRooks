@@ -12,7 +12,7 @@
     <hr />
     <h3>Captured Pieces</h3>
     <br />
-    <% @game.pieces.where(:x_position => 8).each do |piece| %>
+    <% @captured_black_pieces.each do |piece| %>
       <div class="captured"><%= image_tag piece.piece_number.to_s + ".png", class: "piece" %></div>
     <% end %>
   </div>
@@ -24,10 +24,9 @@
       <%= @game.get_player_two %>    
     </h4>
     <hr />
-
     <h3>Captured Pieces</h3>
     <br />
-    <% @game.pieces.where(:x_position => 9).each do |piece| %>
+    <% @captured_white_pieces.each do |piece| %>
       <div class="captured"><%= image_tag piece.piece_number.to_s + ".png", class: "piece" %></div>
     <% end %>
   </div>
