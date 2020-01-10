@@ -45,9 +45,9 @@ class GamesController < ApplicationController
     @game.update(state: 'Surrendered')
 
     if current_user.id == @game.p1_id
-      @game.winner_id = @game.p2_id
+      @game.update(winner_id: @game.p2_id)
     else
-      @game.winner_id = @game.p1_id
+      @game.update(winner_id: @game.p1_id)
     end
 
     redirect_to game_path(@game)

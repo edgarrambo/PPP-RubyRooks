@@ -26,6 +26,13 @@
           </li>
         </ul>
         <ul class="navbar-nav">
+          <% if @game.present? %>
+            <% if @game.id.present? && @game.state == nil %>
+              <li class="nav-item">
+                <%= link_to 'Surrender', game_surrender_path(@game), method: :get, class: 'nav-link btn btn-danger', id: 'Surrender' %>
+              </li>
+            <% end %>
+          <% end %>
           <% if user_signed_in? %>
             <li class="nav-item">
               <%= link_to 'Sign Out', destroy_user_session_path, method: :delete, class: 'nav-link' %>
