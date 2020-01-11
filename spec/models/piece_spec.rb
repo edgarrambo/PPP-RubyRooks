@@ -172,4 +172,23 @@ RSpec.describe Piece, type: :model do
       expect(white_knight.can_take?(white_bishop)).to eq false
     end
   end
+
+  describe 'would_be_in_check?' do
+    it 'prevents putting yourself in check' do
+      game = create(:game)
+      king = create(:king, piece_number: 4, x_position: 3, y_position: 3, game_id: game.id)
+      create(:rook, piece_number: 11, x_position: 4, y_position: 4, game_id: game.id)
+
+      expect(king.would_be_in_check?(3, 4)).to eq true
+      expect(king.would_be_in_check?(2, 2)).to eq false
+    end
+
+    it 'blocks check with another piece' do
+      # does stuff
+    end
+
+    it 'coordiantes for pieces are not affected by would be in check' do
+      # does stuff
+    end
+  end
 end
