@@ -37,5 +37,20 @@ RSpec.describe 'Surrendering a Game', type: :feature do
       expect(game.winner_id).to eq game.p1_id
       expect(game.state).to eq 'Surrendered'
     end
+
+    scenario 'surrender button does not show after game is surrendered' do
+      player1 = create(:user)
+      player2 = create(:user)
+      game = create(:game, name: 'Testerroni Pizza',
+        p1_id: player1.id, p2_id: player2.id,
+        creating_user_id: player1.id, invited_user_id: player2.id)
+
+      sign_in player2
+
+      visit game_path(game)
+      click_on 'Surrender'
+      game.reload
+      expect(page).not_to have_content 'Surrender'
+    end
   end
 end

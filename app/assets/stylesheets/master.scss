@@ -67,3 +67,17 @@ hr {
   position: relative;
   margin-top: -5vw;
 }
+
+.surrendered {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(240, 240, 245, 0.5);
+}
+
+.game-state-message {
+  color: red;
+  line-height: 5px;
+  margin: 0;
+  padding: 0;
+}

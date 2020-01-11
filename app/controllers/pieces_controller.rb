@@ -6,7 +6,6 @@ class PiecesController < ApplicationController
     @piece = Piece.find(params[:id])
   end
 
-
   def update
     Piece.find_by_id(params[:id]).update(piece_params)
     redirect_to game_path(@piece.game)
