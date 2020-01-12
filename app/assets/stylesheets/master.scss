@@ -16,6 +16,7 @@
 }
 
 .white {
+  background-color: #f7f3da;
   width: 5vw;
   height: 5vw;
 }
@@ -24,7 +25,7 @@
 }
 
 .black {
-  background-color: black;
+  background-color: #0902c9;
   width: 5vw;
   height: 5vw;
 }
@@ -66,4 +67,11 @@ hr {
 .move_on_top_of_transparent_box {
   position: relative;
   margin-top: -5vw;
+  width: 4vw;
+  height: 4vw;
+}
+
+.captured {
+  width: 4vw;
+  height: 4vw;
 }
