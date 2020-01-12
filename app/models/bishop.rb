@@ -7,6 +7,6 @@ class Bishop < Piece
     x_distance = (new_x - x_position).abs
     y_distance = (new_y - y_position).abs
 
-    x_distance >= 1 && y_distance >= 1
+    x_distance == y_distance
   end
 end

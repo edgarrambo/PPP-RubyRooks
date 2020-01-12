@@ -1,48 +1,41 @@
 # frozen_string_literal: true
-
 class Pawn < Piece
-
-  def valid_move?(new_x,new_y)
-    if is_obstructed?(new_x, new_y)
-      return false
-    end
-    
-    if diagonal_capture(new_x, new_y)
-      return true
-    end
-    
-    x_distance = new_x - x_position
-    y_distance = new_y - y_position
-
-    if y_distance != 0
-      return false
-    end
-
-    if is_white? and x_position == 1 # Allows two space move on first move of white pawn
-      return x_distance == 2 || x_distance == 1 
-    elsif !is_white? and x_position == 6 # Allows two space move on first move of black pawn
-      return x_distance == -2 || x_distance == -1
-    elsif is_white?
-      return x_distance == 1 
-    elsif !is_white?
-      return x_distance == -1
-    else
-      return false
-    end
+  
+  def valid_move?(x,y)
+    dx = x - x_position
+    dy = y - y_position
+    return false if is_reverse?(x,y)
+    return false if is_obstructed?(x,y)
+    return true  if diagonal_capture?(x,y)
+    return false if dy != 0 # restrict movement along the x-axis
+    return true  if can_move_two?(x,y)
+    return true  if dx.abs == 1 
+    return false
   end
 
-  def diagonal_capture(new_x,new_y)
-    x_distance = new_x - x_position
-    y_distance = new_y - y_position
-    
-    return false if y_distance.abs != 1
+  def is_reverse?(x,y)
+    dx = x - x_position
+    dy = y - y_position
+    return dx < 0 if is_white?
+    return dx > 0 if not is_white?
+  end
 
-    if is_white? && x_distance == 1 || !is_white? && x_distance == -1
+  def diagonal_capture?(x,y)
+    dx = x - x_position
+    dy = y - y_position
+    return false if dy.abs != 1
+    if is_white? && dx == 1 || !is_white? && dx == -1
       targets = game.pieces.find do |piece|
-        piece.x_position == new_x && piece.y_position == new_y
+        piece.x_position == x && piece.y_position == y
       end
-      
       return targets.present?
     end 
+  end
+
+  def can_move_two?(x,y)
+    dx = (x - x_position).abs
+    dy = (y - y_position).abs
+    return dx <= 2 if (is_white? and x_position == 1) or (not is_white? and x_position == 6)
+    return false
   end
 end
