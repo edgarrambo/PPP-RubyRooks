@@ -2,7 +2,7 @@
 
 class Piece < ApplicationRecord
   belongs_to :game
-  
+
   def is_obstructed?(new_x, new_y)
     x_sorted_array = [new_x, x_position].sort
     y_sorted_array = [new_y, y_position].sort
@@ -48,7 +48,7 @@ class Piece < ApplicationRecord
     end
     return obstructions.present?
   end
-  
+
   def players_own_piece_is_there?(new_x, new_y)
     occupying_piece = Piece.where(x_position: new_x, y_position: new_y, game_id: game.id)
     if occupying_piece.any? then
@@ -67,12 +67,17 @@ class Piece < ApplicationRecord
     assign_attributes(x_position: new_x, y_position: new_y)
     save
   end
-  
+
   def set_captured! # TODO: Maybe should add a column to table that states whether a piece is captured
     if is_white?
       assign_attributes(x_position: 9, y_position: 0)
     else
       assign_attributes(x_position: 8, y_position: 0)
     end
+  end
+
+  def can_take?(piece)
+    valid_move?(piece.x_position, piece.y_position) &&
+      (is_white? != piece.is_white?)
   end
 end
