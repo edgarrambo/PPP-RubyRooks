@@ -49,8 +49,14 @@ class Game < ApplicationRecord
   end
 
   def check?
+    check = false
+
     kings = pieces.where(type: 'King')
-    kings.any? { |king| pieces.any? { |piece| piece.can_take?(king) } }
+    kings.each do |king|
+      check = true if pieces.any? { |piece| piece.can_take?(king) }
+    end
+
+    check
   end
 
   def populate_game

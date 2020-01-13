@@ -173,22 +173,59 @@ RSpec.describe Piece, type: :model do
     end
   end
 
-  describe 'would_be_in_check?' do
+  describe 'puts_game_in_check?(x, y)' do
     it 'prevents putting yourself in check' do
       game = create(:game)
       king = create(:king, piece_number: 4, x_position: 3, y_position: 3, game_id: game.id)
       create(:rook, piece_number: 11, x_position: 4, y_position: 4, game_id: game.id)
 
-      expect(king.would_be_in_check?(3, 4)).to eq true
-      expect(king.would_be_in_check?(2, 2)).to eq false
+      expect(king.puts_game_in_check?(3, 4)).to eq true
+      expect(king.puts_game_in_check?(2, 2)).to eq false
     end
 
     it 'blocks check with another piece' do
-      # does stuff
+      game = create(:game)
+      king = create(:king, piece_number: 4, x_position: 2, y_position: 4, game_id: game.id)
+      knight = create(:knight, piece_number: 1, x_position: 3, y_position: 4, game_id: game.id)
+      create(:rook, piece_number: 11, x_position: 4, y_position: 4, game_id: game.id)
+
+      expect(king.puts_game_in_check?(1, 4)).to eq false
+      expect(knight.puts_game_in_check?(4, 2)).to eq true
     end
 
-    it 'coordiantes for pieces are not affected by would be in check' do
-      # does stuff
+    it 'puts into check by moving another piece out of the way' do
+      game = create(:game)
+      king = create(:king, piece_number: 4, x_position: 2, y_position: 4, game_id: game.id)
+      knight = create(:knight, piece_number: 1, x_position: 3, y_position: 4, game_id: game.id)
+      create(:rook, piece_number: 11, x_position: 4, y_position: 4, game_id: game.id)
+
+      expect(knight.puts_game_in_check?(4, 2)).to eq true
+    end
+
+    it 'ensures coordiantes for pieces are not affected by would be in check' do
+      game = create(:game)
+      king = create(:king, piece_number: 4, x_position: 4, y_position: 4, game_id: game.id)
+      create(:rook, piece_number: 11, x_position: 5, y_position: 5, game_id: game.id)
+
+      king_position = [king.x_position, king.y_position]
+
+      expect(king.puts_game_in_check?(5, 4)).to eq true
+      expect(king_position).to eq [4, 4]
+
+      expect(king.puts_game_in_check?(3, 3)).to eq false
+      expect(king_position).to eq [4, 4]
+    end
+
+    it 'ensures move_to!() does not update attributes if pieces move would put game in check' do
+      game = create(:game)
+      king = create(:king, piece_number: 4, x_position: 4, y_position: 4, game_id: game.id)
+      create(:rook, piece_number: 11, x_position: 5, y_position: 5, game_id: game.id)
+
+      king.move_to!(5, 4)
+      game.reload
+
+      expect(king.x_position).to eq 4
+      expect(king.y_position).to eq 4
     end
   end
 end

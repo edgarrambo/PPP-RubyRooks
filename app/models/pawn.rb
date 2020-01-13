@@ -1,16 +1,10 @@
 # frozen_string_literal: true
 
 class Pawn < Piece
-
   def valid_move?(new_x,new_y)
-    if is_obstructed?(new_x, new_y)
-      return false
-    end
-    
-    if diagonal_capture(new_x, new_y)
-      return true
-    end
-    
+    return false if is_obstructed?(new_x, new_y)
+    return true if diagonal_capture(new_x, new_y)
+
     x_distance = new_x - x_position
     y_distance = new_y - y_position
 
