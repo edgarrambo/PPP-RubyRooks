@@ -189,11 +189,11 @@ RSpec.describe Piece, type: :model do
     before(:each) do
       @game = create(:game)
       @white_king = create(:king, x_position: 0, y_position: 4, piece_number: 4, game_id: @game.id)
-      @white_queenside_rook = create(:king, x_position: 0, y_position: 0, piece_number: 0, game_id: @game.id)
-      @white_kingside_rook = create(:king, x_position: 0, y_position: 7, piece_number: 0, game_id: @game.id)
+      @white_queenside_rook = create(:rook, x_position: 0, y_position: 0, piece_number: 0, game_id: @game.id)
+      @white_kingside_rook = create(:rook, x_position: 0, y_position: 7, piece_number: 0, game_id: @game.id)
       @black_king = create(:king, x_position: 7, y_position: 4, piece_number: 9, game_id: @game.id)
-      @black_queenside_rook = create(:king, x_position: 7, y_position: 0, piece_number: 6, game_id: @game.id)
-      @black_kingside_rook = create(:king, x_position: 7, y_position: 7, piece_number: 6, game_id: @game.id)
+      @black_queenside_rook = create(:rook, x_position: 7, y_position: 0, piece_number: 6, game_id: @game.id)
+      @black_kingside_rook = create(:rook, x_position: 7, y_position: 7, piece_number: 6, game_id: @game.id)
     end
 
     it 'returns false if rook has moved' do
@@ -202,10 +202,100 @@ RSpec.describe Piece, type: :model do
       @black_queenside_rook.update(moved: true)
       @black_kingside_rook.update(moved: true)
 
-      expect(@white_king.can_castle?(0, 4, 0, 0)).to eq false
-      expect(@white_king.can_castle?(0, 4, 0, 7)).to eq false
-      expect(@black_king.can_castle?(7, 4, 7, 0)).to eq false
-      expect(@black_king.can_castle?(7, 4, 7, 7)).to eq false
+      expect(@white_king.can_castle?(@white_queenside_rook)).to eq false
+      expect(@white_king.can_castle?(@white_kingside_rook)).to eq false
+      expect(@black_king.can_castle?(@black_queenside_rook)).to eq false
+      expect(@black_king.can_castle?(@black_kingside_rook)).to eq false
+    end
+
+    it 'returns false if the king has moved' do
+      @white_king.update(moved: true)
+      @black_king.update(moved: true)
+
+      expect(@white_king.can_castle?(@white_queenside_rook)).to eq false
+      expect(@white_king.can_castle?(@white_kingside_rook)).to eq false
+      expect(@black_king.can_castle?(@black_queenside_rook)).to eq false
+      expect(@black_king.can_castle?(@black_kingside_rook)).to eq false
+    end
+
+    it 'returns false if their are obstructions' do
+      white_knight = create(:knight, x_position: 0, y_position: 1, piece_number: 1, game_id: @game.id)
+      white_bishop = create(:bishop, x_position: 0, y_position: 6, piece_number: 2, game_id: @game.id)
+      black_knight = create(:knight, x_position: 7, y_position: 2, piece_number: 7, game_id: @game.id)
+      black_bishop = create(:bishop, x_position: 7, y_position: 5, piece_number: 8, game_id: @game.id)
+
+      expect(@white_king.can_castle?(@white_queenside_rook)).to eq false
+      expect(@white_king.can_castle?(@white_kingside_rook)).to eq false
+      expect(@black_king.can_castle?(@black_queenside_rook)).to eq false
+      expect(@black_king.can_castle?(@black_kingside_rook)).to eq false
+    end
+
+    it 'returns false if the king is in check' do
+      white_queen = create(:queen, x_position: 4, y_position: 4, piece_number: 3, game_id: @game.id)
+      black_queen = create(:queen, x_position: 3, y_position: 4, piece_number: 9, game_id: @game.id)
+
+      expect(@white_king.can_castle?(@white_queenside_rook)).to eq false
+      expect(@white_king.can_castle?(@white_kingside_rook)).to eq false
+      expect(@black_king.can_castle?(@black_queenside_rook)).to eq false
+      expect(@black_king.can_castle?(@black_kingside_rook)).to eq false
+    end
+
+    it 'returns false if the king tries to castle through check' do
+      white_queen = create(:queen, x_position: 5, y_position: 5, piece_number: 3, game_id: @game.id)
+      black_queen = create(:queen, x_position: 2, y_position: 5, piece_number: 9, game_id: @game.id)
+
+      expect(@white_king.can_castle?(@white_queenside_rook)).to eq false
+      expect(@white_king.can_castle?(@white_kingside_rook)).to eq false
+      expect(@black_king.can_castle?(@black_queenside_rook)).to eq false
+      expect(@black_king.can_castle?(@black_kingside_rook)).to eq false
+    end
+
+    it 'returns false if the king would be in check as the result of the move' do
+      white_queen = create(:queen, x_position: 3, y_position: 2, piece_number: 3, game_id: @game.id)
+      black_queen = create(:queen, x_position: 4, y_position: 6, piece_number: 9, game_id: @game.id)
+
+      expect(@white_king.can_castle?(@white_queenside_rook)).to eq false
+      expect(@white_king.can_castle?(@white_kingside_rook)).to eq false
+      expect(@black_king.can_castle?(@black_queenside_rook)).to eq false
+      expect(@black_king.can_castle?(@black_kingside_rook)).to eq false
+    end
+
+    it 'returns true if you can castle' do
+      expect(@white_king.can_castle?(@white_queenside_rook)).to eq true
+      expect(@white_king.can_castle?(@white_kingside_rook)).to eq true
+      expect(@black_king.can_castle?(@black_queenside_rook)).to eq true
+      expect(@black_king.can_castle?(@black_kingside_rook)).to eq true
+    end
+
+    it 'returns true if opposite rook as moved but castling rook has not' do
+      @white_queenside_rook.update(moved: true)
+      @black_queenside_rook.update(moved: true)
+
+      expect(@white_king.can_castle?(@white_queenside_rook)).to eq false
+      expect(@white_king.can_castle?(@white_kingside_rook)).to eq true
+      expect(@black_king.can_castle?(@black_queenside_rook)).to eq false
+      expect(@black_king.can_castle?(@black_kingside_rook)).to eq true
+    end
+
+    it 'returns true if opposite rook has obstruction but castling rook has not' do
+      white_bishop = create(:bishop, x_position: 0, y_position: 6, piece_number: 2, game_id: @game.id)
+      black_knight = create(:knight, x_position: 7, y_position: 2, piece_number: 7, game_id: @game.id)
+
+      expect(@white_king.can_castle?(@white_queenside_rook)).to eq true
+      expect(@white_king.can_castle?(@white_kingside_rook)).to eq false
+      expect(@black_king.can_castle?(@black_queenside_rook)).to eq false
+      expect(@black_king.can_castle?(@black_kingside_rook)).to eq true
+    end
+
+    it 'returns true if opposite rook causes check but castling rook does not' do
+      white_queen = create(:queen, x_position: 6, y_position: 6, piece_number: 3, game_id: @game.id)
+      black_queen = create(:queen, x_position: 1, y_position: 2, piece_number: 9, game_id: @game.id)
+
+      expect(@white_king.can_castle?(@white_queenside_rook)).to eq false
+      byebug
+      expect(@white_king.can_castle?(@white_kingside_rook)).to eq true
+      expect(@black_king.can_castle?(@black_queenside_rook)).to eq true
+      expect(@black_king.can_castle?(@black_kingside_rook)).to eq false
     end
   end
 end

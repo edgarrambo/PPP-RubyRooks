@@ -81,19 +81,31 @@ class Piece < ApplicationRecord
       (is_white? != piece.is_white?)
   end
 
-  def can_castle?(x, y, rook_position_x, rook_position_y)
+  def can_castle?(rook_position)
+    rook_position_x = rook_position.x_position
+    rook_position_y = rook_position.y_position
     x_sorted_array = [rook_position_x, x_position].sort
     y_sorted_array = [rook_position_y, y_position].sort
+    x = self.x_position
+    y = self.y_position
 
     return false if moved?
     return false if game.pieces.where(x_position: rook_position_x, y_position: rook_position_y).first.moved?
     return false if horizontal_obstruction?(rook_position_x, rook_position_y, x_sorted_array, y_sorted_array)
-    return false if game.pieces.any? { |piece| piece.can_take?(x, y) } # King is in check
-    return false if game.pieces.any? { |piece| piece.can_take?(x, y - 1) } # King would be in check at destination tile or at intermediate tile
-    return false if game.pieces.any? { |piece| piece.can_take?(x, y - 2) } # King would be in check at destination tile or at intermediate tile
-    return false if game.pieces.any? { |piece| piece.can_take?(x, y + 1) } # King would be in check at destination tile or at intermediate tile
-    return false if game.pieces.any? { |piece| piece.can_take?(x, y + 2) } # King would be in check at destination tile or at intermediate tile
+    return false if game.pieces.any? { |piece| piece.can_take?(self) } # King is in check
+    return false if pieces_of_the_opposing_player.any? { |piece| piece.valid_move?(x, y - 1) } # King would be in check at destination tile or at intermediate tile
+    return false if pieces_of_the_opposing_player.any? { |piece| piece.valid_move?(x, y - 2) } # King would be in check at destination tile or at intermediate tile
+    return false if pieces_of_the_opposing_player.any? { |piece| piece.valid_move?(x, y + 1) } # King would be in check at destination tile or at intermediate tile
+    return false if pieces_of_the_opposing_player.any? { |piece| piece.valid_move?(x, y + 2) } # King would be in check at destination tile or at intermediate tile
     return true # I think this is all you have to check for castling?
+  end
+
+  def pieces_of_the_opposing_player
+    if is_white?
+      game.pieces.where("piece_number > 5")
+    else
+      game.pieces.where("piece_number < 6")
+    end
   end
 
   def castle!(rook_position)
