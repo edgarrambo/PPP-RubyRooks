@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GamesController < ApplicationController
-  before_action :authenticate_user!, only: %i[new create show update_invited_user]
+  before_action :authenticate_user!, only: %i[new create show update_invited_user surrender]
 
   def index
     @games = Game.all
@@ -35,11 +35,24 @@ class GamesController < ApplicationController
     @game = Game.find(params[:game_id])
     @game.update(invited_user_id: current_user.id)
     if @game.valid?
-      @game.randomly_assign_player_one_and_player_two(current_user)
+      @game.randomly_assign_players(current_user)
       redirect_to game_path(@game)
     else
       render :new, status: :unprocessable_entity
-    end    
+    end
+  end
+
+  def surrender
+    @game = Game.find(params[:game_id])
+    @game.update(state: 'Surrendered')
+
+    if current_user.id == @game.p1_id
+      @game.update(winner_id: @game.p2_id)
+    else
+      @game.update(winner_id: @game.p1_id)
+    end
+
+    redirect_to game_path(@game)
   end
 
   private
@@ -47,5 +60,5 @@ class GamesController < ApplicationController
   def game_params
     params.require(:game).permit(:name)
   end
-  
+
 end

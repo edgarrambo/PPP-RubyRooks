@@ -58,7 +58,7 @@ class Piece < ApplicationRecord
     end
   end
 
-  def move_to!(new_x,new_y) 
+  def move_to!(new_x, new_y)
     occupying_piece = Piece.where(x_position: new_x, y_position: new_y, game_id: game.id)
     if occupying_piece.any? then
       occupying_piece.first.set_captured!

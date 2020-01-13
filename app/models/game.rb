@@ -10,10 +10,10 @@ class Game < ApplicationRecord
   scope :available, -> { where(invited_user_id: nil) }
 
   def assign_default_player
-	 write_attribute(:p1_id, creating_user.id)
+    write_attribute(:p1_id, creating_user.id)
   end
 
-  def randomly_assign_player_one_and_player_two(current_user)
+  def randomly_assign_players(current_user)
     other_player = creating_user
     if rand(1..1000) <= 500
       update(p1_id: other_player.id, p2_id: current_user.id)
@@ -33,11 +33,11 @@ class Game < ApplicationRecord
   end
 
   def player_one=(u)
-    write_attribute(:p1_id,u.id)
+    write_attribute(:p1_id, u.id)
   end
 
   def player_two=(u)
-    write_attribute(:p2_id,u.id)
+    write_attribute(:p2_id, u.id)
   end
 
   def get_player_one 

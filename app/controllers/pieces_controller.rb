@@ -7,7 +7,6 @@ class PiecesController < ApplicationController
     @piece = Piece.find(params[:id])
   end
 
-
   def update
     x = piece_params[:x_position].to_i
     y = piece_params[:y_position].to_i

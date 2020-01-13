@@ -34,7 +34,7 @@ RSpec.describe GamesController, type: :controller do
     it 'should require users to be logged in' do
       game = create(:game)
 
-      get :update_invited_user, params: {game_id: game.id}
+      get :update_invited_user, params: { game_id: game.id }
       expect(response).to redirect_to new_user_session_path
     end
 
@@ -43,7 +43,7 @@ RSpec.describe GamesController, type: :controller do
       user = create(:user)
       sign_in user
 
-      get :update_invited_user, params: {game_id: game.id}
+      get :update_invited_user, params: { game_id: game.id }
 
       expect(response).to redirect_to game_path(game.id)
       game.reload

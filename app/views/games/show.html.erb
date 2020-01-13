@@ -1,5 +1,6 @@
 <div class="col-8 offset-2 text-center">
   <h2><%= @game.name %></h2>
+  <% if @game.state == 'Surrendered' %><p class="game-state-message"><%= @game.winner_id %> won due to surrender!</p><% end %>
 </div>
 
 <br />
@@ -17,6 +18,7 @@
     <% end %>
   </div>
   <div class="col-lg-6">
+    <% if @game.state == 'Surrendered' %><div class="surrendered"></div><% end %>
     <%= render :partial => "board", :locals => { :the_piece => nil, :the_game => @game } %>
   </div>
   <div class="col-lg-3 text-center">
