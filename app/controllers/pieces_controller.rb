@@ -2,6 +2,7 @@ class PiecesController < ApplicationController
   before_action :authenticate_user!
   before_action :player_one_can_only_move_white_and_player_two_can_only_move_black, only: [:show, :update]
   before_action :valid_move?, only: [:update]
+  before_action :can_castle?, only: [:castle]
 
   def show
     @piece = Piece.find(params[:id])
@@ -12,6 +13,10 @@ class PiecesController < ApplicationController
     y = piece_params[:y_position].to_i
     Piece.find_by_id(params[:id]).move_to!(x, y)
     redirect_to game_path(@piece.game)
+  end
+
+  def castle
+    # Call Castle! from piece.rb
   end
 
   private
@@ -33,6 +38,12 @@ class PiecesController < ApplicationController
     y = piece_params[:y_position].to_i
     if !@piece.valid_move?(x, y)
       redirect_to game_path(@piece.game), alert: "This is not a valid move!"
+    end
+  end
+
+  def can_castle? # neeed some rewording here
+    if !@piece.can_castle?(rook_position)
+      redirect_to game_path(@piece.game), alert: "You can not Castle at this time!"
     end
   end
 end

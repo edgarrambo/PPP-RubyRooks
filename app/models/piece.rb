@@ -64,7 +64,7 @@ class Piece < ApplicationRecord
       occupying_piece.first.set_captured!
       occupying_piece.first.save
     end
-    assign_attributes(x_position: new_x, y_position: new_y)
+    assign_attributes(x_position: new_x, y_position: new_y, moved: true)
     save
   end
 
@@ -79,5 +79,24 @@ class Piece < ApplicationRecord
   def can_take?(piece)
     valid_move?(piece.x_position, piece.y_position) &&
       (is_white? != piece.is_white?)
+  end
+
+  def can_castle?(x, y, rook_position_x, rook_position_y)
+    x_sorted_array = [rook_position_x, x_position].sort
+    y_sorted_array = [rook_position_y, y_position].sort
+
+    return false if moved?
+    return false if game.pieces.where(x_position: rook_position_x, y_position: rook_position_y).first.moved?
+    return false if horizontal_obstruction?(rook_position_x, rook_position_y, x_sorted_array, y_sorted_array)
+    return false if game.pieces.any? { |piece| piece.can_take?(x, y) } # King is in check
+    return false if game.pieces.any? { |piece| piece.can_take?(x, y - 1) } # King would be in check at destination tile or at intermediate tile
+    return false if game.pieces.any? { |piece| piece.can_take?(x, y - 2) } # King would be in check at destination tile or at intermediate tile
+    return false if game.pieces.any? { |piece| piece.can_take?(x, y + 1) } # King would be in check at destination tile or at intermediate tile
+    return false if game.pieces.any? { |piece| piece.can_take?(x, y + 2) } # King would be in check at destination tile or at intermediate tile
+    return true # I think this is all you have to check for castling?
+  end
+
+  def castle!(rook_position)
+
   end
 end

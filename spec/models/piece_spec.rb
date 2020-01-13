@@ -105,8 +105,10 @@ RSpec.describe Piece, type: :model do
 
       expect(piece_one.x_position).to eq 3
       expect(piece_one.y_position).to eq 3
+      expect(piece_one.moved).to eq true
       expect(piece_two.x_position).to eq 8
       expect(piece_two.y_position).to eq 0
+      expect(piece_two.moved).to eq false
     end
 
     it 'updates moving piece(black) position and occupying piece(white) position if they are different colors' do
@@ -118,8 +120,10 @@ RSpec.describe Piece, type: :model do
 
       expect(piece_one.x_position).to eq 3
       expect(piece_one.y_position).to eq 3
+      expect(piece_one.moved).to eq true
       expect(piece_two.x_position).to eq 9
       expect(piece_two.y_position).to eq 0
+      expect(piece_two.moved).to eq false
     end
 
     it 'updates position if there is no occupying piece' do
@@ -129,6 +133,7 @@ RSpec.describe Piece, type: :model do
 
       expect(piece.x_position).to eq 4
       expect(piece.y_position).to eq 4
+      expect(piece.moved).to eq true
     end
   end
 
@@ -177,6 +182,30 @@ RSpec.describe Piece, type: :model do
       white_knight = create(:knight, x_position: 4, y_position: 4, piece_number: 1, game_id: @game.id)
 
       expect(white_knight.can_take?(white_bishop)).to eq false
+    end
+  end
+
+  describe 'can_castle? method' do
+    before(:each) do
+      @game = create(:game)
+      @white_king = create(:king, x_position: 0, y_position: 4, piece_number: 4, game_id: @game.id)
+      @white_queenside_rook = create(:king, x_position: 0, y_position: 0, piece_number: 0, game_id: @game.id)
+      @white_kingside_rook = create(:king, x_position: 0, y_position: 7, piece_number: 0, game_id: @game.id)
+      @black_king = create(:king, x_position: 7, y_position: 4, piece_number: 9, game_id: @game.id)
+      @black_queenside_rook = create(:king, x_position: 7, y_position: 0, piece_number: 6, game_id: @game.id)
+      @black_kingside_rook = create(:king, x_position: 7, y_position: 7, piece_number: 6, game_id: @game.id)
+    end
+
+    it 'returns false if rook has moved' do
+      @white_queenside_rook.update(moved: true)
+      @white_kingside_rook.update(moved: true)
+      @black_queenside_rook.update(moved: true)
+      @black_kingside_rook.update(moved: true)
+
+      expect(@white_king.can_castle?(0, 4, 0, 0)).to eq false
+      expect(@white_king.can_castle?(0, 4, 0, 7)).to eq false
+      expect(@black_king.can_castle?(7, 4, 7, 0)).to eq false
+      expect(@black_king.can_castle?(7, 4, 7, 7)).to eq false
     end
   end
 end
