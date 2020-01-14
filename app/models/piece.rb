@@ -109,7 +109,27 @@ class Piece < ApplicationRecord
     end
   end
 
-  def castle!(rook_position)
-
+  def castle!(rook)
+    if is_white? and rook.y_position == 0
+      rook.assign_attributes(y_position: 3, moved: true)
+      rook.save
+      assign_attributes(y_position: 2, moved: true)
+      save
+    elsif is_white? and rook.y_position == 7
+      rook.assign_attributes(y_position: 5, moved: true)
+      rook.save
+      assign_attributes(y_position: 6, moved: true)
+      save
+    elsif !is_white? and rook.y_position == 0
+      rook.assign_attributes(y_position: 3, moved: true)
+      rook.save
+      assign_attributes(y_position: 2, moved: true)
+      save
+    else
+      rook.assign_attributes(y_position: 5, moved: true)
+      rook.save
+      assign_attributes(y_position: 6, moved: true)
+      save
+    end
   end
 end

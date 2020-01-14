@@ -42,6 +42,7 @@ class PiecesController < ApplicationController
   end
 
   def can_castle? # neeed some rewording here
+    @piece = Piece.find(params[:id])
     if !@piece.can_castle?(rook_position)
       redirect_to game_path(@piece.game), alert: "You can not Castle at this time!"
     end

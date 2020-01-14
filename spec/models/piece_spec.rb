@@ -297,4 +297,76 @@ RSpec.describe Piece, type: :model do
       expect(@black_king.can_castle?(@black_kingside_rook)).to eq false
     end
   end
+
+  describe 'castle! method' do
+    before(:each) do
+      @game = create(:game)
+      @white_king = create(:king, x_position: 0, y_position: 4, piece_number: 4, game_id: @game.id)
+      @black_king = create(:king, x_position: 7, y_position: 4, piece_number: 9, game_id: @game.id)
+    end
+
+    it 'moves pieces for white player queenside castling' do
+      white_queenside_rook = create(:rook, x_position: 0, y_position: 0, piece_number: 0, game_id: @game.id)
+
+      @white_king.castle!(white_queenside_rook)
+
+      @white_king.reload
+      white_queenside_rook.reload
+
+      expect(@white_king.x_position).to eq 0
+      expect(@white_king.y_position).to eq 2
+      expect(@white_king.moved).to eq true
+      expect(white_queenside_rook.x_position).to eq 0
+      expect(white_queenside_rook.y_position).to eq 3
+      expect(white_queenside_rook.moved).to eq true
+    end
+
+    it 'moves pieces for white player king side castling' do
+      white_kingside_rook = create(:rook, x_position: 0, y_position: 7, piece_number: 0, game_id: @game.id)
+
+      @white_king.castle!(white_kingside_rook)
+
+      @white_king.reload
+      white_kingside_rook.reload
+
+      expect(@white_king.x_position).to eq 0
+      expect(@white_king.y_position).to eq 6
+      expect(@white_king.moved).to eq true
+      expect(white_kingside_rook.x_position).to eq 0
+      expect(white_kingside_rook.y_position).to eq 5
+      expect(white_kingside_rook.moved).to eq true
+    end
+
+    it 'moves pieces for black player queen side castling' do
+      black_queenside_rook = create(:rook, x_position: 7, y_position: 0, piece_number: 6, game_id: @game.id)
+
+      @black_king.castle!(black_queenside_rook)
+
+      @black_king.reload
+      black_queenside_rook.reload
+
+      expect(@black_king.x_position).to eq 7
+      expect(@black_king.y_position).to eq 2
+      expect(@black_king.moved).to eq true
+      expect(black_queenside_rook.x_position).to eq 7
+      expect(black_queenside_rook.y_position).to eq 3
+      expect(black_queenside_rook.moved).to eq true
+    end
+
+    it 'moves pieces for black player king side castling' do
+      black_kingside_rook = create(:rook, x_position: 7, y_position: 7, piece_number: 6, game_id: @game.id)
+
+      @black_king.castle!(black_kingside_rook)
+
+      @black_king.reload
+      black_kingside_rook.reload
+
+      expect(@black_king.x_position).to eq 7
+      expect(@black_king.y_position).to eq 6
+      expect(@black_king.moved).to eq true
+      expect(black_kingside_rook.x_position).to eq 7
+      expect(black_kingside_rook.y_position).to eq 5
+      expect(black_kingside_rook.moved).to eq true
+    end
+  end
 end
