@@ -16,7 +16,10 @@ class PiecesController < ApplicationController
   end
 
   def castle
-    # Call Castle! from piece.rb
+    piece = Piece.find(params[:piece_id])
+    rook = Piece.find(params[:rook_id])
+    piece.castle!(rook)
+    redirect_to game_path(piece.game)
   end
 
   private
@@ -42,9 +45,10 @@ class PiecesController < ApplicationController
   end
 
   def can_castle? # neeed some rewording here
-    @piece = Piece.find(params[:id])
-    if !@piece.can_castle?(rook_position)
-      redirect_to game_path(@piece.game), alert: "You can not Castle at this time!"
+    piece = Piece.find(params[:piece_id])
+    rook = Piece.find(params[:rook_id])
+    if !piece.can_castle?(rook)
+      redirect_to game_path(piece.game), alert: "You can not Castle at this time!"
     end
   end
 end
