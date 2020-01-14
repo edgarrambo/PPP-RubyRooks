@@ -19,11 +19,11 @@ class Piece < ApplicationRecord
       return true
     end
   end
-  
+
   def horizontal_obstruction?(new_x, new_y, x_sorted_array, y_sorted_array)
     obstructions = game.pieces.find do |chess_piece|
       is_on_same_rank = new_x == chess_piece.x_position
-      is_between_y = chess_piece.y_position.between?(y_sorted_array[0] + 1, y_sorted_array[1] - 1) 
+      is_between_y = chess_piece.y_position.between?(y_sorted_array[0] + 1, y_sorted_array[1] - 1)
       is_on_same_rank && is_between_y
     end
     return obstructions.present?
@@ -32,7 +32,7 @@ class Piece < ApplicationRecord
   def vertical_obstruction?(new_x, new_y, x_sorted_array, y_sorted_array)
     obstructions = game.pieces.find do |chess_piece|
       is_on_same_file = new_y == chess_piece.y_position
-      is_between_x = chess_piece.x_position.between?(x_sorted_array[0] + 1, x_sorted_array[1] - 1) 
+      is_between_x = chess_piece.x_position.between?(x_sorted_array[0] + 1, x_sorted_array[1] - 1)
       is_on_same_file && is_between_x
     end
     return obstructions.present?
@@ -43,7 +43,7 @@ class Piece < ApplicationRecord
       is_eq_abs = (new_x - chess_piece.x_position).abs == (new_y - chess_piece.y_position).abs
       is_between_x = chess_piece.x_position.between?(x_sorted_array[0] + 1, x_sorted_array[1] - 1)
       is_between_y = chess_piece.y_position.between?(y_sorted_array[0] + 1, y_sorted_array[1] - 1)
-      
+
       is_eq_abs && is_between_x && is_between_y
     end
     return obstructions.present?
@@ -81,35 +81,32 @@ class Piece < ApplicationRecord
       (is_white? != piece.is_white?)
   end
 
-  def can_castle?(rook_position)
-    rook_position_x = rook_position.x_position
-    rook_position_y = rook_position.y_position
-    x_sorted_array = [rook_position_x, x_position].sort
-    y_sorted_array = [rook_position_y, y_position].sort
-    x = self.x_position
-    y = self.y_position
+  def can_castle?(rook)
+    x_sorted_array = [rook.x_position, x_position].sort
+    y_sorted_array = [rook.y_position, y_position].sort
 
-    return false if moved?
-    return false if game.pieces.where(x_position: rook_position_x, y_position: rook_position_y).first.moved?
-    return false if horizontal_obstruction?(rook_position_x, rook_position_y, x_sorted_array, y_sorted_array)
-    return false if game.pieces.any? { |piece| piece.can_take?(self) } # King is in check
-    return false if moves_into_check(x, y - 1) && rook_position_y == 0 # King would be in check at destination tile or at intermediate tile
-    return false if moves_into_check(x, y - 2) && rook_position_y == 0 # King would be in check at destination tile or at intermediate tile
-    return false if moves_into_check(x, y + 1) && rook_position_y == 7 # King would be in check at destination tile or at intermediate tile
-    return false if moves_into_check(x, y + 2) && rook_position_y == 7 # King would be in check at destination tile or at intermediate tile
-    return true # I think this is all you have to check for castling?
-  end
-
-  def pieces_of_the_opposing_player
-    if is_white?
-      game.pieces.where("piece_number > 5")
-    else
-      game.pieces.where("piece_number < 6")
+    if moved? ||
+       game.pieces.where(x_position: rook.x_position, y_position: rook.y_position).first.moved? ||
+       horizontal_obstruction?(rook.x_position, rook.y_position, x_sorted_array, y_sorted_array) ||
+       opponent_pieces.any? { |piece| piece.can_take?(self) } ||
+       rook.y_position == 0 && [1, 2].any? { |number| moves_into_check?(x_position, y_position - number) } ||
+       rook.y_position == 7 && [1, 2].any? { |number| moves_into_check?(x_position, y_position + number) }
+      return false
     end
+
+    return true
   end
 
-  def moves_into_check(x, y)
-    return pieces_of_the_opposing_player.any? { |piece| piece.valid_move?(x, y) }
+  def moves_into_check?(x, y)
+    return opponent_pieces.any? { |piece| piece.valid_move?(x, y) }
+  end
+
+  def opponent_pieces
+    if is_white?
+      game.pieces.where('piece_number > 5')
+    else
+      game.pieces.where('piece_number < 6')
+    end
   end
 
   def castle!(rook_position)
