@@ -8,15 +8,10 @@ class PiecesController < ApplicationController
   end
 
   def update
-<<<<<<< HEAD
     x = piece_params[:x_position].to_i
     y = piece_params[:y_position].to_i
     Piece.find_by_id(params[:id]).move_to!(x, y)
     redirect_to game_path(@piece.game)
-=======
-    Piece.find_by_id(params[:id]).update(piece_params)
-    redirect_to game_path(@piece.game) 
->>>>>>> add jquery code to replace insterstitial
   end
 
   private
