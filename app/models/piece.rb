@@ -81,22 +81,22 @@ class Piece < ApplicationRecord
       (is_white? != piece.is_white?)
   end
 
-  def can_castle?(rook_position)
-    rook_position_x = rook_position.x_position
-    rook_position_y = rook_position.y_position
-    x_sorted_array = [rook_position_x, x_position].sort
-    y_sorted_array = [rook_position_y, y_position].sort
-    x = self.x_position
-    y = self.y_position
+  def can_castle?(rook)
+    x = x_position
+    y = y_position
+    rook_x = rook.x_position
+    rook_y = rook.y_position
+    x_sorted_array = [rook_x, x].sort
+    y_sorted_array = [rook_y, y].sort
 
     return false if moved?
-    return false if game.pieces.where(x_position: rook_position_x, y_position: rook_position_y).first.moved?
-    return false if horizontal_obstruction?(rook_position_x, rook_position_y, x_sorted_array, y_sorted_array)
+    return false if game.pieces.where(x_position: rook_x, y_position: rook_y).first.moved?
+    return false if horizontal_obstruction?(rook_x, rook_y, x_sorted_array, y_sorted_array)
     return false if game.pieces.any? { |piece| piece.can_take?(self) } # King is in check
-    return false if moves_into_check(x, y - 1) && rook_position_y == 0 # King would be in check at destination tile or at intermediate tile
-    return false if moves_into_check(x, y - 2) && rook_position_y == 0 # King would be in check at destination tile or at intermediate tile
-    return false if moves_into_check(x, y + 1) && rook_position_y == 7 # King would be in check at destination tile or at intermediate tile
-    return false if moves_into_check(x, y + 2) && rook_position_y == 7 # King would be in check at destination tile or at intermediate tile
+    return false if moves_into_check(x, y - 1) && rook_y == 0 # King would be in check at destination tile or at intermediate tile
+    return false if moves_into_check(x, y - 2) && rook_y == 0 # King would be in check at destination tile or at intermediate tile
+    return false if moves_into_check(x, y + 1) && rook_y == 7 # King would be in check at destination tile or at intermediate tile
+    return false if moves_into_check(x, y + 2) && rook_y == 7 # King would be in check at destination tile or at intermediate tile
     return true # I think this is all you have to check for castling?
   end
 
