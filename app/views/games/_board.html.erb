@@ -1,58 +1,1 @@
-<script>
-  $(function() {
-    $('.piece').draggable();
-    $( '.square').droppable({
-      drop: function( event, ui ) {
-          <%#
-          $.ajax({
-          type: 'PATCH',
-          url: 'pieces/' + piece.id,
-          dataType: 'json',
-          data: { 
-          piece: {
-            x_position: $(this).data("x_position"),
-            y_position: $(this).data("y_position")
-          }         
-        });
-        %>
-      }
-    });
-  });
-</script>
-
-
-<% 8.times do |y| %> 
-  <div class="row justify-content-center">
-    <% 8.times do |x| %>
-      <% piece = get_piece(x, y, the_game) %>        
-      <% if is_square_for_piece_to_be_moved?(the_piece, piece) %>
-        <div id="<%= @piece.x_position%>,<%= @piece.y_position %>" class="purple">
-          <%= image_tag piece.piece_number.to_s + ".png", class: "piece" %>
-        </div>
-      <% else %>
-<<<<<<< HEAD
-        <div id="<%= x %>,<%= y %>" class="<%= black_tile?(x,y) ? "black" : "white" %>">
-=======
-        <div id="<%= x %>,<%= y %>" class="square droppable <%= is_black?(x,y) ? "black" : "white" %>">
->>>>>>> add jquery code to replace insterstitial
-          <% if the_piece %>
-            <%= link_to piece_path(x_position: x, y_position: y), action: :update, method: :PATCH do %>
-              
-                <% if piece.present? %>
-                  <div class="move_on_top_of_transparent_box">
-                    <%= image_tag piece.piece_number.to_s + ".png", class: "piece" %>
-                  </div>
-                <% end %>
-            <% end %>
-          <% end %>
-          <% if piece.present? && !the_piece %>
-            <%= link_to piece_path(piece.id), data: {turbolinks: false} do %>        
-              <%= image_tag piece.piece_number.to_s + ".png", class: "piece" %>
-            <% end %>
-          <% end %>
-        </div>
-      <% end %>
-    <% end %>
-  </div>
-<% end %>
-
+<% 8.times do |y| %>   <div class="row justify-content-center">    <% 8.times do |x| %>      <% piece = get_piece(x, y, the_game) %>                <div id="<%= x %>,<%= y %>" class="<%= black_tile?(x,y) ? "black tile" : "white tile" %>">          <% if piece.present? %>            <%= link_to piece_path(piece) do %>                      <%= image_tag piece.piece_number.to_s + ".png", class: "piece" %>            <% end %>          <% end %>        </div>    <% end %>  </div><% end %><script>  $(function() {    $('.piece').draggable({      classes: {        "ui-draggable": "highlight"      },      snap: '.tile'    });    $( '.tile').droppable({            drop: function( event, ui ) {        $.ajax({          type: 'PATCH',          url: ui.draggable.data('update-url'),          dataType: 'json',          data: {piece: {x_position: x, y_position: y}}                });            },    });  });  </script>
