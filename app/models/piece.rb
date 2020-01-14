@@ -89,18 +89,19 @@ class Piece < ApplicationRecord
     x_sorted_array = [rook_x, x].sort
     y_sorted_array = [rook_y, y].sort
 
-    return false if moved?
-    return false if game.pieces.where(x_position: rook_x, y_position: rook_y).first.moved?
-    return false if horizontal_obstruction?(rook_x, rook_y, x_sorted_array, y_sorted_array)
-    return false if game.pieces.any? { |piece| piece.can_take?(self) } # King is in check
-    return false if moves_into_check(x, y - 1) && rook_y == 0 # King would be in check at destination tile or at intermediate tile
-    return false if moves_into_check(x, y - 2) && rook_y == 0 # King would be in check at destination tile or at intermediate tile
-    return false if moves_into_check(x, y + 1) && rook_y == 7 # King would be in check at destination tile or at intermediate tile
-    return false if moves_into_check(x, y + 2) && rook_y == 7 # King would be in check at destination tile or at intermediate tile
-    return true # I think this is all you have to check for castling?
+    if moved? ||
+       game.pieces.where(x_position: rook_x, y_position: rook_y).first.moved? ||
+       horizontal_obstruction?(rook_x, rook_y, x_sorted_array, y_sorted_array) ||
+       opponent_pieces.any? { |piece| piece.can_take?(self) } ||
+       rook_y == 0 && [1, 2].any? { |number| moves_into_check?(x, y - number) } ||
+       rook_y == 7 && [1, 2].any? { |number| moves_into_check?(x, y + number) }
+      return false
+    end
+
+    return true
   end
 
-  def pieces_of_the_opposing_player
+  def opponent_pieces
     if is_white?
       game.pieces.where("piece_number > 5")
     else
@@ -108,8 +109,8 @@ class Piece < ApplicationRecord
     end
   end
 
-  def moves_into_check(x, y)
-    return pieces_of_the_opposing_player.any? { |piece| piece.valid_move?(x, y) }
+  def moves_into_check?(x, y)
+    return opponent_pieces.any? { |piece| piece.valid_move?(x, y) }
   end
 
   def castle!(rook_position)
