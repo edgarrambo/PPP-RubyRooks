@@ -191,7 +191,7 @@ RSpec.describe Piece, type: :model do
       @white_king = create(:king, x_position: 0, y_position: 4, piece_number: 4, game_id: @game.id)
       @white_queenside_rook = create(:rook, x_position: 0, y_position: 0, piece_number: 0, game_id: @game.id)
       @white_kingside_rook = create(:rook, x_position: 0, y_position: 7, piece_number: 0, game_id: @game.id)
-      @black_king = create(:king, x_position: 7, y_position: 4, piece_number: 9, game_id: @game.id)
+      @black_king = create(:king, x_position: 7, y_position: 4, piece_number: 10, game_id: @game.id)
       @black_queenside_rook = create(:rook, x_position: 7, y_position: 0, piece_number: 6, game_id: @game.id)
       @black_kingside_rook = create(:rook, x_position: 7, y_position: 7, piece_number: 6, game_id: @game.id)
     end
