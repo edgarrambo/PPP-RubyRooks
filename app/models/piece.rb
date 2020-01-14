@@ -93,10 +93,10 @@ class Piece < ApplicationRecord
     return false if game.pieces.where(x_position: rook_position_x, y_position: rook_position_y).first.moved?
     return false if horizontal_obstruction?(rook_position_x, rook_position_y, x_sorted_array, y_sorted_array)
     return false if game.pieces.any? { |piece| piece.can_take?(self) } # King is in check
-    return false if pieces_of_the_opposing_player.any? { |piece| piece.valid_move?(x, y - 1) } # King would be in check at destination tile or at intermediate tile
-    return false if pieces_of_the_opposing_player.any? { |piece| piece.valid_move?(x, y - 2) } # King would be in check at destination tile or at intermediate tile
-    return false if pieces_of_the_opposing_player.any? { |piece| piece.valid_move?(x, y + 1) } # King would be in check at destination tile or at intermediate tile
-    return false if pieces_of_the_opposing_player.any? { |piece| piece.valid_move?(x, y + 2) } # King would be in check at destination tile or at intermediate tile
+    return false if moves_into_check(x, y - 1) && rook_position_y == 0 # King would be in check at destination tile or at intermediate tile
+    return false if moves_into_check(x, y - 2) && rook_position_y == 0 # King would be in check at destination tile or at intermediate tile
+    return false if moves_into_check(x, y + 1) && rook_position_y == 7 # King would be in check at destination tile or at intermediate tile
+    return false if moves_into_check(x, y + 2) && rook_position_y == 7 # King would be in check at destination tile or at intermediate tile
     return true # I think this is all you have to check for castling?
   end
 
@@ -106,6 +106,10 @@ class Piece < ApplicationRecord
     else
       game.pieces.where("piece_number < 6")
     end
+  end
+
+  def moves_into_check(x, y)
+    return pieces_of_the_opposing_player.any? { |piece| piece.valid_move?(x, y) }
   end
 
   def castle!(rook_position)

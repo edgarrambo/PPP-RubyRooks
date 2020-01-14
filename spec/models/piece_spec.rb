@@ -290,9 +290,8 @@ RSpec.describe Piece, type: :model do
     it 'returns true if opposite rook causes check but castling rook does not' do
       white_queen = create(:queen, x_position: 6, y_position: 6, piece_number: 3, game_id: @game.id)
       black_queen = create(:queen, x_position: 1, y_position: 2, piece_number: 9, game_id: @game.id)
-
+      
       expect(@white_king.can_castle?(@white_queenside_rook)).to eq false
-      byebug
       expect(@white_king.can_castle?(@white_kingside_rook)).to eq true
       expect(@black_king.can_castle?(@black_queenside_rook)).to eq true
       expect(@black_king.can_castle?(@black_kingside_rook)).to eq false
