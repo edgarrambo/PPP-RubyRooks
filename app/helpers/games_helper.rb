@@ -7,12 +7,7 @@ module GamesHelper
     game.pieces.where(x_position: x, y_position: y).first
   end
 
-  def render_piece(x, y, game, color)
-    piece = get_piece(x, y, game)
-    tag.h1 piece.piece_number.to_s, class: color
-  end
-
-  def is_black?(x,y)
+  def black_tile?(x,y)
     return (x % 2 == 0 && y % 2 == 0 || x % 2 == 1 && y % 2 == 1)
   end
 

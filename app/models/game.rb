@@ -8,7 +8,7 @@ class Game < ApplicationRecord
   has_many :pieces, dependent: :destroy
   before_create :assign_default_player
   scope :available, -> { where(invited_user_id: nil) }
-  
+
   def assign_default_player
 	 write_attribute(:p1_id, creating_user.id)
   end
@@ -21,67 +21,72 @@ class Game < ApplicationRecord
       update(p1_id: current_user.id, p2_id: other_player.id)
     end
   end
-  
+
   def player_one
     return nil if p1_id.nil?
     return User.find(p1_id)
   end
-  
+
   def player_two
     return nil if p2_id.nil?
     return User.find(p2_id)
   end
-  
+
   def player_one=(u)
     write_attribute(:p1_id,u.id)
   end
-  
+
   def player_two=(u)
     write_attribute(:p2_id,u.id)
   end
-  
+
   def get_player_one 
     return (not player_one.nil?) ? player_one.email : "No Player One"
   end
-  
+
   def get_player_two
     return (not player_two.nil?) ? player_two.email : "No Player Two"
   end
-  
+
+  def check?
+    kings = pieces.where(type: 'King')
+    kings.any? { |king| pieces.any? { |piece| piece.can_take?(king) } }
+  end
+
   def populate_game
     # White Rooks
-    pieces.create(x_position: 0, y_position: 0, piece_number: 0)
-    pieces.create(x_position: 0, y_position: 7, piece_number: 0)
+    pieces.create(x_position: 0, y_position: 0, piece_number: 0, type: 'Rook')
+    pieces.create(x_position: 0, y_position: 7, piece_number: 0, type: 'Rook')
     # White Knights
-    pieces.create(x_position: 0, y_position: 1, piece_number: 1)
-    pieces.create(x_position: 0, y_position: 6, piece_number: 1)
+    pieces.create(x_position: 0, y_position: 1, piece_number: 1, type: 'Knight')
+    pieces.create(x_position: 0, y_position: 6, piece_number: 1, type: 'Knight')
     # White Bishops
-    pieces.create(x_position: 0, y_position: 2, piece_number: 2)
-    pieces.create(x_position: 0, y_position: 5, piece_number: 2)
+    pieces.create(x_position: 0, y_position: 2, piece_number: 2, type: 'Bishop')
+    pieces.create(x_position: 0, y_position: 5, piece_number: 2, type: 'Bishop')
     # White Queen
-    pieces.create(x_position: 0, y_position: 3, piece_number: 3)
+    pieces.create(x_position: 0, y_position: 3, piece_number: 3, type: 'Queen')
     # White King
-    pieces.create(x_position: 0, y_position: 4, piece_number: 4)
+    pieces.create(x_position: 0, y_position: 4, piece_number: 4, type: 'King')
     # White Pawns
     8.times do |y|
-      pieces.create(x_position: 1, y_position: y, piece_number: 5)
+      pieces.create(x_position: 1, y_position: y, piece_number: 5, type: 'Pawn')
     end
     # Black Rooks
-    pieces.create(x_position: 7, y_position: 0, piece_number: 6)
-    pieces.create(x_position: 7, y_position: 7, piece_number: 6)
+    pieces.create(x_position: 7, y_position: 0, piece_number: 6, type: 'Rook')
+    pieces.create(x_position: 7, y_position: 7, piece_number: 6, type: 'Rook')
     # Black Knights
-    pieces.create(x_position: 7, y_position: 1, piece_number: 7)
-    pieces.create(x_position: 7, y_position: 6, piece_number: 7)
+    pieces.create(x_position: 7, y_position: 1, piece_number: 7, type: 'Knight')
+    pieces.create(x_position: 7, y_position: 6, piece_number: 7, type: 'Knight')
     # Black Bishops
-    pieces.create(x_position: 7, y_position: 2, piece_number: 8)
-    pieces.create(x_position: 7, y_position: 5, piece_number: 8)
+    pieces.create(x_position: 7, y_position: 2, piece_number: 8, type: 'Bishop')
+    pieces.create(x_position: 7, y_position: 5, piece_number: 8, type: 'Bishop')
     # Black Queen
-    pieces.create(x_position: 7, y_position: 3, piece_number: 9)
+    pieces.create(x_position: 7, y_position: 3, piece_number: 9, type: 'Queen')
     # Black King
-    pieces.create(x_position: 7, y_position: 4, piece_number: 10)
+    pieces.create(x_position: 7, y_position: 4, piece_number: 10, type: 'King')
     # Black Pawns
     8.times do |y|
-      pieces.create(x_position: 6, y_position: y, piece_number: 11)
+      pieces.create(x_position: 6, y_position: y, piece_number: 11, type: 'Pawn')
     end
   end
 end

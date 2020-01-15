@@ -1,21 +1,9 @@
 @import "bootstrap";
 
-.red {
-  color: red;
-  font-size: 3vw;
-}
 
-.blue {
-  color: blue;
-  font-size: 3vw;
-}
-
-.green {
-  color: #34eb40;
-  font-size: 3vw;
-}
 
 .white {
+  background-color: #f7f3da;
   width: 5vw;
   height: 5vw;
 }
@@ -24,13 +12,18 @@
 }
 
 .black {
-  background-color: black;
+  background-color: #0902c9;
   width: 5vw;
   height: 5vw;
 }
 
 .black a:hover {
   text-decoration: none;
+}
+
+.piece {
+  height: 100%;
+  width: 100%;
 }
 
 .purple {
@@ -61,4 +54,11 @@ hr {
 .move_on_top_of_transparent_box {
   position: relative;
   margin-top: -5vw;
+  width: 4vw;
+  height: 4vw;
+}
+
+.captured {
+  width: 4vw;
+  height: 4vw;
 }
