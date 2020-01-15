@@ -49,8 +49,6 @@ class Game < ApplicationRecord
   end
 
   def check?
-    check = false
-
     kings = pieces.where(type: 'King')
     kings.each do |king|
       if king.piece_number > 5 && pieces.any? { |piece| piece.can_take?(king) }

@@ -38,6 +38,7 @@ RSpec.describe 'Moving pieces', type: :feature do
 
       white_king.reload
       expect(white_king.x_position).to eq 5
+      expect(page).to have_content 'You cannot put yourself in Check.'
       expect(game.check?).to eq false
     end
   end

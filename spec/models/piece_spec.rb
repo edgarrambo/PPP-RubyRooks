@@ -222,17 +222,5 @@ RSpec.describe Piece, type: :model do
       expect(king.puts_game_in_check?(3, 3)).to eq false
       expect(king_position).to eq [4, 4]
     end
-
-    it 'ensures move_to!() does not update attributes if pieces move would put game in check' do
-      game = create(:game)
-      king = create(:king, piece_number: 4, x_position: 4, y_position: 4, game_id: game.id)
-      create(:rook, piece_number: 11, x_position: 5, y_position: 5, game_id: game.id)
-
-      king.move_to!(5, 4)
-      game.reload
-
-      expect(king.x_position).to eq 4
-      expect(king.y_position).to eq 4
-    end
   end
 end

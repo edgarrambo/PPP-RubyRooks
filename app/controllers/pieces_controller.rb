@@ -8,19 +8,25 @@ class PiecesController < ApplicationController
   end
 
   def update
+    @piece = Piece.find(params[:id])
     x = piece_params[:x_position].to_i
     y = piece_params[:y_position].to_i
-    if @piece.game.state == 'White King in Check' && current_user.id != @piece.game.p1_id
-      Piece.find_by_id(params[:id]).move_to!(x, y)
-      falsh.alert = 'White King is in Check.'
-    elsif @piece.game.state == 'Black King in Check' && current_user.id != @piece.game.p2_id
-      Piece.find_by_id(params[:id]).move_to!(x, y)
-      flash.alert = 'Black King is in Check.'
-    elsif @piece.game.check?
-      flash.alert = 'You cannot put yourself in Check.'
+
+    if @piece.puts_game_in_check?(x, y)
+      if current_user.id == @piece.game.p2_id && @piece.game.state == 'White King in Check'
+        @piece.move_to!(x, y)
+        flash.alert = 'White King is in Check.'
+      elsif current_user.id == @piece.game.p1_id && @piece.game.state == 'Black King in Check'
+        @piece.move_to!(x, y)
+        flash.alert = 'Black King is in Check.'
+      elsif current_user.id == @piece.game.p1_id && @piece.game.state == 'White King in Check' ||
+            current_user.id == @piece.game.p2_id && @piece.game.state == 'Black King in Check'
+        flash.alert = 'You cannot put yourself in Check.'
+      end
     else
-      Piece.find_by_id(params[:id]).move_to!(x, y)
+      @piece.move_to!(x, y)
     end
+
     redirect_to game_path(@piece.game)
   end
 
