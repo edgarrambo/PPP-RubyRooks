@@ -5,6 +5,8 @@ module GamesHelper
 
   def get_piece(x, y, game)
     game.pieces.where(x_position: x, y_position: y).first
+    
+    
   end
 
   def black_tile?(x,y)
