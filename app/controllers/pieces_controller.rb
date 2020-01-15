@@ -44,11 +44,15 @@ class PiecesController < ApplicationController
     end
   end
 
-  def can_castle? # neeed some rewording here
+  def can_castle? 
     piece = Piece.find(params[:piece_id])
     rook = Piece.find(params[:rook_id])
     if !piece.can_castle?(rook)
       redirect_to game_path(piece.game), alert: "You can not Castle at this time!"
+    end
+
+    if piece.is_white? && piece.game.player_one != current_user || !piece.is_white? && piece.game.player_two != current_user
+      redirect_to game_path(piece.game), alert: "That is not your piece!"
     end
   end
 end

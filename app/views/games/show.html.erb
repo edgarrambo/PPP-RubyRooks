@@ -9,13 +9,13 @@
   <div class="col-lg-3 text-center">
     <h4>
       <%= @game.get_player_one %>
-      <% if !@game.pieces.where(x_position: 0, y_position: 0).first.nil? && @game.pieces.where(piece_number: 4).first.can_castle?(@game.pieces.where(x_position: 0, y_position: 0).first) %>
-      <%= link_to "White Queen Side Castle", piece_castle_path(piece_id: @game.pieces.where(piece_number: 4).first, rook_id: @game.pieces.where(x_position: 0, y_position: 0).first), 
+      <% if !white_queenside_rook.nil? && white_king.can_castle?(white_queenside_rook) && current_user == @game.player_one %>
+      <%= link_to "White Queen Side Castle", piece_castle_path(piece_id: white_king, rook_id: white_queenside_rook), 
               method: :get, data: {confirm: 'Are you sure you want to Castle?'},
               class: 'btn btn-secondary' %>
       <% end %>
-      <% if !@game.pieces.where(x_position: 0, y_position: 7).first.nil? && @game.pieces.where(piece_number: 4).first.can_castle?(@game.pieces.where(x_position: 0, y_position: 7).first) %>
-      <%= link_to "White King Side Castle", piece_castle_path(piece_id: @game.pieces.where(piece_number: 4).first, rook_id: @game.pieces.where(x_position: 0, y_position: 7).first), 
+      <% if !white_kingside_rook.nil? && white_king.can_castle?(white_kingside_rook) && current_user == @game.player_one %>
+      <%= link_to "White King Side Castle", piece_castle_path(piece_id: white_king, rook_id: white_kingside_rook), 
               method: :get, data: {confirm: 'Are you sure you want to Castle?'},
               class: 'btn btn-secondary' %>
       <% end %>       
@@ -34,13 +34,13 @@
   <div class="col-lg-3 text-center">
     <h4>
       <%= @game.get_player_two %>
-      <% if !@game.pieces.where(x_position: 7, y_position: 0).first.nil? && @game.pieces.where(piece_number: 10).first.can_castle?(@game.pieces.where(x_position: 7, y_position: 0).first) %>
-      <%= link_to "Black Queen Side Castle", piece_castle_path(piece_id: @game.pieces.where(piece_number: 10).first, rook_id: @game.pieces.where(x_position: 7, y_position: 0).first), 
+      <% if !black_queenside_rook.nil? && black_king.can_castle?(black_queenside_rook) && current_user == @game.player_two %>
+      <%= link_to "Black Queen Side Castle", piece_castle_path(piece_id: black_king, rook_id: black_queenside_rook), 
               method: :get, data: {confirm: 'Are you sure you want to Castle?'},
               class: 'btn btn-secondary' %>
       <% end %>
-      <% if !@game.pieces.where(x_position: 7, y_position: 7).first.nil? && @game.pieces.where(piece_number: 10).first.can_castle?(@game.pieces.where(x_position: 7, y_position: 7).first) %>
-      <%= link_to "Black King Side Castle", piece_castle_path(piece_id: @game.pieces.where(piece_number: 10).first, rook_id: @game.pieces.where(x_position: 7, y_position: 7).first), 
+      <% if !black_kingside_rook.nil? && black_king.can_castle?(black_kingside_rook) && current_user == @game.player_two %>
+      <%= link_to "Black King Side Castle", piece_castle_path(piece_id: black_king, rook_id: black_kingside_rook), 
               method: :get, data: {confirm: 'Are you sure you want to Castle?'},
               class: 'btn btn-secondary' %>
       <% end %>    

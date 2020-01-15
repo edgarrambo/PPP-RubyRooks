@@ -11,8 +11,6 @@ RSpec.describe 'Castling in a Game', type: :feature do
         p1_id: @player1.id, p2_id: @player2.id,
         creating_user_id: @player1.id, invited_user_id: @player2.id)
 
-      sign_in @player1
-
       @white_king = create(:king, x_position: 0, y_position: 4, piece_number: 4, game_id: @game.id)
       @white_queenside_rook = create(:rook, x_position: 0, y_position: 0, piece_number: 0, game_id: @game.id)
       @white_kingside_rook = create(:rook, x_position: 0, y_position: 7, piece_number: 0, game_id: @game.id)
@@ -22,6 +20,7 @@ RSpec.describe 'Castling in a Game', type: :feature do
     end
 
     scenario 'White player queen side castles' do
+      sign_in @player1
       visit game_path(@game)
       click_on 'White Queen Side Castle'
       @white_king.reload
@@ -30,7 +29,8 @@ RSpec.describe 'Castling in a Game', type: :feature do
       expect(@white_queenside_rook.y_position).to eq 3
     end
 
-    scenario 'black player king side castles' do
+    scenario 'Black player king side castles' do
+      sign_in @player2
       visit game_path(@game)
       click_on 'Black King Side Castle'
       @black_king.reload
