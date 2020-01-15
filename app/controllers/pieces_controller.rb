@@ -11,6 +11,18 @@ class PiecesController < ApplicationController
     @piece = Piece.find(params[:id])
     x = piece_params[:x_position].to_i
     y = piece_params[:y_position].to_i
+    test_for_check_and_move(x, y)
+    redirect_to game_path(@piece.game)
+  end
+
+  private
+
+  def piece_params
+    params.permit(:x_position, :y_position)
+  end
+
+  def test_for_check_and_move(x, y)
+    @piece = Piece.find(params[:id])
 
     if @piece.puts_game_in_check?(x, y)
       if current_user.id == @piece.game.p2_id && @piece.game.state == 'White King in Check'
@@ -26,14 +38,6 @@ class PiecesController < ApplicationController
     else
       @piece.move_to!(x, y)
     end
-
-    redirect_to game_path(@piece.game)
-  end
-
-  private
-
-  def piece_params
-    params.permit(:x_position, :y_position)
   end
 
   def player_one_can_only_move_white_and_player_two_can_only_move_black
