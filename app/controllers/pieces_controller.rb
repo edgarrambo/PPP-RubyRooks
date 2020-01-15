@@ -41,6 +41,8 @@ def valid_move?
     
    x = piece_params[:x_position].to_i
    y = piece_params[:y_position].to_i
-   
+   if !@piece.valid_move?(x, y)
+     redirect_to game_path(@piece.game), alert: "This is not a valid move!"
+   end
  end
 end
