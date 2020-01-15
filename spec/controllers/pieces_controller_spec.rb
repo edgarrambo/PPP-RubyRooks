@@ -98,7 +98,7 @@ RSpec.describe PiecesController, type: :controller do
     end
   end
 
-  describe 'pieces#update action' do
+  describe 'pieces#castle action' do
     it 'allows white player to castle queenside' do
       game = create(:game)
 
