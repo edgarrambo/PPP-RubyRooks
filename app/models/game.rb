@@ -50,7 +50,16 @@ class Game < ApplicationRecord
 
   def check?
     kings = pieces.where(type: 'King')
-    kings.any? { |king| pieces.any? { |piece| piece.can_take?(king) } }
+    kings.each do |king|
+      if king.piece_number > 5 && pieces.any? { |piece| piece.can_take?(king) }
+        self.state = 'Black King in Check'
+        return true
+      elsif king.piece_number < 6 && pieces.any? { |piece| piece.can_take?(king) }
+        self.state = 'White King in Check'
+        return true
+      end
+    end
+    false
   end
 
   def populate_game
