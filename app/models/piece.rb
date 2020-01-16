@@ -61,13 +61,36 @@ class Piece < ApplicationRecord
 
   def move_to!(x, y)
     occupying_piece = Piece.where(x_position: x, y_position: y, game_id: game.id)
+    last_piece_moved = game.pieces.order('updated_at').last
     if occupying_piece.any? then
       occupying_piece.first.set_captured!
       occupying_piece.first.save
     end
+    if en_passant?(x, y) then
+      last_piece_moved.set_captured!
+      last_piece_moved.save
+    end
     create_move(x, y)
     assign_attributes(x_position: x, y_position: y, moved: true)
     save
+  end
+
+  def en_passant?(x, y)
+    last_move = game.pieces.order('updated_at').last.moves.order('updated_at').last
+    return false if last_move.nil?
+    return true  if pawn_moved_through_capture(x, y, last_move)
+    return false
+  end
+
+  def pawn_moved_through_capture(x, y, last_move)
+    pawn_moved_two = (last_move.start_x - last_move.final_x).abs == 2
+    if last_move.start_piece == 5 # White pawn
+      return pawn_moved_two && x == 2 && y == last_move.final_y
+    elsif last_move.start_piece == 11 # Black pawn
+      return pawn_moved_two && x == 5 && y == last_move.final_y
+    else
+      return false
+    end
   end
 
   def set_captured! # TODO: Maybe should add a column to table that states whether a piece is captured

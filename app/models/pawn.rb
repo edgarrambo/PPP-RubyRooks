@@ -34,29 +34,6 @@ class Pawn < Piece
     end 
   end
 
-  def en_passant?(x, y)
-    last_move = game.pieces.order('updated_at').last.moves.order('updated_at').last
-    return false if last_move.nil?
-    return false if !last_move.pawn?
-    return true  if pawn_moved_through_capture(x, y, last_move)
-    return false
-  end
-
-  def pawn?
-    return start_piece == 5 || start_piece == 11
-  end
-
-  def pawn_moved_through_capture(x, y, last_move)
-    pawn_moved_two = (last_move.start_x - last_move.final_x).abs == 2
-    if last_move.is_white?
-      return pawn_moved_two && x == 2 && y == last_move.final_y
-    elsif !last_move.is_white?
-      return pawn_moved_two && x == 5 && y == last_move.final_y
-    else
-      return false
-    end
-  end
-
   def tile_is_occupied?(x, y)
     return opponent_pieces.any? { |piece| piece.x_position == x && piece.y_position == y }
   end

@@ -127,40 +127,4 @@ RSpec.describe Pawn, type: :model do
       end
     end
   end
-
-  describe 'en_passant?(x,y)' do
-    before(:each) do
-      @game = create(:game)
-      @white_pawn = create(:pawn, x_position: 4, y_position: 0, piece_number: 5, game_id: @game.id)
-      @black_pawn = create(:pawn, x_position: 6, y_position: 1, piece_number: 11, game_id: @game.id)
-    end
-
-    it 'returns false if last piece moved was not a pawn' do
-      piece = create(:queen, x_position: 3, y_position: 3, piece_number: 9, game_id: @game.id)
-      piece.move_to!(2,3)
-      @game.reload
-      expect(@white_pawn.en_passant?(5,1)).to eq false
-    end
-
-    it 'returns false if last piece moved was a pawn moving one space' do
-      @black_pawn.move_to!(5,1)
-      @game.reload
-      expect(@white_pawn.en_passant?(5,1)).to eq false
-    end
-
-    it 'returns false if last piece moved was a pawn moving two spaces on a different row' do
-      black_pawn_2 = create(:pawn, x_position: 6, y_position: 7, piece_number: 11, game_id: @game.id)
-      black_pawn_2.move_to!(4,7)
-      @game.reload
-      expect(@white_pawn.en_passant?(5,1)).to eq false
-    end
-
-    it 'returns true if previous move is a pawn moving two spaces past a pawn' do
-      @black_pawn.move_to!(4,1)
-      @game.reload
-      @black_pawn.reload
-      byebug
-      expect(@white_pawn.en_passant?(5,1)).to eq true
-    end
-  end
 end

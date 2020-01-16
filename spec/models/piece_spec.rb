@@ -126,6 +126,26 @@ RSpec.describe Piece, type: :model do
       expect(piece_two.moved).to eq false
     end
 
+    it 'performs En passant' do
+      player1 = create(:user)
+      player2 = create(:user)
+      game = create(:game, name: 'Testerroni Pizza',
+        p1_id: player1.id, p2_id: player2.id,
+        creating_user_id: player1.id, invited_user_id: player2.id)
+      white_pawn = create(:pawn, x_position: 4, y_position: 0, piece_number: 5, game_id: game.id)
+      black_pawn = create(:pawn, x_position: 6, y_position: 1, piece_number: 11, game_id: game.id)
+
+      black_pawn.move_to!(4,1)
+      game.reload
+      white_pawn.move_to!(5,1)
+      game.reload
+      black_pawn.reload
+      expect(white_pawn.x_position).to eq 5
+      expect(white_pawn.y_position).to eq 1
+      expect(black_pawn.x_position).to eq 8
+      expect(black_pawn.y_position).to eq 0
+    end
+
     it 'updates position if there is no occupying piece' do
       piece = create(:piece, x_position: 1, y_position: 1, piece_number: 0, game_id: @game.id)
 
@@ -367,6 +387,44 @@ RSpec.describe Piece, type: :model do
       expect(black_kingside_rook.x_position).to eq 7
       expect(black_kingside_rook.y_position).to eq 5
       expect(black_kingside_rook.moved).to eq true
+    end
+  end
+
+  describe 'en_passant?(x,y)' do
+    before(:each) do
+      @player1 = create(:user)
+      @player2 = create(:user)
+      @game = create(:game, name: 'Testerroni Pizza',
+        p1_id: @player1.id, p2_id: @player2.id,
+        creating_user_id: @player1.id, invited_user_id: @player2.id)
+      @white_pawn = create(:pawn, x_position: 4, y_position: 0, piece_number: 5, game_id: @game.id)
+      @black_pawn = create(:pawn, x_position: 6, y_position: 1, piece_number: 11, game_id: @game.id)
+    end
+
+    it 'returns false if last piece moved was not a pawn' do
+      piece = create(:queen, x_position: 3, y_position: 3, piece_number: 9, game_id: @game.id)
+      piece.move_to!(2,3)
+      @game.reload
+      expect(@white_pawn.en_passant?(5,1)).to eq false
+    end
+
+    it 'returns false if last piece moved was a pawn moving one space' do
+      @black_pawn.move_to!(5,1)
+      @game.reload
+      expect(@white_pawn.en_passant?(5,1)).to eq false
+    end
+
+    it 'returns false if last piece moved was a pawn moving two spaces on a different row' do
+      black_pawn_2 = create(:pawn, x_position: 6, y_position: 7, piece_number: 11, game_id: @game.id)
+      black_pawn_2.move_to!(4,7)
+      @game.reload
+      expect(@white_pawn.en_passant?(5,1)).to eq false
+    end
+
+    it 'returns true if previous move is a pawn moving two spaces past a pawn' do
+      @black_pawn.move_to!(4,1)
+      @game.reload
+      expect(@white_pawn.en_passant?(5,1)).to eq true
     end
   end
 end
