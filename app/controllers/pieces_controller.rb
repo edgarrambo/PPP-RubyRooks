@@ -11,9 +11,8 @@ class PiecesController < ApplicationController
     @piece = Piece.find(params[:id])
     x = piece_params[:x_position].to_i
     y = piece_params[:y_position].to_i
-    if @piece.move_to!(x,y)
-      @piece.update(piece_params)
-    end
+    @piece.move_to!(x,y)
+      
     respond_to do |format|
       format.html
       format.json {render json: @piece, status: :ok }
@@ -30,8 +29,8 @@ class PiecesController < ApplicationController
     @piece = Piece.find(params[:id])
     if @piece.is_white? && @piece.game.player_one != current_user || !@piece.is_white? && @piece.game.player_two != current_user
       respond_to do |format|
-        format.html
-        format.json {render json: @piece.game, alert: "That is not your piece!", status: 422}
+        format.html {redirect_to game_path(@piece.game), alert: "That is not your piece!"}
+        #format.json
       end
     end
   end
@@ -43,7 +42,7 @@ class PiecesController < ApplicationController
     if !@piece.valid_move?(x, y)
       respond_to do |format|
         format.html {redirect_to game_path(@piece.game), alert: "Invalid move!"}
-        format.json {render json: @piece.game, messsage: "Invalid move!", status: 422}
+        #format.json {render json: @piece.game, messsage: "Invalid move!", status: 422}
       end 
     end
   end
