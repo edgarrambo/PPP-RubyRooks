@@ -1,4 +1,3 @@
-
 <div class="col-8 offset-2 text-center">
   <h2><%= @game.name %></h2>
 </div>
@@ -6,7 +5,7 @@
 <br />
 
 <div class="row">
-  <div class="col-lg-3 text-center">
+  <div class="col-lg text-center">
     <h4>
       <%= @game.get_player_one %>      
     </h4>
@@ -17,10 +16,10 @@
       <div class="captured"><%= image_tag piece.piece_number.to_s + ".png", class: "piece" %></div>
     <% end %>
   </div>
-  <div class=" gameboard col-lg-6">
-    <%= render :partial => "board", :locals => { :the_piece => nil, :the_game => @game } %>
+  <div class="gameboard col-lg-auto">
+    <%= render :partial => "board", :locals => {:the_game => @game } %>
   </div>
-  <div class="col-lg-3 text-center">
+  <div class="col-lg text-center">
     <h4>
       <%= @game.get_player_two %>    
     </h4>
@@ -32,47 +31,3 @@
     <% end %>
   </div>
 </div>
-
-<script>
-  $(function() {
-    $('.piece').draggable({
-      containment: ".gameboard"
-      snap: ".tile",
-      cursor: "move"
-    });
-    $( '.tile').droppable({
-      drop: function( event, ui ) {
-        var piece = ui.draggable
-        var destination_square = $(this);
-        var update_piece = {
-          id: piece.data('piece-id'), 
-          x_position: destination_square.data('x-coord'),
-          y_position: destination_square.data('y-coord'),
-        }
-        $.ajax({
-          type: 'PATCH',
-          url: '/pieces/' + update_piece.id,
-          beforeSend: function(xhr) {
-            xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-          },
-          dataType: 'json',
-          data: {
-            piece: {
-              id: update_piece.id,
-              x_position: update_piece.x_position,
-              y_position: update_piece.y_position,
-            }
-          },
-          error: function(xhr){
-            location.reload();
-          },
-
-          success: function(data) {
-            destination_square.empty();
-            location.reload(true);
-          }       
-        });
-      }  
-    });
-  });  
-</script>
