@@ -3,8 +3,15 @@
         <% 8.times do |x| %>
           <% piece = get_piece(x, y, @game) %>
             <div id="<%= x %>,<%= y %>" data-x-coord=<%= x %> data-y-coord=<%= y %> class="<%= black_tile?(x,y) ? "black tile" : "white tile" %>">
-              <% if piece.present? %>
-                  <%= image_tag piece.piece_number.to_s + ".png", class: "piece", data: {piece_id: piece.id} %>
+              <% if piece.present? && players_piece?(piece) %>
+                  <%= image_tag piece.piece_number.to_s + ".png", 
+                  class: 'piece', 
+                  data: {piece_id: piece.id} %>
+              <% end %>
+              <% if piece.present? && !players_piece?(piece) %>
+                  <%= image_tag piece.piece_number.to_s + ".png", 
+                  class: 'piece2', 
+                  data: {piece_id: piece.id} %>
               <% end %>
             </div>
         <% end %>
@@ -18,7 +25,7 @@
       snap: ".tile",
       cursor: "move"
     });
-    $( '.tile').droppable({
+    $('.tile').droppable({
       drop: function( event, ui ) {
         var piece = ui.draggable
         var destination_square = $(this);
@@ -37,7 +44,11 @@
               y_position: update_piece.y_position,
             }
           },
-          error: function(xhr) {
+          error: function() {
+            location.reload();
+            alert("That is not a valid move!");
+          },
+          success: function() {
             location.reload();
           },
         });

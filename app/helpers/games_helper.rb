@@ -11,6 +11,10 @@ module GamesHelper
     return (x % 2 == 0 && y % 2 == 0 || x % 2 == 1 && y % 2 == 1)
   end
 
+  def players_piece?(piece)
+    return piece.is_white? && piece.game.player_one == current_user || !piece.is_white? && piece.game.player_two == current_user
+  end 
+
   def is_square_for_piece_to_be_moved?(the_piece, piece)
     return the_piece && the_piece == piece
   end
