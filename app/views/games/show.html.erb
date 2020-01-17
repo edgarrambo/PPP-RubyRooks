@@ -33,37 +33,41 @@
 </div>
 
 <script type='text/javascript'>
-  $(function() {
-    $('.piece').draggable({
-      containment: '.gameboard',
-      snap: '.tile',
-      cursor: 'crosshair',
-      revert: true,
-      scroll: false
-    });
+  function init_draggables_and_droppables() { 
+      $('.piece').draggable({
+        containment: '.gameboard',
+        snap: '.tile',
+        cursor: 'crosshair',
+        revert: true,
+        scroll: false
+      });
 
-    $('.tile').droppable({
-      drop: function( event, ui ) {
-        piece_id = ui.draggable.data('piece-id')
-        x_position = $(this).data('x-coord')
-        y_position = $(this).data('y-coord')
-        $.ajax({
-          url: `/pieces/${piece_id}`,
-          type: 'PATCH',
-          beforeSend: function(xhr) {
-            xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-          },
-          dataType: 'script',
-          data: {
-            piece: {
-              id: piece_id,
-              x_position: x_position,
-              y_position: y_position,
+      $('.tile').droppable({
+        drop: function( event, ui ) {
+          piece_id = ui.draggable.data('piece-id')
+          x_position = $(this).data('x-coord')
+          y_position = $(this).data('y-coord')
+          $.ajax({
+            url: `/pieces/${piece_id}`,
+            type: 'PATCH',
+            beforeSend: function(xhr) {
+              xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+            },
+            dataType: 'script',
+            data: {
+              piece: {
+                id: piece_id,
+                x_position: x_position,
+                y_position: y_position,
+              }
             }
-          }
-        });
-        $(`#${ui.draggable[0].id}`).draggable({revert: false});
-      }
-    });
+          });
+          $(`#${ui.draggable[0].id}`).draggable({revert: false});
+        }
+      });
+    }
+  
+  $(function() {
+    init_draggables_and_droppables();
   });
 </script>

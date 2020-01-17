@@ -16,7 +16,7 @@ class PiecesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.js { render 'update.js.erb', game: @game }
+      format.js
       format.json { render json: @piece, status: :ok, file: '/pieces/update' }
     end
   end
@@ -34,6 +34,7 @@ class PiecesController < ApplicationController
 
     respond_to do |format|
       format.html { flash.alert = 'That is not your piece!' }
+      format.js
       format.json { render json: @piece, status: 422 }
     end
   end
@@ -46,6 +47,7 @@ class PiecesController < ApplicationController
 
     respond_to do |format|
       format.html { flash.alert = 'Invalid move!' }
+      format.js
       format.json { render json: @piece, status: 422 }
     end
   end
