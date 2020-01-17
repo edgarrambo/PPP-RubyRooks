@@ -12,11 +12,6 @@ class PiecesController < ApplicationController
     x = piece_params[:x_position].to_i
     y = piece_params[:y_position].to_i
     @piece.move_to!(x,y)
-      
-    respond_to do |format|
-      format.html
-      format.json {render json: @piece, status: :ok }
-    end
   end
 
   private
