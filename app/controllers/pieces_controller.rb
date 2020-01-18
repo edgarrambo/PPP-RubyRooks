@@ -1,7 +1,5 @@
 class PiecesController < ApplicationController
   before_action :authenticate_user!
-  before_action :player_one_can_only_move_white_and_player_two_can_only_move_black, only: [:show, :update]
-  before_action :valid_move?, only: [:update]
 
   def show
     @piece = Piece.find(params[:id])
@@ -9,14 +7,14 @@ class PiecesController < ApplicationController
 
   def update
     @piece = Piece.find(params[:id])
-    x = piece_params[:x_position].to_i
-    y = piece_params[:y_position].to_i
-    @piece.move_to!(x,y)
-      
-    respond_to do |format|
-      format.html
-      format.json {render json: @piece, status: :ok }
-    end
+    @game = Game.find(@piece.game_id)
+    flash.now[:alert] = []
+    flash.now[:alert] << 'Invalid move!' unless valid_move?
+    flash.now[:alert] << 'You are in check.' if false
+    flash.now[:alert] << 'Not your piece!' unless current_player_controls_piece?
+    x = params[:x_position].to_i
+    y = params[:y_position].to_i
+    @piece.move_to!(x, y) if flash.now[:alert].empty?
   end
 
   private
@@ -25,23 +23,16 @@ class PiecesController < ApplicationController
     params.require(:piece).permit(:x_position, :y_position)
   end
 
-  def player_one_can_only_move_white_and_player_two_can_only_move_black
+  def current_player_controls_piece?
     @piece = Piece.find(params[:id])
-    if @piece.is_white? && @piece.game.player_one != current_user || !@piece.is_white? && @piece.game.player_two != current_user
-      respond_to do |format|
-        format.html {redirect_to game_path(@piece.game), alert: "That is not your piece!"}
-      end
-    end
+    @piece.is_white? && @piece.game.player_one == current_user ||
+      !@piece.is_white? && @piece.game.player_two == current_user
   end
 
   def valid_move?
     @piece = Piece.find(params[:id])
-    x = piece_params[:x_position].to_i
-    y = piece_params[:y_position].to_i
-    if !@piece.valid_move?(x, y)
-      respond_to do |format|
-        format.html {redirect_to game_path(@piece.game), alert: "Invalid move!"}
-      end 
-    end
+    x = params[:x_position].to_i
+    y = params[:y_position].to_i
+    @piece.valid_move?(x, y)
   end
 end

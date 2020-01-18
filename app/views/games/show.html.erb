@@ -16,8 +16,8 @@
       <div class="captured"><%= image_tag piece.piece_number.to_s + ".png", class: "piece" %></div>
     <% end %>
   </div>
-  <div class="gameboard col-lg-auto">
-    <%= render :partial => "board", :locals => {:the_game => @game } %>
+  <div class="game-board col-lg-auto">
+    <%= render partial: 'board', the_game: @game %>
   </div>
   <div class="col-lg text-center">
     <h4>
@@ -31,3 +31,30 @@
     <% end %>
   </div>
 </div>
+
+<script type='text/javascript'>
+  function init_draggables_and_droppables() { 
+      $('.piece').draggable({
+        containment: '.gameboard',
+        snap: '.tile',
+        cursor: 'crosshair',
+        scroll: false
+      });
+
+      $('.tile').droppable({
+        drop: function( event, ui ) {
+          piece_id = ui.draggable.data('piece-id')
+          x_position = $(this).data('x-coord')
+          y_position = $(this).data('y-coord')
+          $.ajax({
+            url: `/pieces/${piece_id}?x_position=${x_position}&y_position=${y_position}`,
+            type: 'PUT'
+          });
+        }
+      });
+    }
+  
+  $(function() {
+    init_draggables_and_droppables();
+  });
+</script>
