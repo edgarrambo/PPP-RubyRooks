@@ -37,8 +37,8 @@
       $('.piece').draggable({
         containment: '.gameboard',
         snap: '.tile',
-        cursor: 'crosshair',
         revert: true,
+        cursor: 'crosshair',
         scroll: false
       });
 
@@ -48,21 +48,9 @@
           x_position = $(this).data('x-coord')
           y_position = $(this).data('y-coord')
           $.ajax({
-            url: `/pieces/${piece_id}`,
-            type: 'PATCH',
-            beforeSend: function(xhr) {
-              xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-            },
-            dataType: 'script',
-            data: {
-              piece: {
-                id: piece_id,
-                x_position: x_position,
-                y_position: y_position,
-              }
-            }
+            url: `/pieces/${piece_id}?x_position=${x_position}&y_position=${y_position}`,
+            type: 'PUT'
           });
-          $(`#${ui.draggable[0].id}`).draggable({revert: false});
         }
       });
     }

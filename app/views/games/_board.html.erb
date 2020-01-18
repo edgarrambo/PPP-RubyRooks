@@ -1,3 +1,11 @@
+<% if flash.now[:alert].present? %>
+  <div class="deliver-message alert alert-danger">
+    <% flash.now[:alert].each do |alert| %>
+      <%= alert %>
+    <% end %>
+  </div>
+<% end %>
+
 <% 8.times do |y| %>
   <div class="row justify-content-center">
     <% 8.times do |x| %>
