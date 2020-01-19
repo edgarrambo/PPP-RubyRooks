@@ -83,11 +83,8 @@ class Piece < ApplicationRecord
 
   def puts_game_in_check?(x, y)
     previous_attributes = attributes
-    begin
-      update(x_position: x, y_position: y)
-      game.check?
-    ensure
-      update(previous_attributes)
-    end
+    update(x_position: x, y_position: y)
+    game.check?(self)
+    update(previous_attributes)
   end
 end

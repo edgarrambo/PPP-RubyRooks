@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Game < ApplicationRecord
   belongs_to :creating_user, :class_name => 'User', :foreign_key => 'creating_user_id'
   belongs_to :invited_user, :class_name => 'User', :foreign_key => 'invited_user_id', optional: true
@@ -48,17 +49,32 @@ class Game < ApplicationRecord
     return (not player_two.nil?) ? player_two.email : "No Player Two"
   end
 
-  def check?
-    kings = pieces.where(type: 'King')
-    kings.each do |king|
-      if !king.is_white? && pieces.any? { |piece| piece.can_take?(king) }
-        self.state = 'Black King in Check'
-        return true
-      elsif king.is_white? && pieces.any? { |piece| piece.can_take?(king) }
-        self.state = 'White King in Check'
-        return true
-      end
+  def get_your_king(piece)
+    return piece.game.pieces.where(piece_number: 4).first if piece.is_white?
+
+    piece.games.pieces.where(piece_number: 10).first
+  end
+
+  def get_enemies(piece)
+    return piece.game.pieces.where('piece_number > 5') if piece.is_white?
+
+    piece.games.pieces.where('piece_number < 6')
+  end
+
+  def check?(piece)
+    enemies = get_enemies(piece)
+    king = get_your_king(piece)
+
+    if king.is_white? && enemies.any? { |enemy| enemy.can_take?(king) }
+      update(state: 'White King in Check')
+      return true
+    elsif enemies.any? { |enemy| enemy.can_take?(king) }
+      update(state: 'Black King in Check')
+      return true
+    else
+      update(state: nil)
     end
+
     false
   end
 

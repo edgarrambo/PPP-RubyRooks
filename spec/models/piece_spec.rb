@@ -59,7 +59,7 @@ RSpec.describe Piece, type: :model do
     it 'returns false if not obstructed diagonally' do
       piece_one = create(:piece, x_position: 1, y_position: 3, game_id: @game.id)
       piece_two = create(:piece, x_position: 3, y_position: 3, game_id: @game.id)
-      
+
       expect(piece_one.is_obstructed?(5, 7)).to eq false
     end
 

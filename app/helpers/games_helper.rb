@@ -10,8 +10,4 @@ module GamesHelper
   def black_tile?(x,y)
     return (x % 2 == 0 && y % 2 == 0 || x % 2 == 1 && y % 2 == 1)
   end
-
-  def is_square_for_piece_to_be_moved?(the_piece, piece)
-    return the_piece && the_piece == piece
-  end
 end

@@ -1,7 +1,5 @@
 class PiecesController < ApplicationController
   before_action :authenticate_user!
-  before_action :player_one_can_only_move_white_and_player_two_can_only_move_black, only: [:show, :update]
-  before_action :valid_move?, only: [:update]
 
   def show
     @piece = Piece.find(params[:id])
@@ -9,50 +7,53 @@ class PiecesController < ApplicationController
 
   def update
     @piece = Piece.find(params[:id])
-    x = piece_params[:x_position].to_i
-    y = piece_params[:y_position].to_i
-    test_for_check_and_move(x, y)
-    redirect_to game_path(@piece.game)
+    @game = Game.find(@piece.game_id)
+    x = params[:x_position].to_i
+    y = params[:y_position].to_i
+    flash.now[:alert] = []
+    flash.now[:alert] << 'Invalid move!' unless valid_move?(@piece, x, y)
+    flash.now[:alert] << 'Not your piece!' unless current_player_controls_piece?(@piece)
+    game_in_check?(@piece, x, y)
+    @piece.move_to!(x, y) if flash.now[:alert].empty?
+    alert_for_check(@piece)
   end
 
   private
 
   def piece_params
-    params.permit(:x_position, :y_position)
+    params.require(:piece).permit(:x_position, :y_position)
   end
 
-  def test_for_check_and_move(x, y)
-    @piece = Piece.find(params[:id])
+  def current_player_controls_piece?(piece)
+    piece.is_white? && piece.game.player_one == current_user ||
+      !piece.is_white? && piece.game.player_two == current_user
+  end
 
-    if @piece.puts_game_in_check?(x, y)
-      if current_user.id == @piece.game.p2_id && @piece.game.state == 'White King in Check'
-        @piece.move_to!(x, y)
-        flash.alert = 'White King is in Check.'
-      elsif current_user.id == @piece.game.p1_id && @piece.game.state == 'Black King in Check'
-        @piece.move_to!(x, y)
-        flash.alert = 'Black King is in Check.'
-      elsif current_user.id == @piece.game.p1_id && @piece.game.state == 'White King in Check' ||
-            current_user.id == @piece.game.p2_id && @piece.game.state == 'Black King in Check'
-        flash.alert = 'You cannot put yourself in Check.'
+  def valid_move?(piece, x, y)
+    piece.valid_move?(x, y)
+  end
+
+  def game_in_check?(piece, x, y)
+    if piece.puts_game_in_check?(x, y)
+      if piece.is_white? && piece.game.state == 'White King in Check' ||
+         !piece.is_white? && piece.game.state == 'Black King in Check'
+        flash.now[:alert] << 'You cannot put yourself in Check.'
+        piece.game.update(state: nil)
+        return false
       end
+
+      return true
     else
-      @piece.move_to!(x, y)
+      piece.game.update(state: nil)
+      return false
     end
   end
 
-  def player_one_can_only_move_white_and_player_two_can_only_move_black
-    @piece = Piece.find(params[:id])
-    if @piece.is_white? && @piece.game.player_one != current_user || !@piece.is_white? && @piece.game.player_two != current_user
-      redirect_to game_path(@piece.game), alert: "That is not your piece!"
-    end
-  end
-
-  def valid_move?
-    @piece = Piece.find(params[:id])
-    x = piece_params[:x_position].to_i
-    y = piece_params[:y_position].to_i
-    if !@piece.valid_move?(x, y)
-      redirect_to game_path(@piece.game), alert: "This is not a valid move!"
+  def alert_for_check(piece)
+    if piece.game.state == 'White King in Check'
+      flash.now[:alert] << 'White King is in Check.'
+    elsif piece.game.state == 'Black King in Check'
+      flash.now[:alert] << 'Black King is in Check.'
     end
   end
 end

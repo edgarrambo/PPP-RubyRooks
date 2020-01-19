@@ -31,6 +31,7 @@ RSpec.describe Game, type: :model do
       it 'should have game state in check (black king in check)' do
         @white_king.update(x_position: 1, y_position: 0)
         @white_rook.update(x_position: 6, y_position: 7)
+
         expect(@game.check?).to eq true
         expect(@game.state).to eq 'Black King in Check'
       end
