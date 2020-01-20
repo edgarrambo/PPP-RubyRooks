@@ -19,6 +19,13 @@ class PiecesController < ApplicationController
     flash.now[:alert] << @game.end_turn(check_response, current_user) if check_response
   end
 
+  def castle
+    piece = Piece.find(params[:piece_id])
+    rook = Piece.find(params[:rook_id])
+    piece.castle!(rook)
+    redirect_to game_path(piece.game)
+  end
+
   private
 
   def piece_params
@@ -39,5 +46,17 @@ class PiecesController < ApplicationController
     end
 
     return 'Enemy in Check.' if piece.puts_enemy_in_check?(x, y)
+  end
+
+  def can_castle? 
+    piece = Piece.find(params[:piece_id])
+    rook = Piece.find(params[:rook_id])
+    if !piece.can_castle?(rook)
+      redirect_to game_path(piece.game), alert: "You can not Castle at this time!"
+    end
+
+    if piece.is_white? && piece.game.player_one != current_user || !piece.is_white? && piece.game.player_two != current_user
+      redirect_to game_path(piece.game), alert: "That is not your piece!"
+    end
   end
 end

@@ -27,8 +27,6 @@ class GamesController < ApplicationController
 
   def show
     @game = Game.find(params[:id])
-    @captured_black_pieces = @game.pieces.where(x_position: 8)
-    @captured_white_pieces = @game.pieces.where(x_position: 9)
   end
 
   def update_invited_user

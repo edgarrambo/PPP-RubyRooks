@@ -1,0 +1,22 @@
+<h4>
+  <%= @game.get_player_one %>
+  <br />
+</h4>
+<div class="row justify-content-center">
+  <% if !white_queenside_rook.nil? && white_king.can_castle?(white_queenside_rook) && current_user == @game.player_one %>
+    <%= link_to "White Queen Side Castle", piece_castle_path(piece_id: white_king, rook_id: white_queenside_rook), 
+              method: :get, data: {confirm: 'Are you sure you want to Castle?'},
+              class: 'btn btn-secondary' %>
+  <% end %>
+  <% if !white_kingside_rook.nil? && white_king.can_castle?(white_kingside_rook) && current_user == @game.player_one %>
+    <%= link_to "White King Side Castle", piece_castle_path(piece_id: white_king, rook_id: white_kingside_rook), 
+              method: :get, data: {confirm: 'Are you sure you want to Castle?'},
+              class: 'btn btn-secondary' %>
+  <% end %>
+</div>       
+<hr />
+<h3>Captured Pieces</h3>
+<br />
+<% captured_black_pieces.each do |piece| %>
+  <div class="captured"><%= image_tag piece.piece_number.to_s + ".png", class: "piece" %></div>
+<% end %>

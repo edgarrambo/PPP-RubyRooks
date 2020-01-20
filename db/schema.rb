@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_10_012817) do
+ActiveRecord::Schema.define(version: 2020_01_15_215906) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,12 +48,14 @@ ActiveRecord::Schema.define(version: 2020_01_10_012817) do
     t.integer "end_piece", limit: 2
     t.integer "start_x", limit: 2
     t.integer "start_y", limit: 2
-    t.integer "end_x", limit: 2
-    t.integer "end_y", limit: 2
+    t.integer "final_x", limit: 2
+    t.integer "final_y", limit: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["end_x", "end_y"], name: "index_moves_on_end_x_and_end_y"
+    t.bigint "piece_id"
+    t.index ["final_x", "final_y"], name: "index_moves_on_final_x_and_final_y"
     t.index ["game_id"], name: "index_moves_on_game_id"
+    t.index ["piece_id"], name: "index_moves_on_piece_id"
     t.index ["start_piece"], name: "index_moves_on_start_piece"
     t.index ["start_x", "start_y"], name: "index_moves_on_start_x_and_start_y"
     t.index ["user_id"], name: "index_moves_on_user_id"
@@ -67,6 +69,7 @@ ActiveRecord::Schema.define(version: 2020_01_10_012817) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type"
+    t.boolean "moved", default: false, null: false
     t.index ["game_id"], name: "index_pieces_on_game_id"
   end
 
