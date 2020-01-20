@@ -62,13 +62,13 @@ class Piece < ApplicationRecord
   def move_to!(x, y)
     occupying_piece = Piece.where(x_position: x, y_position: y, game_id: game.id)
     occupying_piece.first&.set_captured!
-    assign_attributes(x_position: x, y_position: y)
 
+    last_piece_moved = game.pieces.order('updated_at').last
     if en_passant?(x, y) then
       last_piece_moved.set_captured!
       last_piece_moved.save
     end
-      
+
     create_move(x, y)
     assign_attributes(x_position: x, y_position: y, moved: true)
     save
