@@ -1,12 +1,11 @@
 <div class="col-8 offset-2 text-center">
   <h2><%= @game.name %></h2>
-  <% if @game.state == 'Surrendered' %><p class="game-state-message"><%= @game.winner_id %> won due to surrender!</p><% end %>
 </div>
 
 <br />
 
 <div class="row">
-  <div class="col-lg-3 text-center">
+  <div class="col-lg text-center">
     <h4>
       <%= @game.get_player_one %>
       <% if !white_queenside_rook.nil? && white_king.can_castle?(white_queenside_rook) && current_user == @game.player_one %>
@@ -27,11 +26,10 @@
       <div class="captured"><%= image_tag piece.piece_number.to_s + ".png", class: "piece" %></div>
     <% end %>
   </div>
-  <div class="col-lg-6">
-    <% if @game.state == 'Surrendered' %><div class="surrendered"></div><% end %>
-    <%= render :partial => "board", :locals => { :the_piece => nil, :the_game => @game } %>
+  <div class="game-board col-lg-auto">
+    <%= render partial: 'board', the_game: @game %>
   </div>
-  <div class="col-lg-3 text-center">
+  <div class="col-lg text-center">
     <h4>
       <%= @game.get_player_two %>
       <% if !black_queenside_rook.nil? && black_king.can_castle?(black_queenside_rook) && current_user == @game.player_two %>
@@ -53,3 +51,30 @@
     <% end %>
   </div>
 </div>
+
+<script type='text/javascript'>
+  function init_draggables_and_droppables() { 
+      $('.piece').draggable({
+        containment: '.gameboard',
+        snap: '.tile',
+        cursor: 'crosshair',
+        scroll: false
+      });
+
+      $('.tile').droppable({
+        drop: function( event, ui ) {
+          piece_id = ui.draggable.data('piece-id')
+          x_position = $(this).data('x-coord')
+          y_position = $(this).data('y-coord')
+          $.ajax({
+            url: `/pieces/${piece_id}?x_position=${x_position}&y_position=${y_position}`,
+            type: 'PUT'
+          });
+        }
+      });
+    }
+  
+  $(function() {
+    init_draggables_and_droppables();
+  });
+</script>

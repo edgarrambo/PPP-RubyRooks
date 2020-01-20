@@ -1,31 +1,20 @@
-<% 8.times do |y| %> 
-  <div class="row justify-content-center">
-    <% 8.times do |x| %>
-      <% piece = get_piece(x, y, the_game) %>        
-      <% if is_square_for_piece_to_be_moved?(the_piece, piece) %>
-        <div id="<%= @piece.x_position%>,<%= @piece.y_position %>" class="purple">
-          <%= image_tag piece.piece_number.to_s + ".png", class: "piece" %>
-        </div>
-      <% else %>
-        <div id="<%= x %>,<%= y %>" class="<%= black_tile?(x,y) ? "black" : "white" %>">
-          <% if the_piece %>
-            <%= link_to piece_path(x_position: x, y_position: y), action: :update, method: :PATCH do %>
-              <div class="transparent_box"></div>
-                <% if piece.present? %>
-                  <div class="move_on_top_of_transparent_box">
-                    <%= image_tag piece.piece_number.to_s + ".png", class: "piece" %>
-                  </div>
-                <% end %>
-            <% end %>
-          <% end %>
-          <% if piece.present? && !the_piece %>
-            <%= link_to piece_path(piece.id), data: {turbolinks: false} do %>        
-              <%= image_tag piece.piece_number.to_s + ".png", class: "piece" %>
-            <% end %>
-          <% end %>
-        </div>
-      <% end %>
+<% if flash.now[:alert].present? %>
+  <div class="deliver-message alert alert-danger">
+    <% flash.now[:alert].each do |alert| %>
+      <%= alert %>
     <% end %>
   </div>
 <% end %>
 
+<% 8.times do |y| %>
+  <div class="row justify-content-center">
+    <% 8.times do |x| %>
+      <% piece = get_piece(x, y, @game) %>
+        <div id="<%= x %>,<%= y %>" data-x-coord=<%= x %> data-y-coord=<%= y %> class="<%= black_tile?(x,y) ? "black tile" : "white tile" %>">
+          <% if piece.present? %>
+              <%= image_tag piece.piece_number.to_s + ".png", class: "piece", data: { piece_id: piece.id, x_coord: piece.x_position, y_coord: piece.y_position } %>
+          <% end %>
+        </div>
+    <% end %>
+  </div>
+<% end %>
