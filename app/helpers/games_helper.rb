@@ -4,7 +4,7 @@ module GamesHelper
   include ActionView::Helpers::TagHelper
 
   def get_piece(x, y, game)
-    game.pieces.where(x_position: x, y_position: y).first
+    return game.pieces.where(x_position: x, y_position: y).first
   end
 
   def black_tile?(x,y)
@@ -20,11 +20,11 @@ module GamesHelper
   end
   
   def white_queenside_rook
-      return @game.pieces.where(x_position: 0, y_position: 0).first
+    return @game.pieces.where(x_position: 0, y_position: 0).first
   end
 
   def white_kingside_rook
-    @game.pieces.where(x_position: 0, y_position: 7).first
+    return @game.pieces.where(x_position: 0, y_position: 7).first
   end
 
   def black_king
@@ -32,10 +32,18 @@ module GamesHelper
   end
   
   def black_queenside_rook
-      return @game.pieces.where(x_position: 7, y_position: 0).first
+    return @game.pieces.where(x_position: 7, y_position: 0).first
   end
 
   def black_kingside_rook
-    @game.pieces.where(x_position: 7, y_position: 7).first
+    return @game.pieces.where(x_position: 7, y_position: 7).first
+  end
+
+  def captured_black_pieces
+    return @game.pieces.where(x_position: 8)
+  end
+
+  def captured_white_pieces
+    return @game.pieces.where(x_position: 9)
   end
 end

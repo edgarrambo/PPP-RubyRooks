@@ -5,50 +5,14 @@
 <br />
 
 <div class="row">
-  <div class="col-lg text-center">
-    <h4>
-      <%= @game.get_player_one %>
-      <% if !white_queenside_rook.nil? && white_king.can_castle?(white_queenside_rook) && current_user == @game.player_one %>
-      <%= link_to "White Queen Side Castle", piece_castle_path(piece_id: white_king, rook_id: white_queenside_rook), 
-              method: :get, data: {confirm: 'Are you sure you want to Castle?'},
-              class: 'btn btn-secondary' %>
-      <% end %>
-      <% if !white_kingside_rook.nil? && white_king.can_castle?(white_kingside_rook) && current_user == @game.player_one %>
-      <%= link_to "White King Side Castle", piece_castle_path(piece_id: white_king, rook_id: white_kingside_rook), 
-              method: :get, data: {confirm: 'Are you sure you want to Castle?'},
-              class: 'btn btn-secondary' %>
-      <% end %>       
-    </h4>
-    <hr />
-    <h3>Captured Pieces</h3>
-    <br />
-    <% @captured_black_pieces.each do |piece| %>
-      <div class="captured"><%= image_tag piece.piece_number.to_s + ".png", class: "piece" %></div>
-    <% end %>
+  <div class="player-one col-lg text-center">
+    <%= render partial: 'player_one' %>
   </div>
   <div class="game-board col-lg-auto">
-    <%= render partial: 'board', the_game: @game %>
+    <%= render partial: 'board' %>
   </div>
-  <div class="col-lg text-center">
-    <h4>
-      <%= @game.get_player_two %>
-      <% if !black_queenside_rook.nil? && black_king.can_castle?(black_queenside_rook) && current_user == @game.player_two %>
-      <%= link_to "Black Queen Side Castle", piece_castle_path(piece_id: black_king, rook_id: black_queenside_rook), 
-              method: :get, data: {confirm: 'Are you sure you want to Castle?'},
-              class: 'btn btn-secondary' %>
-      <% end %>
-      <% if !black_kingside_rook.nil? && black_king.can_castle?(black_kingside_rook) && current_user == @game.player_two %>
-      <%= link_to "Black King Side Castle", piece_castle_path(piece_id: black_king, rook_id: black_kingside_rook), 
-              method: :get, data: {confirm: 'Are you sure you want to Castle?'},
-              class: 'btn btn-secondary' %>
-      <% end %>    
-    </h4>
-    <hr />
-    <h3>Captured Pieces</h3>
-    <br />
-    <% @captured_white_pieces.each do |piece| %>
-      <div class="captured"><%= image_tag piece.piece_number.to_s + ".png", class: "piece" %></div>
-    <% end %>
+  <div class="player-two col-lg text-center">
+    <%= render partial: 'player_two' %>
   </div>
 </div>
 

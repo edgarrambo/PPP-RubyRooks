@@ -56,11 +56,14 @@ RSpec.describe Piece, type: :model do
       expect(piece_one.is_obstructed?(2, 2)).to eq false
     end
 
-    it 'returns false if not obstructed diagonally' do
-      piece_one = create(:piece, x_position: 1, y_position: 3, game_id: @game.id)
-      piece_two = create(:piece, x_position: 3, y_position: 3, game_id: @game.id)
+    it 'returns false if not obstructed diagonally but there would be obstructions vertically or horizontally' do
+      piece_one = create(:piece, x_position: 4, y_position: 4, game_id: @game.id)
+      piece_two = create(:piece, x_position: 4, y_position: 5, game_id: @game.id)
+      piece_three = create(:piece, x_position: 4, y_position: 6, game_id: @game.id)
+      piece_four = create(:piece, x_position: 5, y_position: 4, game_id: @game.id)
+      piece_five = create(:piece, x_position: 6, y_position: 4, game_id: @game.id)
       
-      expect(piece_one.is_obstructed?(5, 7)).to eq false
+      expect(piece_one.is_obstructed?(6, 6)).to eq false
     end
 
     it 'returns true if destination contains piece of the same color(white)' do
@@ -419,6 +422,13 @@ RSpec.describe Piece, type: :model do
       black_pawn_2.move_to!(4,7)
       @game.reload
       expect(@white_pawn.en_passant?(5,1)).to eq false
+    end
+
+    it 'returns false if it is not a pawn moving to that square' do
+      piece = create(:queen, x_position: 5, y_position: 2, piece_number: 9, game_id: @game.id)
+      @black_pawn.move_to!(4,1)
+      @game.reload
+      expect(piece.en_passant?(5,1)).to eq false
     end
 
     it 'returns true if previous move is a pawn moving two spaces past a pawn' do

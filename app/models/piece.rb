@@ -2,7 +2,7 @@
 
 class Piece < ApplicationRecord
   belongs_to :game
-  has_many :moves
+  has_many :moves, dependent: :destroy
 
   def is_obstructed?(x, y)
     x_sorted_array = [x, x_position].sort
@@ -84,9 +84,9 @@ class Piece < ApplicationRecord
 
   def pawn_moved_through_capture(x, y, last_move)
     pawn_moved_two = (last_move.start_x - last_move.final_x).abs == 2
-    if last_move.start_piece == 5 # White pawn
+    if last_move.start_piece == 5 && piece_number == 11 # White pawn moved past black pawn
       return pawn_moved_two && x == 2 && y == last_move.final_y
-    elsif last_move.start_piece == 11 # Black pawn
+    elsif last_move.start_piece == 11 && piece_number == 5# Black pawn moved past white pawn
       return pawn_moved_two && x == 5 && y == last_move.final_y
     else
       return false
