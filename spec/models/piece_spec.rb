@@ -180,14 +180,14 @@ RSpec.describe Piece, type: :model do
     end
   end
 
-  describe 'puts_game_in_check?(x, y)' do
+  describe 'puts_self_in_check?(x, y)' do
     it 'prevents putting yourself in check' do
       game = create(:game)
       king = create(:king, piece_number: 4, x_position: 3, y_position: 3, game_id: game.id)
       create(:rook, piece_number: 11, x_position: 4, y_position: 4, game_id: game.id)
 
-      expect(king.puts_game_in_check?(3, 4)).to eq true
-      expect(king.puts_game_in_check?(2, 2)).to eq false
+      expect(king.puts_self_in_check?(3, 4)).to eq true
+      expect(king.puts_self_in_check?(2, 2)).to eq false
     end
 
     it 'blocks check with another piece' do
@@ -196,8 +196,8 @@ RSpec.describe Piece, type: :model do
       knight = create(:knight, piece_number: 1, x_position: 3, y_position: 4, game_id: game.id)
       create(:rook, piece_number: 11, x_position: 4, y_position: 4, game_id: game.id)
 
-      expect(king.puts_game_in_check?(1, 4)).to eq false
-      expect(knight.puts_game_in_check?(4, 2)).to eq true
+      expect(king.puts_self_in_check?(1, 4)).to eq false
+      expect(knight.puts_self_in_check?(4, 2)).to eq true
     end
 
     it 'puts into check by moving another piece out of the way' do
@@ -206,7 +206,7 @@ RSpec.describe Piece, type: :model do
       knight = create(:knight, piece_number: 1, x_position: 3, y_position: 4, game_id: game.id)
       create(:rook, piece_number: 11, x_position: 4, y_position: 4, game_id: game.id)
 
-      expect(knight.puts_game_in_check?(4, 2)).to eq true
+      expect(knight.puts_self_in_check?(4, 2)).to eq true
     end
 
     it 'ensures coordiantes for pieces are not affected by would be in check' do
@@ -216,10 +216,10 @@ RSpec.describe Piece, type: :model do
 
       king_position = [king.x_position, king.y_position]
 
-      expect(king.puts_game_in_check?(5, 4)).to eq true
+      expect(king.puts_self_in_check?(5, 4)).to eq true
       expect(king_position).to eq [4, 4]
 
-      expect(king.puts_game_in_check?(3, 3)).to eq false
+      expect(king.puts_self_in_check?(3, 3)).to eq false
       expect(king_position).to eq [4, 4]
     end
   end

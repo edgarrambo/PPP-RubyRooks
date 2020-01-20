@@ -24,45 +24,41 @@ RSpec.describe Game, type: :model do
       end
 
       it 'should have game state in check (white king in check)' do
-        expect(@game.check?).to eq true
-        expect(@game.state).to eq 'White King in Check'
+        expect(@game.check?(true)).to eq true
       end
 
       it 'should have game state in check (black king in check)' do
         @white_king.update(x_position: 1, y_position: 0)
         @white_rook.update(x_position: 6, y_position: 7)
 
-        expect(@game.check?).to eq true
-        expect(@game.state).to eq 'Black King in Check'
+        expect(@game.check?(false)).to eq true
       end
 
       it 'should not have game state in check' do
         @black_rook.update(x_position: 1, y_position: 1)
-        expect(@game.check?).to eq false
+        expect(@game.check?(true)).to eq false
       end
 
       it 'should be in check with only one King(black) on the board' do
         @white_king.destroy
         @white_rook.update(x_position: 6, y_position: 7)
-        expect(@game.check?).to eq true
-        expect(@game.state).to eq 'Black King in Check'
+        expect(@game.check?(false)).to eq true
       end
 
       it 'should be in check with only one King(white) on the board' do
         @black_king.destroy
-        expect(@game.check?).to eq true
-        expect(@game.state).to eq 'White King in Check'
+        expect(@game.check?(true)).to eq true
       end
 
       it 'should not be in check with only one King(black) on the board' do
         @white_king.destroy
-        expect(@game.check?).to eq false
+        expect(@game.check?(true)).to eq false
       end
 
       it 'should not be in check with only one King(white) on the board' do
         @black_king.destroy
         @black_rook.update(x_position: 4)
-        expect(@game.check?).to eq false
+        expect(@game.check?(true)).to eq false
       end
     end
   end

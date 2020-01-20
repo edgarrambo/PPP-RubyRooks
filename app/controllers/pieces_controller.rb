@@ -11,11 +11,12 @@ class PiecesController < ApplicationController
     x = params[:x_position].to_i
     y = params[:y_position].to_i
     flash.now[:alert] = []
-    flash.now[:alert] << 'Invalid move!' unless valid_move?(@piece, x, y)
+
+    flash.now[:alert] << 'Invalid move!' unless @piece.valid_move?(x, y)
     flash.now[:alert] << 'Not your piece!' unless current_player_controls_piece?(@piece)
-    game_in_check?(@piece, x, y)
+    check_response = test_check(@piece, x, y)
     @piece.move_to!(x, y) if flash.now[:alert].empty?
-    alert_for_check(@piece)
+    flash.now[:alert] << @game.end_turn(check_response, current_user) if check_response
   end
 
   private
@@ -29,31 +30,14 @@ class PiecesController < ApplicationController
       !piece.is_white? && piece.game.player_two == current_user
   end
 
-  def valid_move?(piece, x, y)
-    piece.valid_move?(x, y)
-  end
+  def test_check(piece, x, y)
+    return false if piece.can_take?(helpers.get_piece(x, y, piece.game))
 
-  def game_in_check?(piece, x, y)
-    if piece.puts_game_in_check?(x, y)
-      if piece.is_white? && piece.game.state == 'White King in Check' ||
-         !piece.is_white? && piece.game.state == 'Black King in Check'
-        flash.now[:alert] << 'You cannot put yourself in Check.'
-        piece.game.update(state: nil)
-        return false
-      end
-
-      return true
-    else
-      piece.game.update(state: nil)
+    if piece.puts_self_in_check?(x, y)
+      flash.now[:alert] << 'You cannot put/leave yourself in Check.'
       return false
     end
-  end
 
-  def alert_for_check(piece)
-    if piece.game.state == 'White King in Check'
-      flash.now[:alert] << 'White King is in Check.'
-    elsif piece.game.state == 'Black King in Check'
-      flash.now[:alert] << 'Black King is in Check.'
-    end
+    return 'Enemy in Check.' if piece.puts_enemy_in_check?(x, y)
   end
 end

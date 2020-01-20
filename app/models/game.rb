@@ -49,33 +49,28 @@ class Game < ApplicationRecord
     return (not player_two.nil?) ? player_two.email : "No Player Two"
   end
 
-  def get_your_king(piece)
-    return piece.game.pieces.where(piece_number: 4).first if piece.is_white?
-
-    piece.games.pieces.where(piece_number: 10).first
-  end
-
   def get_enemies(piece)
     return piece.game.pieces.where('piece_number > 5') if piece.is_white?
 
-    piece.games.pieces.where('piece_number < 6')
+    piece.game.pieces.where('piece_number < 6')
   end
 
-  def check?(piece)
-    enemies = get_enemies(piece)
-    king = get_your_king(piece)
+  def check?(white)
+    king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
+    return false unless king
 
-    if king.is_white? && enemies.any? { |enemy| enemy.can_take?(king) }
-      update(state: 'White King in Check')
-      return true
-    elsif enemies.any? { |enemy| enemy.can_take?(king) }
-      update(state: 'Black King in Check')
-      return true
-    else
-      update(state: nil)
-    end
+    enemies = get_enemies(king)
+    enemies.any? { |enemy| enemy.can_take?(king) }
+  end
 
-    false
+  def pieces_for_color(white)
+    pieces.select { |piece| piece.is_white? == white }
+  end
+
+  def end_turn(check_response, current_user)
+    return 'Black King in Check.' if check_response == 'Enemy in Check.' && current_user.id == p1_id
+
+    'White King in Check.' if check_response == 'Enemy in Check.' && current_user.id == p2_id
   end
 
   def populate_game

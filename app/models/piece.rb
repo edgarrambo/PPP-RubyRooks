@@ -60,10 +60,7 @@ class Piece < ApplicationRecord
 
   def move_to!(new_x, new_y)
     occupying_piece = Piece.where(x_position: new_x, y_position: new_y, game_id: game.id)
-    if occupying_piece.any? then
-      occupying_piece.first.set_captured!
-      occupying_piece.first.save
-    end
+    occupying_piece.first&.set_captured!
     assign_attributes(x_position: new_x, y_position: new_y)
     save
   end
@@ -74,17 +71,38 @@ class Piece < ApplicationRecord
     else
       assign_attributes(x_position: 8, y_position: 0)
     end
+
+    save
   end
 
   def can_take?(piece)
+    return if piece == nil
+
     valid_move?(piece.x_position, piece.y_position) &&
       (is_white? != piece.is_white?)
   end
 
-  def puts_game_in_check?(x, y)
+  def puts_self_in_check?(x, y)
     previous_attributes = attributes
-    update(x_position: x, y_position: y)
-    game.check?(self)
-    update(previous_attributes)
+    begin
+      update(x_position: x, y_position: y)
+      game.pieces.reload
+      game.check?(is_white?)
+    ensure
+      update(previous_attributes)
+      game.pieces.reload
+    end
+  end
+
+  def puts_enemy_in_check?(x, y)
+    previous_attributes = attributes
+    begin
+      update(x_position: x, y_position: y)
+      game.pieces.reload
+      game.check?(!is_white?)
+    ensure
+      update(previous_attributes)
+      game.pieces.reload
+    end
   end
 end
