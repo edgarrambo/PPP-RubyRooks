@@ -17,6 +17,13 @@ class PiecesController < ApplicationController
     @piece.move_to!(x, y) if flash.now[:alert].empty?
   end
 
+  def castle
+    piece = Piece.find(params[:piece_id])
+    rook = Piece.find(params[:rook_id])
+    piece.castle!(rook)
+    redirect_to game_path(piece.game)
+  end
+
   private
 
   def piece_params
@@ -34,5 +41,17 @@ class PiecesController < ApplicationController
     x = params[:x_position].to_i
     y = params[:y_position].to_i
     @piece.valid_move?(x, y)
+  end
+
+  def can_castle? 
+    piece = Piece.find(params[:piece_id])
+    rook = Piece.find(params[:rook_id])
+    if !piece.can_castle?(rook)
+      redirect_to game_path(piece.game), alert: "You can not Castle at this time!"
+    end
+
+    if piece.is_white? && piece.game.player_one != current_user || !piece.is_white? && piece.game.player_two != current_user
+      redirect_to game_path(piece.game), alert: "That is not your piece!"
+    end
   end
 end
