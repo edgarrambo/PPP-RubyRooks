@@ -61,15 +61,14 @@ class Piece < ApplicationRecord
 
   def move_to!(x, y)
     occupying_piece = Piece.where(x_position: x, y_position: y, game_id: game.id)
+    occupying_piece.first&.set_captured!
+
     last_piece_moved = game.pieces.order('updated_at').last
-    if occupying_piece.any? then
-      occupying_piece.first.set_captured!
-      occupying_piece.first.save
-    end
     if en_passant?(x, y) then
       last_piece_moved.set_captured!
       last_piece_moved.save
     end
+
     create_move(x, y)
     assign_attributes(x_position: x, y_position: y, moved: true)
     save
@@ -99,6 +98,8 @@ class Piece < ApplicationRecord
     else
       assign_attributes(x_position: 8, y_position: 0)
     end
+
+    save
   end
 
   def create_move(x, y)
@@ -114,8 +115,34 @@ class Piece < ApplicationRecord
   end
 
   def can_take?(piece)
+    return if piece == nil
+
     valid_move?(piece.x_position, piece.y_position) &&
       (is_white? != piece.is_white?)
+  end
+
+  def puts_self_in_check?(x, y)
+    previous_attributes = attributes
+    begin
+      update(x_position: x, y_position: y)
+      game.pieces.reload
+      game.check?(is_white?)
+    ensure
+      update(previous_attributes)
+      game.pieces.reload
+    end
+  end
+
+  def puts_enemy_in_check?(x, y)
+    previous_attributes = attributes
+    begin
+      update(x_position: x, y_position: y)
+      game.pieces.reload
+      game.check?(!is_white?)
+    ensure
+      update(previous_attributes)
+      game.pieces.reload
+    end
   end
 
   def can_castle?(rook)
