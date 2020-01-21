@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Game < ApplicationRecord
   belongs_to :creating_user, :class_name => 'User', :foreign_key => 'creating_user_id'
   belongs_to :invited_user, :class_name => 'User', :foreign_key => 'invited_user_id', optional: true
@@ -48,9 +49,28 @@ class Game < ApplicationRecord
     return (not player_two.nil?) ? player_two.email : "No Player Two"
   end
 
-  def check?
-    kings = pieces.where(type: 'King')
-    kings.any? { |king| pieces.any? { |piece| piece.can_take?(king) } }
+  def get_enemies(piece)
+    return piece.game.pieces.where('piece_number > 5') if piece.is_white?
+
+    piece.game.pieces.where('piece_number < 6')
+  end
+
+  def check?(white)
+    king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
+    return false unless king
+
+    enemies = get_enemies(king)
+    enemies.any? { |enemy| enemy.can_take?(king) }
+  end
+
+  def pieces_for_color(white)
+    pieces.select { |piece| piece.is_white? == white }
+  end
+
+  def end_turn(check_response, current_user)
+    return 'Black King in Check.' if check_response == 'Enemy in Check.' && current_user.id == p1_id
+
+    'White King in Check.' if check_response == 'Enemy in Check.' && current_user.id == p2_id
   end
 
   def populate_game

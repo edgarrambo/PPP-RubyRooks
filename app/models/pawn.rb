@@ -44,4 +44,11 @@ class Pawn < Piece
     return delta_x <= 2 if (is_white? and x_position == 1) or (not is_white? and x_position == 6)
     return false
   end
+
+  def promotable?
+    return true if is_white? && x_position == 7
+    return true if !is_white? && x_position == 0
+
+    false
+  end
 end
