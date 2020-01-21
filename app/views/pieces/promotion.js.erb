@@ -1,0 +1,6 @@
+$('[data-piece-id="<%= @piece.id %>"]').popover('hide');
+$('[data-piece-id="<%= @piece.id %>"]')
+.replaceWith('<%= image_tag @piece.piece_number.to_s + ".png", \
+              class: "piece", \
+              data: { piece_id: @piece.id, x_coord: @piece.x_position, y_coord: @piece.y_position } %>');
+init_draggables_and_droppables();
