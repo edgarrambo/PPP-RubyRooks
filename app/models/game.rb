@@ -59,6 +59,7 @@ class Game < ApplicationRecord
     piece.game.pieces.where('piece_number < 6')
   end
 
+  
   def check?(white)
     king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
     return false unless king
@@ -70,6 +71,26 @@ class Game < ApplicationRecord
   def pieces_for_color(white)
     pieces.select { |piece| piece.is_white? == white }
   end
+
+
+  def can_be_blocked?(king)
+
+  end
+
+  def checkmate?(white)
+    king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
+    return false unless check?(white)
+
+    enemies = get_enemies(king)
+    enemies.any? { |enemy| enemy.can_take?(king) }
+
+    return false if pieces_for_color(white).can_take?(enemy)
+    #return false if king.can_escape_check?
+    #return false if enemy.can_be_blocked?
+
+    true
+  end
+
 
   def populate_game
     # White Rooks

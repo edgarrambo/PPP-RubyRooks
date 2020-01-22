@@ -16,3 +16,8 @@ class King < Piece
     end
   end
 end
+
+
+def can_escape_check?
+
+end
