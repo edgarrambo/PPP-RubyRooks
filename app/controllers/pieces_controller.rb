@@ -6,6 +6,8 @@ class PiecesController < ApplicationController
 
     flash.now[:alert] << 'Invalid move!' unless @piece.valid_move?(@x, @y)
     flash.now[:alert] << 'Not your piece!' unless current_player_controls_piece?(@piece)
+    flash.now[:alert] << 'Not your turn!' unless current_players_turn?(@game)
+    flash.now[:alert] << 'No second player!' unless game_has_two_players?(@game)
     check_response = test_check(@piece, @x, @y)
     @piece.move_to!(@x, @y) if flash.now[:alert].empty?
     flash.now[:alert] << @game.end_turn(check_response, current_user) if check_response
@@ -48,6 +50,20 @@ class PiecesController < ApplicationController
   def current_player_controls_piece?(piece)
     piece.is_white? && piece.game.player_one == current_user ||
       !piece.is_white? && piece.game.player_two == current_user
+  end
+
+  def current_players_turn?(game)
+    last_piece_moved = game.pieces.order('updated_at').last.moves.order('updated_at').last
+    if last_piece_moved.nil?  
+      return game.player_one == current_user
+    end
+    return true if game.player_one == current_user && last_piece_moved.start_piece > 5
+    return true if game.player_two == current_user && last_piece_moved.start_piece < 6
+    return false
+  end
+
+  def game_has_two_players?(game)
+    return !game.player_one.nil? && !game.player_two.nil?
   end
 
   def test_check(piece, x, y)
