@@ -54,11 +54,10 @@ class PiecesController < ApplicationController
 
   def current_players_turn?(game)
     last_piece_moved = game.pieces.order('updated_at').last.moves.order('updated_at').last
-    if last_piece_moved.nil?  
-      return game.player_one == current_user
-    end
+    return true if last_piece_moved.nil? && game.player_one == current_user
+    return false if last_piece_moved.nil?
     return true if game.player_one == current_user && last_piece_moved.start_piece > 5
-    return true if game.player_two == current_user && last_piece_moved.start_piece < 6
+    return true if game.player_two == current_user && last_piece_moved&.start_piece < 6
     return false
   end
 

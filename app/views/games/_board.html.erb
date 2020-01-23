@@ -9,7 +9,7 @@
 <% 8.times do |y| %>
   <div class="row justify-content-center">
     <% 8.times do |x| %>
-      <div id="<%= x %>,<%= y %>" data-x-coord=<%= x %> data-y-coord=<%= y %> class="<%= black_tile?(x,y) ? "black tile" : "white tile" %>">
+      <div id="<%= x %>-<%= y %>" data-x-coord=<%= x %> data-y-coord=<%= y %> class="<%= black_tile?(x,y) ? "black tile" : "white tile" %>">
         <% piece = get_piece(x, y, @game) %>
         <% if can_move_piece?(piece) %>
           <%= image_tag piece.piece_number.to_s + ".png", 
@@ -18,7 +18,8 @@
         <% end %>
         <% if can_not_move_piece?(piece) %>
           <%= image_tag piece.piece_number.to_s + ".png", 
-                class: 'piece2' %>
+                class: 'piece2',
+                data: {piece_id: piece.id} %>
         <% end %>
       </div>
     <% end %>

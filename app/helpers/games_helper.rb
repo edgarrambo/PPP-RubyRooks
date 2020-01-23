@@ -60,6 +60,19 @@ module GamesHelper
     end
   end
 
+  def player_ones_turn?
+    last_move = @game.pieces.order('updated_at').last.moves.order('updated_at').last
+    return true if last_move.nil?
+    return true if last_move.start_piece > 5
+    return false 
+  end
+
+  def player_twos_turn?
+    last_move = @game.pieces.order('updated_at').last.moves.order('updated_at').last
+    return false if last_move.nil?
+    return true if last_move.start_piece < 6
+    return false 
+  end
   def your_turn_and_your_player_one?
     return your_turn? && @game.player_one == current_user
   end

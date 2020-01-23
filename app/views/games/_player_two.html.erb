@@ -1,4 +1,4 @@
-<h4 class="<%= your_turn_and_your_player_two? ? "your-turn" : "" %>">
+<h4 class="<%= player_twos_turn? ? "your-turn" : "not-your-turn" %>">
   <%= @game.get_player_two %>
   <br />
 </h4>
@@ -18,5 +18,5 @@
 <h3>Captured Pieces</h3>
 <br />
 <% captured_white_pieces.each do |piece| %>
-  <div class="captured"><%= image_tag piece.piece_number.to_s + ".png", class: "piece" %></div>
+  <div class="captured"><%= image_tag piece.piece_number.to_s + ".png", class: "piece2" %></div>
 <% end %>

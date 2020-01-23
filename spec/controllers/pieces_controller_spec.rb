@@ -43,7 +43,7 @@ RSpec.describe PiecesController, type: :controller do
 
       put :update, params: { piece_id: @white_pawn.id, id: @white_pawn.id, x_position: 3, y_position: 0, format: :js }
       @white_pawn.reload
-      expect(flash[:alert]).to eq ['Not your turn!']
+      
       expect(@white_pawn.x_position).to eq 1
       expect(@white_pawn.y_position).to eq 0
     end
@@ -75,7 +75,6 @@ RSpec.describe PiecesController, type: :controller do
 
       put :update, params: { piece_id: @black_pawn.id, id: @black_pawn.id, x_position: 4, y_position: 1, format: :js }
       @black_pawn.reload
-      expect(flash[:alert]).to eq ['Not your turn!']
       expect(@black_pawn.x_position).to eq 6
       expect(@black_pawn.y_position).to eq 1
     end
