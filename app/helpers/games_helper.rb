@@ -73,14 +73,7 @@ module GamesHelper
     return true if last_move.start_piece < 6
     return false 
   end
-  def your_turn_and_your_player_one?
-    return your_turn? && @game.player_one == current_user
-  end
-
-  def your_turn_and_your_player_two?
-    return your_turn? && @game.player_two == current_user
-  end
-
+  
   def can_move_piece?(piece)
     return piece.present? && players_piece?(piece) && your_turn?
   end

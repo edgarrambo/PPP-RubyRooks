@@ -22,13 +22,23 @@ RSpec.describe PiecesController, type: :controller do
     end
 
     it 'should require two players' do
+      user = create(:user)
+      game = create(:game, creating_user_id: user.id)
+      piece = create(:pawn, x_position: 1, y_position: 0, piece_number: 5, game_id: game.id)
 
+      sign_in user
+
+      put :update, params: {id: piece.id, x_position: 3, y_position: 0, format: :js }
+      piece.reload
+      expect(flash[:alert]).to eq ['No second player!']
+      expect(piece.x_position).to eq 1
+      expect(piece.y_position).to eq 0
     end
 
     it 'should not allow white players to move black pieces' do
       sign_in @player1
 
-      put :update, params: { piece_id: @black_pawn.id, id: @black_pawn.id, x_position: 4, y_position: 1, format: :js }
+      put :update, params: {id: @black_pawn.id, x_position: 4, y_position: 1, format: :js }
       @black_pawn.reload
       expect(flash[:alert]).to eq ['Not your piece!']
       expect(@black_pawn.x_position).to eq 6
@@ -41,7 +51,7 @@ RSpec.describe PiecesController, type: :controller do
 
       sign_in @player1
 
-      put :update, params: { piece_id: @white_pawn.id, id: @white_pawn.id, x_position: 3, y_position: 0, format: :js }
+      put :update, params: {id: @white_pawn.id, x_position: 3, y_position: 0, format: :js }
       @white_pawn.reload
       
       expect(@white_pawn.x_position).to eq 1
@@ -51,7 +61,7 @@ RSpec.describe PiecesController, type: :controller do
     it 'allows white players to move white pieces' do
       sign_in @player1
 
-      put :update, params: { piece_id: @white_pawn.id, id: @white_pawn.id, x_position: 3, y_position: 0, format: :js }
+      put :update, params: {id: @white_pawn.id, x_position: 3, y_position: 0, format: :js }
       @white_pawn.reload
       expect(@white_pawn.x_position).to eq 3
       expect(@white_pawn.y_position).to eq 0
@@ -63,7 +73,7 @@ RSpec.describe PiecesController, type: :controller do
       
       sign_in @player2
 
-      put :update, params: { piece_id: @white_pawn.id, id: @white_pawn.id, x_position: 3, y_position: 0, format: :js }
+      put :update, params: {id: @white_pawn.id, x_position: 3, y_position: 0, format: :js }
 
       expect(flash[:alert]).to eq ['Not your piece!']
       expect(@white_pawn.x_position).to eq 1
@@ -73,7 +83,7 @@ RSpec.describe PiecesController, type: :controller do
     it 'should not allow black players to move pieces on white players turn' do
       sign_in @player2
 
-      put :update, params: { piece_id: @black_pawn.id, id: @black_pawn.id, x_position: 4, y_position: 1, format: :js }
+      put :update, params: {id: @black_pawn.id, x_position: 4, y_position: 1, format: :js }
       @black_pawn.reload
       expect(@black_pawn.x_position).to eq 6
       expect(@black_pawn.y_position).to eq 1
@@ -85,7 +95,7 @@ RSpec.describe PiecesController, type: :controller do
 
       sign_in @player2
 
-      put :update, params: { piece_id: @black_pawn.id, id: @black_pawn.id, x_position: 4, y_position: 1, format: :js }
+      put :update, params: {id: @black_pawn.id, x_position: 4, y_position: 1, format: :js }
       @black_pawn.reload
       expect(@black_pawn.x_position).to eq 4
       expect(@black_pawn.y_position).to eq 1
