@@ -211,5 +211,37 @@ RSpec.describe PiecesController, type: :controller do
       expect(promoted_pawn.piece_number).to eq 8
       expect(promoted_pawn.valid_move?(3, 7)).to eq true
     end
+
+    it 'puts White King in check upon Black Pawn promotion' do
+      game = create(:game)
+
+      sign_in game.player_one
+
+      black_pawn = create(:pawn, x_position: 0, y_position: 4, piece_number: 11, game_id: game.id)
+      white_king = create(:king, x_position: 2, y_position: 6, piece_number: 4, game_id: game.id)
+
+      put :promotion, params: { piece_id: black_pawn.id, id: black_pawn.id, promotion: 'Bishop',
+                                x_position: black_pawn.x_position, y_position: black_pawn.y_position, format: :js }
+
+      promoted_pawn = Piece.find(black_pawn.id)
+
+      expect(promoted_pawn.puts_enemy_in_check?(0, 4)).to eq true
+    end
+
+    it 'puts Black King in check upon White Pawn promotion' do
+      game = create(:game)
+
+      sign_in game.player_one
+
+      white_pawn = create(:pawn, x_position: 0, y_position: 4, piece_number: 5, game_id: game.id)
+      black_king = create(:king, x_position: 0, y_position: 6, piece_number: 10, game_id: game.id)
+
+      put :promotion, params: { piece_id: white_pawn.id, id: white_pawn.id, promotion: 'Rook',
+                                x_position: white_pawn.x_position, y_position: white_pawn.y_position, format: :js }
+
+      promoted_pawn = Piece.find(white_pawn.id)
+
+      expect(promoted_pawn.puts_enemy_in_check?(0, 4)).to eq true
+    end
   end
 end
