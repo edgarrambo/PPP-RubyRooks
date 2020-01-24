@@ -32,6 +32,17 @@ FactoryBot.define do
   factory :pawn, parent: :piece, class: 'Pawn' do
   end
 
+  factory :move do
+    start_piece { 10 }
+    start_x     {  4 }
+    start_y     {  4 }
+    final_x     {  5 }
+    final_y     {  4 }
+
+    association :game
+    association :user
+  end
+
   factory :user do
     sequence(:email) { |n| "person#{n}@example.com" }
     password { 'password' }

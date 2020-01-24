@@ -68,7 +68,6 @@ class Piece < ApplicationRecord
 
       if en_passant?(x, y) then
         last_piece_moved.set_captured!
-        last_piece_moved.save
       end
     end
 
@@ -152,7 +151,8 @@ class Piece < ApplicationRecord
     x_sorted_array = [rook.x_position, x_position].sort
     y_sorted_array = [rook.y_position, y_position].sort
 
-    if moved? ||
+    if !players_turn_and_pieces?(rook) ||
+       moved? ||
        game.pieces.where(x_position: rook.x_position, y_position: rook.y_position).first.moved? ||
        horizontal_obstruction?(rook.x_position, rook.y_position, x_sorted_array, y_sorted_array) ||
        opponent_pieces.any? { |piece| piece.can_take?(self) } ||
@@ -162,6 +162,15 @@ class Piece < ApplicationRecord
     end
 
     return true
+  end
+
+  def players_turn_and_pieces?(rook)
+    last_piece_moved = game.pieces.order('updated_at').last.moves.order('updated_at').last
+    if last_piece_moved.present?
+      last_piece_moved_was_black = last_piece_moved.start_piece > 5
+      return last_piece_moved_was_black && is_white? && rook.is_white? || !last_piece_moved_was_black && !is_white? && !rook.is_white?
+    end
+    return false
   end
 
   def moves_into_check?(x, y)
@@ -178,23 +187,31 @@ class Piece < ApplicationRecord
 
   def castle!(rook)
     if is_white? and rook.y_position == 0
+      rook.create_move(0, 3)
       rook.assign_attributes(y_position: 3, moved: true)
       rook.save
+      create_move(0, 2)
       assign_attributes(y_position: 2, moved: true)
       save
     elsif is_white? and rook.y_position == 7
+      rook.create_move(0, 5)
       rook.assign_attributes(y_position: 5, moved: true)
       rook.save
+      create_move(0, 6)
       assign_attributes(y_position: 6, moved: true)
       save
     elsif !is_white? and rook.y_position == 0
+      rook.create_move(7, 3)
       rook.assign_attributes(y_position: 3, moved: true)
       rook.save
+      create_move(7, 2)
       assign_attributes(y_position: 2, moved: true)
       save
     else
+      rook.create_move(7, 5)
       rook.assign_attributes(y_position: 5, moved: true)
       rook.save
+      create_move(7, 6)
       assign_attributes(y_position: 6, moved: true)
       save
     end

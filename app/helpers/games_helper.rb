@@ -42,4 +42,43 @@ module GamesHelper
   def captured_white_pieces
     return @game.pieces.where(x_position: 9)
   end
+
+  def players_piece?(piece)
+    return piece.is_white? && piece.game.player_one == current_user || !piece.is_white? && piece.game.player_two == current_user
+  end
+
+  def your_turn?
+    last_move = @game.pieces.order('updated_at').last.moves.order('updated_at').last
+    if last_move.nil? then
+      return @game.player_one == current_user
+    elsif last_move.start_piece > 5 
+      return @game.player_one == current_user
+    elsif last_move.start_piece < 6
+      return @game.player_two == current_user
+    else
+      return false
+    end
+  end
+
+  def player_ones_turn?
+    last_move = @game.pieces.order('updated_at').last.moves.order('updated_at').last
+    return true if last_move.nil?
+    return true if last_move.start_piece > 5
+    return false 
+  end
+
+  def player_twos_turn?
+    last_move = @game.pieces.order('updated_at').last.moves.order('updated_at').last
+    return false if last_move.nil?
+    return true if last_move.start_piece < 6
+    return false 
+  end
+  
+  def can_move_piece?(piece)
+    return piece.present? && players_piece?(piece) && your_turn?
+  end
+
+  def can_not_move_piece?(piece)
+    return piece.present? && !players_piece?(piece) || piece.present? && !your_turn?
+  end
 end

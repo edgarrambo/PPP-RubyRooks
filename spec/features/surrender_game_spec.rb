@@ -10,7 +10,7 @@ RSpec.describe 'Surrendering a Game', type: :feature do
       game = create(:game, name: 'Testerroni Pizza',
         p1_id: player1.id, p2_id: player2.id,
         creating_user_id: player1.id, invited_user_id: player2.id)
-
+      game.populate_game
       sign_in player1
 
       visit game_path(game)
@@ -27,7 +27,7 @@ RSpec.describe 'Surrendering a Game', type: :feature do
       game = create(:game, name: 'Testerroni Pizza',
         p1_id: player1.id, p2_id: player2.id,
         creating_user_id: player1.id, invited_user_id: player2.id)
-
+      game.populate_game
       sign_in player2
 
       visit game_path(game)
@@ -44,7 +44,7 @@ RSpec.describe 'Surrendering a Game', type: :feature do
       game = create(:game, name: 'Testerroni Pizza',
         p1_id: player1.id, p2_id: player2.id,
         creating_user_id: player1.id, invited_user_id: player2.id)
-
+      game.populate_game
       sign_in player2
 
       visit game_path(game)

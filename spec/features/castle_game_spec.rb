@@ -20,6 +20,9 @@ RSpec.describe 'Castling in a Game', type: :feature do
     end
 
     scenario 'White player queen side castles' do
+      black_pawn = create(:pawn, x_position: 6, y_position: 2, piece_number: 11, game_id: @game.id)
+      move = create(:move, game_id: @game.id, piece_id: black_pawn.id, start_piece: 11)
+
       sign_in @player1
       visit game_path(@game)
       click_on 'White Queen Side Castle'
@@ -30,6 +33,9 @@ RSpec.describe 'Castling in a Game', type: :feature do
     end
 
     scenario 'Black player king side castles' do
+      white_pawn = create(:pawn, x_position: 1, y_position: 2, piece_number: 5, game_id: @game.id)
+      move = create(:move, game_id: @game.id, piece_id: white_pawn.id, start_piece: 5)
+
       sign_in @player2
       visit game_path(@game)
       click_on 'Black King Side Castle'
