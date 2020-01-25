@@ -8,9 +8,9 @@ class PiecesController < ApplicationController
     flash.now[:alert] << 'Not your piece!' unless current_player_controls_piece?(@piece)
     flash.now[:alert] << 'Not your turn!' unless current_players_turn?(@game)
     flash.now[:alert] << 'No second player!' unless game_has_two_players?(@game)
-    check_response = test_check(@piece, @x, @y)
+    check_response = check_test(@piece, @x, @y)
     @piece.move_to!(@x, @y) if flash.now[:alert].empty?
-    flash.now[:alert] << @game.end_turn(check_response, current_user) if check_response
+    flash.now[:alert] << check_response if check_response
   end
 
   def castle
@@ -65,15 +65,18 @@ class PiecesController < ApplicationController
     return !game.player_one.nil? && !game.player_two.nil?
   end
 
-  def test_check(piece, x, y)
-    return false if piece.can_take?(helpers.get_piece(x, y, piece.game))
+  def check_test(piece, x, y)
+    return false if piece.can_take?(helpers.get_piece(x, y, piece.game)) && piece.type == 'King'
+    return false if piece.can_take?(helpers.get_piece(x, y, piece.game)) && !piece.puts_self_in_check?(x, y)
 
     if piece.puts_self_in_check?(x, y)
       flash.now[:alert] << 'You cannot put/leave yourself in Check.'
       return false
     end
 
-    return 'Enemy in Check.' if piece.puts_enemy_in_check?(x, y)
+    return false unless piece.puts_enemy_in_check?(x, y)
+
+    current_user.id == piece.game.p1_id ? 'Black King in Check.' : 'White King in Check.'
   end
 
   def can_castle? 

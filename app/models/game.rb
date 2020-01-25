@@ -67,12 +67,6 @@ class Game < ApplicationRecord
     pieces.select { |piece| piece.is_white? == white }
   end
 
-  def end_turn(check_response, current_user)
-    return 'Black King in Check.' if check_response == 'Enemy in Check.' && current_user.id == p1_id
-
-    'White King in Check.' if check_response == 'Enemy in Check.' && current_user.id == p2_id
-  end
-
   def populate_game
     # White Rooks
     pieces.create(x_position: 0, y_position: 0, piece_number: 0, type: 'Rook')
