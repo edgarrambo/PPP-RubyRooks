@@ -23,6 +23,10 @@ class Game < ApplicationRecord
     end
   end
 
+  def opponent(current_user)
+    current_user.id == p1_id ? player_two : player_one
+  end
+
   def player_one
     return nil if p1_id.nil?
     return User.find(p1_id)
