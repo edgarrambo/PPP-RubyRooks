@@ -62,4 +62,59 @@ RSpec.describe Game, type: :model do
       end
     end
   end
+
+  describe 'fifty_move_rule?' do
+    before(:each) do
+      @game = create(:game)
+      @piece = create(:king, game_id: @game.id, piece_number: 10)
+    end
+
+    it 'returns false if no moves exist' do
+      expect(@game.fifty_move_rule?).to eq false
+    end
+
+    it 'returns false if less then 100 moves' do
+      75.times do 
+        move = create(:move, piece_id: @piece.id, game_id: @game.id)
+      end
+      expect(@game.fifty_move_rule?).to eq false
+    end
+
+    it 'returns false if pawn was moved in the last fifty moves' do
+      white_pawn = create(:pawn, game_id: @game.id, piece_number: 5)
+      125.times do 
+        move = create(:move, piece_id: @piece.id, game_id: @game.id)
+      end
+      pawn_move = create(:move, piece_id: white_pawn.id, game_id: @game.id, start_piece: 5)
+
+      75.times do 
+        move = create(:move, piece_id: @piece.id, game_id: @game.id)
+      end
+      
+      expect(@game.fifty_move_rule?).to eq false
+    end
+
+    it 'returns false if piece was captured in the last fifty moves' do
+      125.times do 
+        move = create(:move, piece_id: @piece.id, game_id: @game.id)
+      end
+      white_pawn = create(:pawn, game_id: @game.id, piece_number: 5, x_position: 9)
+
+      75.times do 
+        move = create(:move, piece_id: @piece.id, game_id: @game.id)
+      end
+      
+      expect(@game.fifty_move_rule?).to eq false
+    end
+
+    it 'returns true if more then 100 moves' do 
+      white_pawn = create(:pawn, game_id: @game.id, piece_number: 5)
+      pawn_move = create(:move, piece_id: white_pawn.id, game_id: @game.id, start_piece: 5)
+      white_pawn_captured = create(:pawn, game_id: @game.id, piece_number: 5, x_position: 9)
+      101.times do 
+        move = create(:move, piece_id: @piece.id, game_id: @game.id)
+      end
+      expect(@game.fifty_move_rule?).to eq true
+    end
+  end
 end
