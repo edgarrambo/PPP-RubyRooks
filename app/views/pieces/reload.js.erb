@@ -1,0 +1,4 @@
+$('.game-board').html('<%= j (render partial: 'games/board') %>');
+$('.player-one').html('<%= j (render partial: 'games/player_one') %>');
+$('.player-two').html('<%= j (render partial: 'games/player_two') %>');
+init_draggables_and_droppables();

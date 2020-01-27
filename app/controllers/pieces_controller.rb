@@ -11,6 +11,9 @@ class PiecesController < ApplicationController
     check_response = check_test(@piece, @x, @y)
     @piece.move_to!(@x, @y) if flash.now[:alert].empty?
     flash.now[:alert] << check_response if check_response
+    return unless flash.now[:alert].empty?
+
+    ActionCable.server.broadcast 'game_channel', move: render_movement, piece: @piece
   end
 
   def castle
@@ -32,6 +35,15 @@ class PiecesController < ApplicationController
     @piece.update(type: @promotion, piece_number: number)
   end
 
+  def reload
+    @piece = Piece.find(params[:piece_id])
+    @game = Game.find(params[:game_id])
+
+    respond_to do |format|
+      format.js { render 'reload' }
+    end
+  end
+
   private
 
   def piece_params
@@ -45,6 +57,12 @@ class PiecesController < ApplicationController
     @y = params[:y_position].to_i
     @promotion = params[:promotion]
     flash.now[:alert] = []
+  end
+
+  def render_movement
+    respond_to do |format|
+      format.js { render 'update' }
+    end
   end
 
   def current_player_controls_piece?(piece)
