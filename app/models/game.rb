@@ -53,12 +53,6 @@ class Game < ApplicationRecord
     return (not player_two.nil?) ? player_two.email : "No Player Two"
   end
 
-  def get_enemies(piece)
-    return piece.game.pieces.where('piece_number > 5') if piece.is_white?
-
-    piece.game.pieces.where('piece_number < 6')
-  end
-
   
   def check?(white)
     king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
@@ -73,21 +67,24 @@ class Game < ApplicationRecord
   end
 
 
-  def can_be_blocked?(king)
+  def threat_can_be_captured?(white)
+    byebug
+    king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
+    threats = king.detect_threats
+    threats.each do |threat|
+      allies = pieces_for_color(white)
+      allies.any? {|ally| ally.can_take?(threat)}
+    end
 
   end
 
   def checkmate?(white)
+    
     king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
+    return false unless king
     return false unless check?(white)
-
-    enemies = get_enemies(king)
-    enemies.any? { |enemy| enemy.can_take?(king) }
-
-    return false if pieces_for_color(white).can_take?(enemy)
-    #return false if king.can_escape_check?
-    #return false if enemy.can_be_blocked?
-
+    return false if king.can_escape_check?
+    return false if threat_can_be_captured?(white)
     true
   end
 

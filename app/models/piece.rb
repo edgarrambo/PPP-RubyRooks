@@ -122,6 +122,11 @@ class Piece < ApplicationRecord
     valid_move?(piece.x_position, piece.y_position) &&
       (is_white? != piece.is_white?)
   end
+  
+  
+  def can_be_blocked?
+
+  end
 
   def puts_self_in_check?(x, y)
     previous_attributes = attributes
