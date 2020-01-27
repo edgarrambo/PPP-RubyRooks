@@ -14,7 +14,7 @@ class PiecesController < ApplicationController
     @game.update(state: check_response) if check_response
 
     opponent = @game.opponent(current_user)
-    ActionCable.server.broadcast "game_channel_user_#{opponent.id}", move: render_movement, piece: @piece
+    ActionCable.server.broadcast "game_channel_user_#{opponent&.id}", move: render_movement, piece: @piece
   end
 
   def castle
