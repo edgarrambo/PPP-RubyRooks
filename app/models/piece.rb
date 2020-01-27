@@ -216,4 +216,44 @@ class Piece < ApplicationRecord
       save
     end
   end
+
+  def can_claim_draw?
+    return true if stalemate?
+    return true if threefold_repitition?
+    return true if fifty_move_rule?
+    return false
+  end
+
+  def stalemate?
+
+  end
+
+  def threefold_repition? # This one has me beat for now
+    return false
+  end
+
+  def fifty_move_rule?
+    return false if game.moves.count <= 100
+    # The limit is 100 since a move in our app is only one player but in chess is for each player
+    last_fifty_moves = game.moves.order(updated_at: :desc).limit(100) 
+    last_fifty_moves.each do |move|
+      return false if move.start_piece == 5 || move.start_piece == 11
+    end
+    last_white_player_capture = game.pieces.where(x_position: 8).order('updated_at').last
+    last_black_player_capture = game.pieces.where(x_position: 9).order('updated_at').last
+    if last_white_player_capture && last_black_player_capture
+      return false if last_fifty_moves.last.updated_at < last_white_player_capture.updated_at 
+      return false if last_fifty_moves.last.updated_at < last_black_player_capture.updated_at
+      return true
+    end
+    if last_white_player_capture 
+      return false if last_fifty_moves.last.updated_at < last_white_player_capture.updated_at
+      return true
+    end
+    if last_black_player_capture
+      return false if last_fifty_moves.last.updated_at < last_black_player_capture.updated_at
+      return true
+    end
+    return true 
+  end
 end
