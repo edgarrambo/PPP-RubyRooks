@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GamesController < ApplicationController
-  before_action :authenticate_user!, only: %i[new create show update_invited_user surrender]
+  before_action :authenticate_user!, only: %i[new create show update_invited_user surrender draw]
 
   def index
     @games = Game.all
@@ -49,6 +49,14 @@ class GamesController < ApplicationController
     else
       @game.update(winner_id: @game.p1_id)
     end
+
+    redirect_to game_path(@game)
+  end
+
+  def draw
+    @game = Game.find(params[:game_id])
+    @game.write_attribute(:state, 'Draw')
+    @game.save
 
     redirect_to game_path(@game)
   end

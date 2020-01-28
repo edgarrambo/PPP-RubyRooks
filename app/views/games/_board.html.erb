@@ -5,7 +5,9 @@
     <% end %>
   </div>
 <% end %>
-
+<% if @game.state == 'Draw' %>
+  <div class="row justify-content-center"><h3>This game is over. It ended in a draw!</h3></div>
+<% end %>
 <% 8.times do |y| %>
   <div class="row justify-content-center">
     <% 8.times do |x| %>

@@ -35,6 +35,25 @@ RSpec.describe PiecesController, type: :controller do
       expect(piece.y_position).to eq 0
     end
 
+    it 'should not allow moves if game is in a state of draw' do
+      player1 = create(:user)
+      player2 = create(:user)
+      game = create(:game, name: 'Testerroni Pizza',
+        p1_id: player1.id, p2_id: player2.id,
+        creating_user_id: player1.id, invited_user_id: player2.id, state: 'Draw')
+      piece = create(:pawn, x_position: 1, y_position: 0, piece_number: 5, game_id: game.id)
+
+      sign_in player1
+
+      put :update, params: {id: piece.id, x_position: 3, y_position: 0, format: :js }
+      piece.reload
+      game.reload
+      expect(flash[:alert]).to eq ['This game ended in a draw!']
+      expect(piece.x_position).to eq 1
+      expect(piece.y_position).to eq 0
+      expect(game.state).to eq 'Draw'
+    end
+
     it 'should not allow white players to move black pieces' do
       sign_in @player1
 

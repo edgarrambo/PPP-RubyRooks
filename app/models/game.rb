@@ -105,17 +105,74 @@ class Game < ApplicationRecord
   end
 
   def can_claim_draw?(current_user)
-    return true if stalemate?
-    return true if threefold_repitition?
+    return true if stalemate?(current_user)
+    return true if threefold_repetition?
     return true if fifty_move_rule?
     return false
   end
 
-  def stalemate?
-    
+  def stalemate?(current_user)
+    return false if state == 'Black King in Check.'
+    return false if state == 'White King in Check.'
+    if current_user.id == p1_id
+      white_king = pieces.where(piece_number: 4).first
+      white_king_x = white_king.x_position
+      white_king_y = white_king.y_position
+      opponent_pieces = pieces.where('piece_number > 5')
+      if white_king_x == 0
+        white_king_possible_x = [0, 1]
+      elsif white_king_x == 7
+        white_king_possible_x = [6, 7]
+      else
+        white_king_possible_x = [white_king_x - 1, white_king_x, white_king_x + 1]
+      end
+      if white_king_y == 0
+        white_king_possible_y = [0, 1]
+      elsif white_king_y == 7
+        white_king_possible_y = [6, 7]
+      else
+        white_king_possible_y = [white_king_y - 1, white_king_y, white_king_y + 1]
+      end
+      white_king_possible_x.each do |x|
+        white_king_possible_y.each do |y|
+          next if x == white_king_x && y == white_king_y
+          return false if !white_king.puts_self_in_check?(x, y)
+        end
+      end
+      return true
+    elsif current_user.id == p2_id
+      black_king = pieces.where(piece_number: 10).first
+      black_king_x = black_king.x_position
+      black_king_y = black_king.y_position
+      opponent_pieces = pieces.where('piece_number < 6')
+      if black_king_x == 0
+        black_king_possible_x = [0, 1]
+      elsif black_king_x == 7
+        black_king_possible_x = [6, 7]
+      else
+        black_king_possible_x = [black_king_x - 1, black_king_x, black_king_x + 1]
+      end
+      if black_king_y == 0
+        black_king_possible_y = [0, 1]
+      elsif black_king_y == 7
+        black_king_possible_y = [6, 7]
+      else
+        black_king_possible_y = [black_king_y - 1, black_king_y, black_king_y + 1]
+      end
+      black_king_possible_x.each do |x|
+        black_king_possible_y.each do |y|
+          next if x == black_king_x && y == black_king_y
+          return false if !black_king.puts_self_in_check?(x, y)
+        end
+      end
+      return true
+    else
+      return false
+    end
+
   end
 
-  def threefold_repition? # This one has me beat for now
+  def threefold_repetition? # This one has me beat for now
     return false
   end
 

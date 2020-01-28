@@ -117,4 +117,69 @@ RSpec.describe Game, type: :model do
       expect(@game.fifty_move_rule?).to eq true
     end
   end
+
+  describe 'stalemate?' do
+    before (:each) do
+      @player1 = create(:user)
+      @player2 = create(:user)
+      @game = create(:game, name: 'Testerroni Pizza',
+        p1_id: @player1.id, p2_id: @player2.id,
+        creating_user_id: @player1.id, invited_user_id: @player2.id)
+      @white_king = create(:king, x_position: 0, y_position: 0, game_id: @game.id, piece_number: 4)
+      @black_rook = create(:rook, x_position: 1, y_position: 4, game_id: @game.id, piece_number: 6)
+      @black_king = create(:king, x_position: 4, y_position: 4, game_id: @game.id, piece_number: 10)
+    end
+
+    it 'returns false if white king can move' do
+      expect(@game.stalemate?(@player1)).to eq false
+    end
+
+    it 'returns false if white king can move out legally by taking piece' do
+      black_rook2 = create(:rook, x_position: 1, y_position: 1, game_id: @game.id, piece_number: 6)
+      @black_rook.destroy
+
+      expect(@game.stalemate?(@player1)).to eq false
+    end
+
+    it 'returns true if white king can not move out legally by taking piece' do
+      black_rook2 = create(:rook, x_position: 1, y_position: 1, game_id: @game.id, piece_number: 6)
+
+      expect(@game.stalemate?(@player1)).to eq true
+    end
+
+    it 'returns true if white king can not move legally' do
+      black_queen = create(:queen, x_position: 3, y_position: 1, game_id: @game.id, piece_number: 9)
+
+      expect(@game.stalemate?(@player1)).to eq true
+    end
+
+    it 'returns false if black_king king can move' do
+      expect(@game.stalemate?(@player2)).to eq false
+    end
+
+    it 'returns false if black king can move legally by taking piece' do
+      white_rook1 = create(:rook, x_position: 3, y_position: 3, game_id: @game.id, piece_number: 0)
+      white_rook2 = create(:rook, x_position: 5, y_position: 5, game_id: @game.id, piece_number: 0)
+
+      expect(@game.stalemate?(@player2)).to eq false
+    end
+
+    it 'returns true if black king can not move out legally by taking piece' do
+      white_rook1 = create(:rook, x_position: 3, y_position: 3, game_id: @game.id, piece_number: 0)
+      white_rook2 = create(:rook, x_position: 5, y_position: 5, game_id: @game.id, piece_number: 0)
+      white_queen = create(:queen, x_position: 2, y_position: 2, game_id: @game.id, piece_number: 3)
+      white_bishop = create(:bishop, x_position: 6, y_position: 6, game_id: @game.id, piece_number: 2)
+
+      expect(@game.stalemate?(@player2)).to eq true
+    end
+
+    it 'returns true if black king can not move legally' do
+      white_rook1 = create(:rook, x_position: 2, y_position: 3, game_id: @game.id, piece_number: 0)
+      white_rook2 = create(:rook, x_position: 6, y_position: 5, game_id: @game.id, piece_number: 0)
+      white_rook3 = create(:rook, x_position: 3, y_position: 2, game_id: @game.id, piece_number: 0)
+      white_rook4 = create(:rook, x_position: 5, y_position: 6, game_id: @game.id, piece_number: 0)
+      
+      expect(@game.stalemate?(@player2)).to eq true
+    end
+  end
 end

@@ -10,6 +10,6 @@ Rails.application.routes.draw do
   end
 
   resources :games, only: %i[index new create show] do
-    get :update_invited_user, :surrender
+    get :update_invited_user, :surrender, :draw
   end
 end
