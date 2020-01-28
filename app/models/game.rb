@@ -119,61 +119,35 @@ class Game < ApplicationRecord
     return false if state == 'Black King in Check.'
     return false if state == 'White King in Check.'
     if current_user.id == p1_id
-      white_king = pieces.where(piece_number: 4).first
-      white_king_x = white_king.x_position
-      white_king_y = white_king.y_position
-      opponent_pieces = pieces.where('piece_number > 5')
-      if white_king_x == 0
-        white_king_possible_x = [0, 1]
-      elsif white_king_x == 7
-        white_king_possible_x = [6, 7]
-      else
-        white_king_possible_x = [white_king_x - 1, white_king_x, white_king_x + 1]
-      end
-      if white_king_y == 0
-        white_king_possible_y = [0, 1]
-      elsif white_king_y == 7
-        white_king_possible_y = [6, 7]
-      else
-        white_king_possible_y = [white_king_y - 1, white_king_y, white_king_y + 1]
-      end
-      white_king_possible_x.each do |x|
-        white_king_possible_y.each do |y|
-          next if x == white_king_x && y == white_king_y
-          return false if !white_king.puts_self_in_check?(x, y)
-        end
-      end
-      return true
+      return !legal_moves(true)
     elsif current_user.id == p2_id
-      black_king = pieces.where(piece_number: 10).first
-      black_king_x = black_king.x_position
-      black_king_y = black_king.y_position
-      opponent_pieces = pieces.where('piece_number < 6')
-      if black_king_x == 0
-        black_king_possible_x = [0, 1]
-      elsif black_king_x == 7
-        black_king_possible_x = [6, 7]
-      else
-        black_king_possible_x = [black_king_x - 1, black_king_x, black_king_x + 1]
-      end
-      if black_king_y == 0
-        black_king_possible_y = [0, 1]
-      elsif black_king_y == 7
-        black_king_possible_y = [6, 7]
-      else
-        black_king_possible_y = [black_king_y - 1, black_king_y, black_king_y + 1]
-      end
-      black_king_possible_x.each do |x|
-        black_king_possible_y.each do |y|
-          next if x == black_king_x && y == black_king_y
-          return false if !black_king.puts_self_in_check?(x, y)
-        end
-      end
-      return true
+      return !legal_moves(false)
     else
       return false
     end
+  end
 
+  def legal_moves(white)
+    legal_moves = []
+    playable_pieces(white).each do |piece|
+      8.times do |x|
+        8.times do |y|
+          next if !piece.valid_move?(x,y)
+          next if piece.puts_self_in_check?(x,y)
+          legal_moves << piece
+        end
+      end
+    end
+    return legal_moves.present?
+  end
+
+  def playable_pieces(white)
+    playable_pieces = []
+    pieces_for_color(white).each do |piece|
+      next if piece.x_position == 8 || piece.x_position == 9
+      playable_pieces << piece 
+    end
+    return playable_pieces
   end
 
   def threefold_repetition? # This one has me beat for now
@@ -184,24 +158,36 @@ class Game < ApplicationRecord
     return false if moves.count <= 100
     # The limit is 100 since a move in our app is only one player but in chess is for each player
     last_fifty_moves = moves.order(updated_at: :desc).limit(100) 
-    last_fifty_moves.each do |move|
-      return false if move.start_piece == 5 || move.start_piece == 11
+    return false if pawn_was_moved?(last_fifty_moves)
+    return false if piece_was_captured?(last_fifty_moves)
+    return true 
+  end
+
+  def pawn_was_moved?(last_fifty_moves)
+    pawn_moves = last_fifty_moves.find do |move|
+      move.start_piece == 5 || move.start_piece == 11
     end
+
+    return pawn_moves.present?
+  end
+
+  def piece_was_captured?(last_fifty_moves)
     last_white_player_capture = pieces.where(x_position: 8).order('updated_at').last
     last_black_player_capture = pieces.where(x_position: 9).order('updated_at').last
+    # The if statements are to catch if the game has zero captures. A highly unlikely scenario but easy to fix.
     if last_white_player_capture && last_black_player_capture
-      return false if last_fifty_moves.last.updated_at < last_white_player_capture.updated_at 
-      return false if last_fifty_moves.last.updated_at < last_black_player_capture.updated_at
-      return true
+      return true if last_fifty_moves.last.updated_at < last_white_player_capture.updated_at 
+      return true if last_fifty_moves.last.updated_at < last_black_player_capture.updated_at
+      return false
     end
     if last_white_player_capture 
-      return false if last_fifty_moves.last.updated_at < last_white_player_capture.updated_at
-      return true
+      return true if last_fifty_moves.last.updated_at < last_white_player_capture.updated_at
+      return false
     end
     if last_black_player_capture
-      return false if last_fifty_moves.last.updated_at < last_black_player_capture.updated_at
-      return true
+      return true if last_fifty_moves.last.updated_at < last_black_player_capture.updated_at
+      return false
     end
-    return true 
+    return false
   end
 end

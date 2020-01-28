@@ -36,13 +36,6 @@
           });
         }
       });
-      $('.draw').click(function( event ) {
-        var game = $(this).data('id');
-        $.ajax({
-          url: `/games/${game}/draw`,
-          type: 'GET'
-        });
-      });
     }
   
   $(function() {

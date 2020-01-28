@@ -2,7 +2,6 @@
 
 class GamesController < ApplicationController
   before_action :authenticate_user!, only: %i[new create show update_invited_user surrender draw]
-  skip_before_action :verify_authenticity_token, only: %i[draw]
 
   def index
     @games = Game.all
@@ -60,7 +59,11 @@ class GamesController < ApplicationController
     @game.save
 
     opponent = @game.opponent(current_user)
-    ActionCable.server.broadcast "game_channel_user_#{opponent&.id}", move: render_draw, piece: @game.pieces.first
+    ActionCable.server.broadcast "game_channel_user_#{opponent&.id}", piece: @game.pieces.first
+    
+    respond_to do |format|
+      format.js { render 'draw' }
+    end
   end
 
   private
@@ -68,11 +71,4 @@ class GamesController < ApplicationController
   def game_params
     params.require(:game).permit(:name)
   end
-
-  def render_draw
-    respond_to do |format|
-      format.js { render 'draw' }
-    end
-  end
-
 end
