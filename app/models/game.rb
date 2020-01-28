@@ -118,13 +118,8 @@ class Game < ApplicationRecord
   def stalemate?(current_user)
     return false if state == 'Black King in Check.'
     return false if state == 'White King in Check.'
-    if current_user.id == p1_id
-      return !legal_moves(true)
-    elsif current_user.id == p2_id
-      return !legal_moves(false)
-    else
-      return false
-    end
+    return false if legal_moves(current_user.id == p1_id)
+    return true
   end
 
   def legal_moves(white)
