@@ -61,7 +61,7 @@ RSpec.describe GamesController, type: :controller do
         creating_user_id: player1.id, invited_user_id: player2.id)
       sign_in player1
 
-      get :draw, params: { game_id: game.id}
+      get :draw, params: {game_id: game.id, format: :js}
       expect(response).to redirect_to game_path(game.id)
       game.reload
       expect(game.state).to eq 'Draw'

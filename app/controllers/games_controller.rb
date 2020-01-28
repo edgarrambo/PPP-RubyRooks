@@ -58,13 +58,20 @@ class GamesController < ApplicationController
     @game.write_attribute(:state, 'Draw')
     @game.save
 
-    redirect_to game_path(@game)
+    opponent = @game.opponent(current_user)
+    ActionCable.server.broadcast "game_channel_user_#{opponent&.id}", move: render_movement, piece: @game.pieces.first
   end
 
   private
 
   def game_params
     params.require(:game).permit(:name)
+  end
+
+  def render_movement
+    respond_to do |format|
+      format.js { render 'update' }
+    end
   end
 
 end

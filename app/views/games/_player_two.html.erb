@@ -13,9 +13,8 @@
               method: :get, data: {confirm: 'Are you sure you want to Castle?'},
               class: 'btn btn-secondary' %>
   <% end %>
-  <% if @game.can_claim_draw?(current_user) && current_user == @game.player_two && @game.state != 'Draw' %>
-    <%= link_to "Claim a draw", game_draw_path(@game), method: :get, data: {confirm: 'Are you sure you want to end this game in a draw?'},
-              class: 'btn btn-secondary' %>
+  <% if @game.can_claim_draw?(current_user) && current_user == @game.player_two && @game.state != 'Draw' && your_turn? %>
+    <button data-id="<%= @game.id %>" class="btn btn-secondary draw">Claim a draw</button>
   <% end %>
 </div>    
 <hr />

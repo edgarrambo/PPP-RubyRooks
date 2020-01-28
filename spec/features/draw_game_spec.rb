@@ -29,9 +29,11 @@ RSpec.describe 'Claiming a draw in a Game', type: :feature do
     scenario 'Black player claims a draw' do
       white_queenside_rook = create(:rook, x_position: 6, y_position: 5, piece_number: 0, game_id: @game.id)
       white_kingside_rook = create(:rook, x_position: 5, y_position: 6, piece_number: 0, game_id: @game.id)
+      white_pawn = create(:pawn, x_position: 1, y_position: 0, piece_number: 5, game_id: @game.id)
+      white_move = create(:move, game_id: @game.id, piece_id: white_pawn.id, start_piece: 5)
       
       sign_in @player2
-      visit game_path(@game)
+      visit game_path(@game) 
       click_on 'Claim a draw'
       @game.reload
       expect(@game.state).to eq 'Draw'
