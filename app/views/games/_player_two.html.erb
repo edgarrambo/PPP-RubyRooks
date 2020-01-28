@@ -13,6 +13,11 @@
               method: :get, data: {confirm: 'Are you sure you want to Castle?'},
               class: 'btn btn-secondary' %>
   <% end %>
+  <% if @game.can_claim_draw?(current_user) && current_user == @game.player_two && @game.state != 'Draw' && your_turn? %>
+  <%= link_to "Claim a draw", game_draw_path(@game), method: :get, remote: true, 
+            data: {confirm: 'Are you sure you want to end this game in a draw?'},
+            class: 'btn btn-secondary' %>
+  <% end %>
 </div>    
 <hr />
 <h3>Captured Pieces</h3>

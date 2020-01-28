@@ -51,4 +51,19 @@ RSpec.describe GamesController, type: :controller do
       expect([game.player_one, game.player_two]).to match_array players
     end
   end
+
+  describe 'games#draw action' do
+    it 'should allow games to end in a draw' do
+      player1 = create(:user)
+      player2 = create(:user)
+      game = create(:game, name: 'Testerroni Pizza',
+        p1_id: player1.id, p2_id: player2.id,
+        creating_user_id: player1.id, invited_user_id: player2.id)
+      sign_in player1
+
+      get :draw, params: {game_id: game.id}, xhr: true
+      game.reload
+      expect(game.state).to eq 'Draw'
+    end
+  end
 end

@@ -8,11 +8,15 @@ class PiecesController < ApplicationController
     flash.now[:alert] << 'Not your piece!' unless current_player_controls_piece?(@piece)
     flash.now[:alert] << 'Not your turn!' unless current_players_turn?(@game)
     flash.now[:alert] << 'No second player!' unless game_has_two_players?(@game)
-    check_response = check_test(@piece, @x, @y)
-    @piece.move_to!(@x, @y) if flash.now[:alert].empty?
-    flash.now[:alert] << check_response if check_response
-    @game.update(state: check_response) if check_response
-
+    flash.now[:alert] << 'This game ended in a draw!' if @game.state == 'Draw'
+    if flash.now[:alert].empty?
+      check_response = check_test(@piece, @x, @y)
+      @piece.move_to!(@x, @y) 
+      flash.now[:alert] << check_response if check_response
+      check_response ? @game.write_attribute(:state, check_response) : @game.write_attribute(:state, nil)
+      @game.save
+    end
+    
     opponent = @game.opponent(current_user)
     ActionCable.server.broadcast "game_channel_user_#{opponent&.id}", move: render_movement, piece: @piece
   end
@@ -41,7 +45,6 @@ class PiecesController < ApplicationController
     @game = Game.find(params[:game_id])
     flash.now[:alert] = []
     flash.now[:alert] << @game.state if @game.state.present?
-    @game.update(state: nil)
 
     respond_to do |format|
       format.js { render 'reload' }
