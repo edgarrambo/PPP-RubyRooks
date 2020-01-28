@@ -45,7 +45,6 @@ class PiecesController < ApplicationController
     @game = Game.find(params[:game_id])
     flash.now[:alert] = []
     flash.now[:alert] << @game.state if @game.state.present?
-    # @game.update(state: nil)
 
     respond_to do |format|
       format.js { render 'reload' }

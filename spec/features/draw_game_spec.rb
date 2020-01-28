@@ -21,9 +21,7 @@ RSpec.describe 'Claiming a draw in a Game', type: :feature do
 
       sign_in @player1
       visit game_path(@game)
-      click_on 'Claim a draw'
-      @game.reload
-      expect(@game.state).to eq 'Draw'
+      expect(page).to have_content 'Claim a draw'
     end
 
     scenario 'Black player claims a draw' do
@@ -34,9 +32,7 @@ RSpec.describe 'Claiming a draw in a Game', type: :feature do
       
       sign_in @player2
       visit game_path(@game) 
-      click_on 'Claim a draw'
-      @game.reload
-      expect(@game.state).to eq 'Draw'
+      expect(page).to have_content 'Claim a draw'
     end
 
     scenario 'Button does not show up if it is not possible to claim a draw' do
