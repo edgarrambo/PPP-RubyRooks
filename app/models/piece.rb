@@ -122,10 +122,23 @@ class Piece < ApplicationRecord
     valid_move?(piece.x_position, piece.y_position) &&
       (is_white? != piece.is_white?)
   end
-  
-  
-  def can_be_blocked?
 
+  def can_obstruct?(piece)
+    byebug
+    blocking_moves = []
+    enemies = opponent_pieces
+    enemies.each do |enemy|
+      pieces_for_color(white).each do |piece|
+        8.times do |x|
+          8.times do |y|
+          next if !piece.valid_move?(x,y)
+          next if !enemy.is_obstructed?(x,y)
+          blocking moves << [x,y]
+          end
+        end
+      end
+    end
+    blocking_moves.any?
   end
 
   def puts_self_in_check?(x, y)
@@ -151,6 +164,8 @@ class Piece < ApplicationRecord
       game.pieces.reload
     end
   end
+
+
 
   def can_castle?(rook)
     x_sorted_array = [rook.x_position, x_position].sort
