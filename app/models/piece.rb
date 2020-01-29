@@ -126,11 +126,9 @@ class Piece < ApplicationRecord
   def can_obstruct?(threat)
     king = game.pieces_for_color(is_white?).select { |piece| piece.type == 'King' }.first
     target_positions = king.obtain_threat_path(threat)
-
     blocking_moves = target_positions.select do |position|
       valid_move?(position[0], position[1])
     end
-
     blocking_moves.present?
   end
 

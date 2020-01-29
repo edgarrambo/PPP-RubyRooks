@@ -91,14 +91,24 @@ class Game < ApplicationRecord
 
   def checkmate?(white)
     return false unless check?(white)
+    return false if legal_moves(white) 
 
-    king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
-    return false unless king
-    return false if king.can_escape_check?
-    return false if threat_can_be_captured?(white)
-    return false if threat_can_be_blocked?(white)
+    # king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
+    # return false unless king
+    # return false if king.can_escape_check?
+    # return false if threat_can_be_captured?(white)
+    # return false if threat_can_be_blocked?(white)
 
     true
+  end
+
+  def end_game(piece)
+    update(state: "Checkmate" )
+    if piece.is_white?
+      update(winner_id: p1_id)
+    else
+      update(winner_id: p2_id)
+    end
   end
 
   def populate_game
@@ -148,6 +158,7 @@ class Game < ApplicationRecord
   def stalemate?(current_user)
     return false if state == 'Black King in Check.'
     return false if state == 'White King in Check.'
+    return false if enough_pieces_remaining(current_user.id == p1_id)
     return false if legal_moves(current_user.id == p1_id)
     return true
   end
@@ -164,6 +175,9 @@ class Game < ApplicationRecord
       end
     end
     return legal_moves.present?
+  end
+  def enough_pieces_remaining(white) # A check to not do legal moves if the player has enough remaining pieces
+    return playable_pieces(white).count > 3
   end
 
   def playable_pieces(white)
