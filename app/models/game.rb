@@ -73,7 +73,6 @@ class Game < ApplicationRecord
     threats.each do |threat|
       allies = pieces_for_color(white)
       blocked = allies.any? {|ally| ally.can_obstruct?(threat)}
-      byebug
     end
 
     blocked
