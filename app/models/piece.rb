@@ -125,7 +125,11 @@ class Piece < ApplicationRecord
 
   def can_obstruct?(threat)
     king = game.pieces_for_color(is_white?).select { |piece| piece.type == 'King' }.first
-    blocking_moves = king.threat_path(threat)
+    target_positions = king.obtain_threat_path(threat)
+
+    blocking_moves = target_positions.select do |position|
+      valid_move?(position[0], position[1])
+    end
 
     blocking_moves.present?
   end
@@ -133,10 +137,16 @@ class Piece < ApplicationRecord
   def puts_self_in_check?(x, y)
     previous_attributes = attributes
     begin
+      enemy = get_piece(x, y, game)
+      if enemy.present?
+        enemy_attributes = enemy.attributes
+        enemy.update(x_position: 100, y_position: 100)
+      end
       update(x_position: x, y_position: y)
       game.pieces.reload
       game.check?(is_white?)
     ensure
+      enemy&.update(enemy_attributes)
       update(previous_attributes)
       game.pieces.reload
     end
@@ -154,7 +164,9 @@ class Piece < ApplicationRecord
     end
   end
 
-
+  def get_piece(x, y, game)
+    game.pieces.where(x_position: x, y_position: y).first
+  end
 
   def can_castle?(rook)
     x_sorted_array = [rook.x_position, x_position].sort

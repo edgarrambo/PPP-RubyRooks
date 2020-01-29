@@ -77,7 +77,7 @@ class Game < ApplicationRecord
 
     blocked
   end
-  
+
   def threat_can_be_captured?(white)
     capture = false
     king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
@@ -90,16 +90,16 @@ class Game < ApplicationRecord
   end
 
   def checkmate?(white)
+    return false unless check?(white)
+
     king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
     return false unless king
-    return false unless check?(white)
     return false if king.can_escape_check?
     return false if threat_can_be_captured?(white)
     return false if threat_can_be_blocked?(white)
-    byebug
+
     true
   end
-
 
   def populate_game
     # White Rooks

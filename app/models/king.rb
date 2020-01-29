@@ -21,7 +21,7 @@ class King < Piece
     threats = enemies.select{|enemy| enemy.can_take?(self)}
   end
 
-  def threat_path(threat)
+  def obtain_threat_path(threat)
     y_distance = y_position - threat.y_position
     x_distance = x_position - threat.x_position
     diagonal_types = %w[Queen Bishop]
