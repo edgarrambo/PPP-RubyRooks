@@ -118,6 +118,7 @@ class Game < ApplicationRecord
   def stalemate?(current_user)
     return false if state == 'Black King in Check.'
     return false if state == 'White King in Check.'
+    return false if enough_pieces_remaining(current_user.id == p1_id)
     return false if legal_moves(current_user.id == p1_id)
     return true
   end
@@ -134,6 +135,10 @@ class Game < ApplicationRecord
       end
     end
     return legal_moves.present?
+  end
+
+  def enough_pieces_remaining(white) # A check to not do legal moves if the player has enough remaining pieces
+    return playable_pieces(white).count > 3
   end
 
   def playable_pieces(white)

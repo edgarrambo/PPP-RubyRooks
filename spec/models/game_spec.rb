@@ -133,6 +133,14 @@ RSpec.describe Game, type: :model do
       expect(@game.stalemate?(@player1)).to eq false
     end
 
+    it 'returns false if white player has more then three pieces' do
+      white_rook1 = create(:rook, x_position: 3, y_position: 3, game_id: @game.id, piece_number: 0)
+      white_rook2 = create(:rook, x_position: 5, y_position: 5, game_id: @game.id, piece_number: 0)
+      white_knight = create(:knight, x_position: 0, y_position: 1, game_id: @game.id, piece_number: 1)
+
+      expect(@game.stalemate?(@player1)).to eq false
+    end
+
     it 'returns false if white king can move out legally by taking piece' do
       black_rook = create(:rook, x_position: 2, y_position: 4, game_id: @game.id, piece_number: 6)
       black_rook2 = create(:rook, x_position: 1, y_position: 1, game_id: @game.id, piece_number: 6)
@@ -171,6 +179,14 @@ RSpec.describe Game, type: :model do
     end
 
     it 'returns false if black_king king can move' do
+      expect(@game.stalemate?(@player2)).to eq false
+    end
+
+    it 'returns false if black player has more then three pieces' do
+      black_rook = create(:rook, x_position: 1, y_position: 4, game_id: @game.id, piece_number: 6)
+      black_rook2 = create(:rook, x_position: 0, y_position: 5, game_id: @game.id, piece_number: 6)
+      black_queen = create(:queen, x_position: 3, y_position: 1, game_id: @game.id, piece_number: 9)
+
       expect(@game.stalemate?(@player2)).to eq false
     end
 
