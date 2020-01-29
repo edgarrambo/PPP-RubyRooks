@@ -73,7 +73,9 @@ class Game < ApplicationRecord
     threats.each do |threat|
       allies = pieces_for_color(white)
       blocked = allies.any? {|ally| ally.can_obstruct?(threat)}
+      byebug
     end
+
     blocked
   end
   
@@ -95,6 +97,7 @@ class Game < ApplicationRecord
     return false if king.can_escape_check?
     return false if threat_can_be_captured?(white)
     return false if threat_can_be_blocked?(white)
+    byebug
     true
   end
 

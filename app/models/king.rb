@@ -21,6 +21,20 @@ class King < Piece
     threats = enemies.select{|enemy| enemy.can_take?(self)}
   end
 
+  def threat_path(x, y)
+    y_distance = (y - y_position)
+
+    case y_distance
+    #when piece is diagonal threat
+    when (x - x_position).abs == (y - y_position).abs
+      if y_distance > 0 
+    #when piece is below threat
+    when y_distance > 0
+
+    end
+
+  end
+
   def can_escape_check?
     potential_moves = []
     ((x_position - 1)..(x_position + 1)).each do |x|

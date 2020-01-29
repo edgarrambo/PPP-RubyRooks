@@ -123,22 +123,12 @@ class Piece < ApplicationRecord
       (is_white? != piece.is_white?)
   end
 
-  def can_obstruct?(piece)
-    byebug
+  def can_obstruct?(threat)
+    king = pieces_for_color(is_white?).select { |piece| piece.type == 'King' }.first
     blocking_moves = []
-    enemies = opponent_pieces
-    enemies.each do |enemy|
-      pieces_for_color(white).each do |piece|
-        8.times do |x|
-          8.times do |y|
-          next if !piece.valid_move?(x,y)
-          next if !enemy.is_obstructed?(x,y)
-          blocking moves << [x,y]
-          end
-        end
-      end
-    end
-    blocking_moves.any?
+    king.threat_path(threat.x_position, threat.y_position)
+      
+    blocking_moves.present?
   end
 
   def puts_self_in_check?(x, y)
