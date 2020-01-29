@@ -13,8 +13,6 @@ class PiecesController < ApplicationController
     check_response = check_test(@piece, @x, @y)
     @piece.move_to!(@x, @y) if flash.now[:alert].empty?
     @game.end_game(@piece) if @game.checkmate?(!@piece.is_white?)
-    # if !@game.checkmate?(@piece.is_white?)
-    #flash.now[:alert] << check_response if check_response
     if @game.checkmate?(!@piece.is_white?)
       flash.now[:alert] << 'The game has ended in checkmate!'
     elsif check_response && @game.state != 'Draw' && !@game.checkmate?(!@piece.is_white?)
@@ -24,9 +22,7 @@ class PiecesController < ApplicationController
       @game.write_attribute(:state, nil)
     end
     @game.save
-    # check_response ? @game.write_attribute(:state, check_response) : @game.write_attribute(:state, nil)
-    # @game.save
-    # end
+    
     opponent = @game.opponent(current_user)
     ActionCable.server.broadcast "game_channel_user_#{opponent&.id}", move: render_movement, piece: @piece
   end
