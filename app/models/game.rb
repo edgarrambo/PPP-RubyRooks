@@ -72,7 +72,7 @@ class Game < ApplicationRecord
     threats = king.detect_threats
     threats.each do |threat|
       allies = pieces_for_color(white)
-      blocked = allies.any? {|ally| ally.can_obstruct?(threat)}
+      blocked = allies.any? { |ally| ally.can_obstruct?(threat) }
     end
 
     blocked
@@ -84,7 +84,7 @@ class Game < ApplicationRecord
     threats = king.detect_threats
     threats.each do |threat|
       allies = pieces_for_color(white)
-      capture = allies.any? {|ally| ally.can_take?(threat)}
+      capture = allies.any? { |ally| ally.can_take?(threat) }
     end
     capture
   end
