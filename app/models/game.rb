@@ -103,7 +103,6 @@ class Game < ApplicationRecord
   end
 
   def end_game(piece)
-    update(state: "Checkmate" )
     if piece.is_white?
       update(winner_id: p1_id)
     else
