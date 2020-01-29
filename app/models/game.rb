@@ -150,6 +150,10 @@ class Game < ApplicationRecord
     return playable_pieces(white).count > 3
   end
 
+  def enough_pieces_remaining(white) # A check to not do legal moves if the player has enough remaining pieces
+    return playable_pieces(white).count > 3
+  end
+
   def playable_pieces(white)
     playable_pieces = []
     pieces_for_color(white).each do |piece|
