@@ -86,6 +86,24 @@ RSpec.describe PiecesController, type: :controller do
       expect(@white_pawn.y_position).to eq 0
     end
 
+    it 'checks for checkmate and ends the game for a white player' do
+      black_king = create(:king, x_position: 4, y_position: 4, game_id: @game.id, piece_number: 10)
+      white_queen = create(:queen, x_position: 1, y_position: 3, game_id: @game.id, piece_number: 3)
+      white_rook1 = create(:rook, x_position: 0, y_position: 3, game_id: @game.id, piece_number: 0)
+      white_rook2 = create(:rook, x_position: 6, y_position: 5, game_id: @game.id, piece_number: 0)
+      white_rook3 = create(:rook, x_position: 3, y_position: 2, game_id: @game.id, piece_number: 0)
+      white_rook4 = create(:rook, x_position: 5, y_position: 6, game_id: @game.id, piece_number: 0)
+      
+      sign_in @player1
+      
+      put :update, params: {id: white_queen.id, x_position: 3, y_position: 3, format: :js }
+      white_queen.reload
+      @game.reload
+      expect(white_queen.x_position).to eq 3
+      expect(white_queen.y_position).to eq 3
+      expect(@game.winner).to eq @player1
+    end
+
     it 'should not allow black players to move white pieces' do
       white_pawn = create(:pawn, x_position: 1, y_position: 2, piece_number: 5, game_id: @game.id)
       move = create(:move, game_id: @game.id, piece_id: white_pawn.id, start_piece: 5)
@@ -118,6 +136,23 @@ RSpec.describe PiecesController, type: :controller do
       @black_pawn.reload
       expect(@black_pawn.x_position).to eq 4
       expect(@black_pawn.y_position).to eq 1
+    end
+
+    it 'checks for checkmate and ends the game for a black player' do
+      white_king = create(:king, x_position: 0, y_position: 7, game_id: @game.id, piece_number: 4)
+      black_queen = create(:queen, x_position: 6, y_position: 6, game_id: @game.id, piece_number: 9)
+      black_rook = create(:rook, x_position: 1, y_position: 4, game_id: @game.id, piece_number: 6)
+      white_pawn = create(:pawn, x_position: 1, y_position: 2, piece_number: 5, game_id: @game.id)
+      move = create(:move, game_id: @game.id, piece_id: white_pawn.id, start_piece: 5)
+
+      sign_in @player2
+
+      put :update, params: {id: black_queen.id, x_position: 1, y_position: 6, format: :js }
+      black_queen.reload
+      @game.reload
+      expect(black_queen.x_position).to eq 1
+      expect(black_queen.y_position).to eq 6
+      expect(@game.winner).to eq @player2
     end
   end
 
