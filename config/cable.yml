@@ -6,5 +6,5 @@ test:
 
 production:
   adapter: redis
-  url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } %>
+  url: <%= ENV.fetch("REDIS_URL") { "redis://redistogo:bfc9d4ba85b0a6e0743e05b789563da1@crestfish.redistogo.com:9739/" } %>
   channel_prefix: peninsula-pirate-pawns_production
