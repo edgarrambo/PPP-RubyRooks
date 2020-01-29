@@ -72,35 +72,34 @@ class Game < ApplicationRecord
     threats = king.detect_threats
     threats.each do |threat|
       allies = pieces_for_color(white)
-      blocked = allies.any? {|ally| ally.can_obstruct?(threat)}
-      byebug
+      blocked = allies.any? { |ally| ally.can_obstruct?(threat) }
     end
 
     blocked
   end
-  
+
   def threat_can_be_captured?(white)
     capture = false
     king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
     threats = king.detect_threats
     threats.each do |threat|
       allies = pieces_for_color(white)
-      capture = allies.any? {|ally| ally.can_take?(threat)}
+      capture = allies.any? { |ally| ally.can_take?(threat) }
     end
     capture
   end
 
   def checkmate?(white)
+    return false unless check?(white)
+
     king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
     return false unless king
-    return false unless check?(white)
     return false if king.can_escape_check?
     return false if threat_can_be_captured?(white)
     return false if threat_can_be_blocked?(white)
-    byebug
+
     true
   end
-
 
   def populate_game
     # White Rooks
