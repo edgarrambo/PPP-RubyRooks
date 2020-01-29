@@ -66,39 +66,10 @@ class Game < ApplicationRecord
     pieces.select { |piece| piece.is_white? == white }
   end
 
-  def threat_can_be_blocked?(white)
-    blocked = false
-    king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
-    threats = king.detect_threats
-    threats.each do |threat|
-      allies = pieces_for_color(white)
-      blocked = allies.any? { |ally| ally.can_obstruct?(threat) }
-    end
-
-    blocked
-  end
-
-  def threat_can_be_captured?(white)
-    capture = false
-    king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
-    threats = king.detect_threats
-    threats.each do |threat|
-      allies = pieces_for_color(white)
-      capture = allies.any? { |ally| ally.can_take?(threat) }
-    end
-    capture
-  end
 
   def checkmate?(white)
     return false unless check?(white)
     return false if legal_moves(white) 
-
-    # king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
-    # return false unless king
-    # return false if king.can_escape_check?
-    # return false if threat_can_be_captured?(white)
-    # return false if threat_can_be_blocked?(white)
-
     true
   end
 
