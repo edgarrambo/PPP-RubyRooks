@@ -146,9 +146,6 @@ class Game < ApplicationRecord
     end
     return legal_moves.present?
   end
-  def enough_pieces_remaining(white) # A check to not do legal moves if the player has enough remaining pieces
-    return playable_pieces(white).count > 3
-  end
 
   def enough_pieces_remaining(white) # A check to not do legal moves if the player has enough remaining pieces
     return playable_pieces(white).count > 3
