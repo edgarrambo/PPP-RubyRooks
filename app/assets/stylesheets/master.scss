@@ -7,6 +7,60 @@
   }
 }
 
+body {
+  background: image_url('hero6.jpg');
+  background-position: center;
+  height: 100vh;
+}
+
+.hero {
+  background: image_url('hero5.jpg') no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100vh;
+  box-shadow: 0px 3px 8px #2a2a2a;
+}
+
+h1, h2, h3, h4 {
+  color: #F4FAF9;
+  font-family: 'Pirata One', cursive;
+}
+
+.navbar-inverse.bg-inverse {
+  font-family: 'Pirata One', cursive;
+  box-shadow: 0px 1px 3px #2a2a2a;
+  color: #F4FAF9;
+  font-size: 20px;
+  
+}
+
+.navbar-inverse .navbar-brand {
+  color: #F4FAF9;
+  font-size: 28px;
+}
+
+.bg-inverse {
+  background-color: #804609;
+}
+
+
+.list-group-item {
+  background: image_url('chest.jpg')no-repeat center center;
+  background-size: center;
+  background-position: center
+
+  
+}
+.list-group-item a {
+  color: #F4FAF9;
+}
+.list-group-item a:hover {
+  text-decoration: none;
+  color: #F4FAF9;
+}
+
 .white {
   background-color: #f7f3da;
   width: 5vw;
@@ -36,13 +90,6 @@
   width: 100%;
 }
 
-.purple {
-  background-color: purple;
-  border: 1px solid purple;
-  width: 5vw;
-  height: 5vw;
-}
-
 hr {
   width: 100%;
   border: 0;
@@ -50,23 +97,6 @@ hr {
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0), black, rgba(0, 0, 0, 0));
 }
 
-.transparent_box {
-  opacity: 0;
-  width: 5vw;
-  height: 5vw;
-}
-
-.transparent_box:hover {
-  opacity: 1;
-  background-color: green;
-}
-
-.move_on_top_of_transparent_box {
-  position: relative;
-  margin-top: -5vw;
-  width: 4vw;
-  height: 4vw;
-}
 
 .surrendered {
   position: absolute;
@@ -116,5 +146,5 @@ hr {
 }
 
 .not-your-turn {
-  background-color: red;  
+  background-color: grey;  
 }

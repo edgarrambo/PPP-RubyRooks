@@ -1,48 +1,57 @@
-<h1>Ahoy Mateys!!!</h1>
-<br />
-
-<% if current_user %>
+<div class="hero">
+  
+  <br />
+  <div class="col-10 offset-1 text-center">
   <%# Wanted to add a create game button for when someone is logged in and there are games to join. Otherwise there is only the link on the nav bar. %>
-  <% if @games.available.present? %>
-    <h2>Create a new game. <%= link_to 'New Game', new_game_path, class: 'btn btn-primary'%></h2>
-  <% end %>
-  <% if @created.present? %>
-    <ul class="list-group">
-      <h2>Created Games</h2>
-          <% @created.each do |game| %>
-            <li class="list-group-item">
-              <h4><%= link_to game.name, game_path(game) %></h4>
-            </li>
-          <% end %>
-    </ul>
-  <% end %>
+    
+    <div class="row text-center">
+      <div class="col-12 col-sm">
+        <% if @created.present? %>
+          <ul class="list-group">
+            <h3>Created Games</h3>
+                <% @created.each do |game| %>
+                  <li class="list-group-item">
+                    <h4><%= link_to game.name, game_path(game) %></h4>
+                  </li>
+                <% end %>
+          </ul>
+        <% end %>
+      </div>
+      <div class="col-12 col-sm">
+        <% if @joined.present? %>
+          <ul class="list-group">
+            <h3>Joined Games</h3>
+                <% @joined.each do |game| %>
+                  <li class="list-group-item text-center">
+                    <h3><%= link_to game.name, game_path(game) %></h3>
+                  </li>    
+                <% end %>
+          </ul>
+        <% end %>
+      
+      </div>
 
-  <% if @joined.present? %>
-    <ul class="list-group">
-      <h2>Joined Games</h2>
-          <% @joined.each do |game| %>
-            <li class="list-group-item">
-              <h4><%= link_to game.name, game_path(game) %></h4>
-            </li>    
-          <% end %>
-    </ul>
-  <% end %>
-<% end %>
-
-<br />
-
-  <% if @games.available.present? %>
-    <ul class="list-group">
-      <h2>Available Games</h2>
-      <% @games.available.each do |game| %>
-        <li class="list-group-item">
-          <h4><%= game.name %></h4> &nbsp &nbsp &nbsp 
-          <%= link_to "Join", game_update_invited_user_path(game), remote: true,
-              method: :get, data: {confirm: 'Are you sure you want to join?'},
-              class: 'btn btn-secondary' %>
-        </li>
-      <% end %>
-    </ul>
+      <div class="col-12 col-sm">
+        <% if @games.available.present? %>
+          <ul class="list-group">
+            <h3>Available Games</h3>
+            <% @games.available.each do |game| %>
+              <li class="list-group-item">
+                <h4><%= game.name %></h4> &nbsp &nbsp &nbsp 
+                <%= link_to "Join", game_update_invited_user_path(game), remote: true,
+                    method: :get, data: {confirm: 'Are you sure you want to join?'},
+                    class: 'btn btn-outline-info' %>
+              </li>
+            <% end %>
+          </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col-10 offset-1 text-center">
   <% else %>
-    <h2>No games available to join. <%= link_to 'New Game', new_game_path, class: 'btn btn-primary'%></h2>
+    <h3>No games available to join. <%= link_to 'New Game', new_game_path, class: 'btn btn-primary'%></h3>
   <% end %>
+</div>
+    
+  
