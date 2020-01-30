@@ -126,10 +126,16 @@ class Piece < ApplicationRecord
   def puts_self_in_check?(x, y)
     previous_attributes = attributes
     begin
+      enemy = get_piece(x, y, game)
+      if enemy.present?
+        enemy_attributes = enemy.attributes
+        enemy.update(x_position: 100, y_position: 100)
+      end
       update(x_position: x, y_position: y)
       game.pieces.reload
       game.check?(is_white?)
     ensure
+      enemy&.update(enemy_attributes)
       update(previous_attributes)
       game.pieces.reload
     end
@@ -145,6 +151,10 @@ class Piece < ApplicationRecord
       update(previous_attributes)
       game.pieces.reload
     end
+  end
+
+  def get_piece(x, y, game)
+    game.pieces.where(x_position: x, y_position: y).first
   end
 
   def can_castle?(rook)
