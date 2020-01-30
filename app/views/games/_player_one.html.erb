@@ -3,14 +3,14 @@
   <br />
 </h4>
 <div class="row justify-content-center">
-  <% if !white_queenside_rook.nil? && white_king.can_castle?(white_queenside_rook) && current_user == @game.player_one %>
+  <% if can_white_queenside_castle?(white_queenside_rook) %>
     <%= link_to "White Queen Side Castle", piece_castle_path(piece_id: white_king, rook_id: white_queenside_rook), 
-              method: :get, data: {confirm: 'Are you sure you want to Castle?'},
+              method: :get, remote: true, data: {confirm: 'Are you sure you want to Castle?'},
               class: 'btn btn-secondary' %>
   <% end %>
-  <% if !white_kingside_rook.nil? && white_king.can_castle?(white_kingside_rook) && current_user == @game.player_one %>
+  <% if can_white_kingside_castle?(white_kingside_rook) %>
     <%= link_to "White King Side Castle", piece_castle_path(piece_id: white_king, rook_id: white_kingside_rook), 
-              method: :get, data: {confirm: 'Are you sure you want to Castle?'},
+              method: :get, remote: true, data: {confirm: 'Are you sure you want to Castle?'},
               class: 'btn btn-secondary' %>
   <% end %>
   <% if @game.can_claim_draw?(current_user) && current_user == @game.player_one && @game.state != 'Draw' && your_turn? %>

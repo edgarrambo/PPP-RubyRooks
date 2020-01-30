@@ -35,6 +35,22 @@ module GamesHelper
     return @game.pieces.where(x_position: 7, y_position: 7).first
   end
 
+  def can_white_queenside_castle?(white_queenside_rook)
+    return white_queenside_rook && white_king.can_castle?(white_queenside_rook) && current_user == @game.player_one
+  end
+
+  def can_white_kingside_castle?(white_kingside_rook)
+    return white_kingside_rook && white_king.can_castle?(white_kingside_rook) && current_user == @game.player_one
+  end
+
+  def can_black_queenside_castle?(black_queenside_rook)
+    return black_queenside_rook && black_king.can_castle?(black_queenside_rook) && current_user == @game.player_two
+  end
+
+  def can_black_kingside_castle?(black_kingside_rook)
+    return black_kingside_rook && black_king.can_castle?(black_kingside_rook) && current_user == @game.player_two
+  end
+
   def captured_black_pieces
     return @game.pieces.where(x_position: 8)
   end
