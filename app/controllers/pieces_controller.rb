@@ -28,10 +28,13 @@ class PiecesController < ApplicationController
   end
 
   def castle
-    piece = Piece.find(params[:piece_id])
-    rook = Piece.find(params[:rook_id])
-    piece.castle!(rook)
-    redirect_to game_path(piece.game)
+    @piece = Piece.find(params[:piece_id])
+    @rook = Piece.find(params[:rook_id])
+    @game = Game.find(@piece.game_id)
+    @piece.castle!(@rook)
+    
+    opponent = @game.opponent(current_user) 
+    ActionCable.server.broadcast "game_channel_user_#{opponent&.id}", castle: render_movement, piece: @piece
   end
 
   def promotion

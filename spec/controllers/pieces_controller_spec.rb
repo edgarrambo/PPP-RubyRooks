@@ -158,16 +158,18 @@ RSpec.describe PiecesController, type: :controller do
 
   describe 'pieces#castle action' do
     it 'allows white player to castle queenside' do
-      game = create(:game)
+      player1 = create(:user)
+      player2 = create(:user)
+      game = create(:game, name: 'Testerroni Pizza',
+        p1_id: player1.id, p2_id: player2.id,
+        creating_user_id: player1.id, invited_user_id: player2.id)
 
-      sign_in game.player_one
+      sign_in player1
 
       white_king = create(:king, x_position: 0, y_position: 4, piece_number: 4, game_id: game.id)
       white_queenside_rook = create(:rook, x_position: 0, y_position: 0, piece_number: 0, game_id: game.id)
 
-      get :castle, params: { piece_id: white_king.id, rook_id: white_queenside_rook.id}
-
-      expect(response).to redirect_to game_path(game.id)
+      get :castle, params: { piece_id: white_king.id, rook_id: white_queenside_rook.id}, xhr: true
 
       white_king.reload
       white_queenside_rook.reload
