@@ -225,4 +225,91 @@ RSpec.describe Game, type: :model do
       expect(@game.stalemate?(@player2)).to eq true
     end
   end
+
+  describe 'checkmate?' do
+    before (:each) do
+      @player1 = create(:user)
+      @player2 = create(:user)
+      @game = create(:game, name: 'Testerroni Pizza',
+        p1_id: @player1.id, p2_id: @player2.id,
+        creating_user_id: @player1.id, invited_user_id: @player2.id)
+      @white_king = create(:king, x_position: 0, y_position: 0, game_id: @game.id, piece_number: 4)
+      @black_king = create(:king, x_position: 4, y_position: 4, game_id: @game.id, piece_number: 10)
+    end
+
+    it 'returns false if white king is not in check' do
+      expect(@game.checkmate?(@white_king.is_white?)).to eq false
+    end
+
+    it 'returns false if white king can move out of check' do
+      black_rook = create(:rook, x_position: 0, y_position: 4, game_id: @game.id, piece_number: 6)
+
+      expect(@game.checkmate?(@white_king.is_white?)).to eq false
+    end
+
+    it 'returns false if white king can capture out of check' do
+      black_queen = create(:queen, x_position: 1, y_position: 1, game_id: @game.id, piece_number: 9)
+
+      expect(@game.checkmate?(@white_king.is_white?)).to eq false
+    end
+
+    it 'returns true if the white king is in checkmate' do
+      black_queen = create(:queen, x_position: 1, y_position: 1, game_id: @game.id, piece_number: 9)
+      black_rook = create(:rook, x_position: 1, y_position: 4, game_id: @game.id, piece_number: 6)
+      
+      expect(@game.checkmate?(@white_king.is_white?)).to eq true
+    end
+
+    it 'returns false if black king is not in check' do
+      expect(@game.checkmate?(@black_king.is_white?)).to eq false
+    end
+
+    it 'returns false if black king can move out of check' do
+      white_rook = create(:rook, x_position: 0, y_position: 4, game_id: @game.id, piece_number: 0)
+
+      expect(@game.checkmate?(@black_king.is_white?)).to eq false
+    end
+
+    it 'returns false if black king can capture out of check' do
+      white_queen = create(:queen, x_position: 3, y_position: 3, game_id: @game.id, piece_number: 3)
+
+      expect(@game.checkmate?(@black_king.is_white?)).to eq false
+    end
+
+    it 'returns true if the black king is in checkmate' do
+      white_queen = create(:queen, x_position: 3, y_position: 3, game_id: @game.id, piece_number: 3)
+      white_rook1 = create(:rook, x_position: 2, y_position: 3, game_id: @game.id, piece_number: 0)
+      white_rook2 = create(:rook, x_position: 6, y_position: 5, game_id: @game.id, piece_number: 0)
+      white_rook3 = create(:rook, x_position: 3, y_position: 2, game_id: @game.id, piece_number: 0)
+      white_rook4 = create(:rook, x_position: 5, y_position: 6, game_id: @game.id, piece_number: 0)
+
+      expect(@game.checkmate?(@black_king.is_white?)).to eq true
+    end
+  end
+
+  describe 'end_game' do
+    before (:each) do
+      @player1 = create(:user)
+      @player2 = create(:user)
+      @game = create(:game, name: 'Testerroni Pizza',
+        p1_id: @player1.id, p2_id: @player2.id,
+        creating_user_id: @player1.id, invited_user_id: @player2.id)
+    end
+
+    it 'sets player 1 the winner if the piece is white' do
+      white_queen = create(:queen, x_position: 3, y_position: 3, game_id: @game.id, piece_number: 3)
+
+      @game.end_game(white_queen)
+      @game.reload
+      expect(@game.winner).to eq @player1
+    end
+
+    it 'sets player 2 the winner if the piece is black' do 
+      black_queen = create(:queen, x_position: 1, y_position: 1, game_id: @game.id, piece_number: 9)
+
+      @game.end_game(black_queen)
+      @game.reload
+      expect(@game.winner).to eq @player2
+    end
+  end
 end

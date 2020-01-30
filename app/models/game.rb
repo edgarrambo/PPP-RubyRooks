@@ -53,12 +53,7 @@ class Game < ApplicationRecord
     return (not player_two.nil?) ? player_two.email : "No Player Two"
   end
 
-  def get_enemies(piece)
-    return piece.game.pieces.where('piece_number > 5') if piece.is_white?
-
-    piece.game.pieces.where('piece_number < 6')
-  end
-
+  
   def check?(white)
     king = pieces_for_color(white).select { |piece| piece.type == 'King' }.first
     return false unless king
@@ -69,6 +64,21 @@ class Game < ApplicationRecord
 
   def pieces_for_color(white)
     pieces.select { |piece| piece.is_white? == white }
+  end
+
+
+  def checkmate?(white)
+    return false unless check?(white)
+    return false if legal_moves(white) 
+    true
+  end
+
+  def end_game(piece)
+    if piece.is_white?
+      update(winner_id: p1_id)
+    else
+      update(winner_id: p2_id)
+    end
   end
 
   def populate_game
