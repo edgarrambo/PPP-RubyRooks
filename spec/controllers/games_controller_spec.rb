@@ -43,9 +43,9 @@ RSpec.describe GamesController, type: :controller do
       user = create(:user)
       sign_in user
 
-      get :update_invited_user, params: { game_id: game.id }
+      get :update_invited_user, params: { game_id: game.id }, xhr: true
 
-      expect(response).to redirect_to game_path(game.id)
+      expect(response).to have_http_status(:success)
       game.reload
       players = [game.creating_user, game.invited_user]
       expect([game.player_one, game.player_two]).to match_array players

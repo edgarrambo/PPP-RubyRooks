@@ -34,10 +34,13 @@ class GamesController < ApplicationController
     @game.update(invited_user_id: current_user.id)
     if @game.valid?
       @game.randomly_assign_players(current_user)
-      redirect_to game_path(@game)
     else
       render :new, status: :unprocessable_entity
     end
+
+    opponent = @game.opponent(current_user)
+    ActionCable.server.broadcast "game_channel_user_#{opponent&.id}", game: @game
+    ActionCable.server.broadcast "game_channel_user_#{current_user&.id}", path: "games/#{@game.id}"
   end
 
   def surrender
@@ -60,9 +63,19 @@ class GamesController < ApplicationController
 
     opponent = @game.opponent(current_user)
     ActionCable.server.broadcast "game_channel_user_#{opponent&.id}", piece: @game.pieces.first
-    
+
     respond_to do |format|
       format.js { render 'draw' }
+    end
+  end
+
+  def reload
+    @game = Game.find(params[:game_id])
+    flash.now[:alert] = []
+    flash.now[:alert] << @game.state if @game.state.present?
+
+    respond_to do |format|
+      format.js { render 'reload' }
     end
   end
 
